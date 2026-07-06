@@ -24,34 +24,34 @@ const CONSOLE_HOTSPOTS: Array<{ id: BayId; left: string }> = [
   { id: "operations", left: "58.5%" },
 ];
 
-type LightPreset = "dim" | "default" | "bright";
+type Level = "dim" | "default" | "bright";
 
 /**
- * Lighting presets — separate, balanced intensity curves.
- * Exterior curve (dusk outside the glass) and interior curve (accent lights,
- * console spill, rim) are tuned independently so every preset stays sharp
- * and readable — outside never blooms, inside never crushes.
+ * Split lighting model — OUTSIDE and INSIDE tune independently, each with
+ * its own dim/default/bright curve. Clarity is a global tone-map nudge.
  */
-const PRESETS: Record<LightPreset, {
-  // Base tone (brightness/saturate). Contrast is layered on by the clarity control.
-  brightness: number;
-  saturate: number;
-  baseContrast: number;
-  // Exterior curve — dim overlay on upper window band
-  exteriorDim: number;
-  exteriorHalo: number;
-  // Interior curve — accent lighting
-  keyLight: number; warmFill: number; rimLight: number; floorGlow: number; shaft: number;
-  vignette: number;
-  label: string;
-}> = {
-  dim:     { brightness: 1.00, saturate: 1.08, baseContrast: 1.10, exteriorDim: 0.95, exteriorHalo: 0.90, keyLight: 0.55, warmFill: 0.55, rimLight: 0.50, floorGlow: 0.70, shaft: 0.60, vignette: 0.72, label: "DIM" },
-  default: { brightness: 1.20, saturate: 1.14, baseContrast: 1.08, exteriorDim: 0.75, exteriorHalo: 0.65, keyLight: 1.00, warmFill: 1.00, rimLight: 1.00, floorGlow: 1.00, shaft: 0.85, vignette: 0.52, label: "DEFAULT" },
-  bright:  { brightness: 1.42, saturate: 1.18, baseContrast: 1.06, exteriorDim: 0.55, exteriorHalo: 0.45, keyLight: 1.35, warmFill: 1.30, rimLight: 1.25, floorGlow: 1.40, shaft: 1.10, vignette: 0.36, label: "BRIGHT" },
+
+// EXTERIOR curve — dusk outside the glass. Higher level = brighter exterior
+// (less dim overlay). Also nudges base image brightness a touch to lift the
+// exterior when set to BRIGHT.
+const EXTERIOR: Record<Level, { dim: number; halo: number; brightnessAdd: number; label: string }> = {
+  dim:     { dim: 0.95, halo: 0.92, brightnessAdd: -0.05, label: "DIM" },
+  default: { dim: 0.70, halo: 0.60, brightnessAdd:  0.00, label: "DEFAULT" },
+  bright:  { dim: 0.35, halo: 0.25, brightnessAdd:  0.08, label: "BRIGHT" },
 };
 
-// Clarity control — small tone-mapping nudges per preset for panel/OLED/glare screens.
-// Each level adds contrast + micro-saturation on top of the preset's base tone.
+// INTERIOR curve — room accent lighting, console spill, rim. Higher level =
+// more accent light and a slightly softer vignette so the room reads open.
+const INTERIOR: Record<Level, {
+  key: number; warm: number; rim: number; floor: number; shaft: number;
+  vignette: number; brightnessAdd: number; label: string;
+}> = {
+  dim:     { key: 0.45, warm: 0.45, rim: 0.40, floor: 0.55, shaft: 0.50, vignette: 0.70, brightnessAdd: -0.08, label: "DIM" },
+  default: { key: 1.00, warm: 1.00, rim: 1.00, floor: 1.00, shaft: 0.85, vignette: 0.52, brightnessAdd:  0.00, label: "DEFAULT" },
+  bright:  { key: 1.40, warm: 1.35, rim: 1.25, floor: 1.45, shaft: 1.10, vignette: 0.32, brightnessAdd:  0.14, label: "BRIGHT" },
+};
+
+// Clarity — small tone-mapping nudges per screen.
 type Clarity = "soft" | "standard" | "sharp";
 const CLARITY: Record<Clarity, { contrastAdd: number; satAdd: number; label: string }> = {
   soft:     { contrastAdd: -0.04, satAdd: -0.02, label: "SOFT" },
@@ -61,21 +61,25 @@ const CLARITY: Record<Clarity, { contrastAdd: number; satAdd: number; label: str
 
 export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   const [ready, setReady] = useState(false);
-  const [preset, setPreset] = useState<LightPreset>("default");
+  const [outside, setOutside] = useState<Level>("default");
+  const [inside, setInside] = useState<Level>("default");
   const [clarity, setClarity] = useState<Clarity>("standard");
   useEffect(() => { const t = setTimeout(() => setReady(true), 60); return () => clearTimeout(t); }, []);
 
   const bayLabel = (id: BayId) => BAYS.find(b => b.id === id)?.title ?? id;
-  const p = PRESETS[preset];
+  const ext = EXTERIOR[outside];
+  const int = INTERIOR[inside];
   const c = CLARITY[clarity];
   const clamp = (v: number) => Math.min(1, Math.max(0, v));
-  const contrast = Math.max(0.9, p.baseContrast + c.contrastAdd);
-  const saturate = Math.max(0.9, p.saturate + c.satAdd);
-  const imgFilter = `brightness(${p.brightness}) contrast(${contrast}) saturate(${saturate})`;
+  // Base image tone: average the two curves' brightness contributions.
+  const brightness = 1.15 + ext.brightnessAdd * 0.5 + int.brightnessAdd * 0.6;
+  const contrast = Math.max(0.9, 1.08 + c.contrastAdd);
+  const saturate = Math.max(0.9, 1.14 + c.satAdd);
+  const imgFilter = `brightness(${brightness.toFixed(3)}) contrast(${contrast}) saturate(${saturate})`;
 
   return (
     <section className="relative h-screen w-full overflow-hidden bg-[#05070a]">
-      {/* Full-bleed rotunda environment — sharp, balanced */}
+      {/* Full-bleed rotunda environment */}
       <img
         src={rotundaAsset.url}
         alt="Nexus rotunda — command environment overlooking the Gateway Arch"
@@ -84,29 +88,28 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         draggable={false}
       />
 
-
-      {/* EXTERIOR CURVE — dim outside the glass, independent of interior */}
+      {/* EXTERIOR CURVE — dim outside the glass */}
       <div
         className="absolute inset-x-0 top-0 h-[60%] pointer-events-none transition-opacity duration-500 bg-[linear-gradient(180deg,rgba(3,6,12,0.82)_0%,rgba(3,6,12,0.50)_55%,transparent_100%)]"
-        style={{ opacity: p.exteriorDim }}
+        style={{ opacity: ext.dim }}
       />
       <div
         className="absolute inset-x-0 top-0 h-[45%] pointer-events-none transition-opacity duration-500 bg-[radial-gradient(ellipse_at_50%_0%,rgba(2,4,10,0.65)_0%,transparent_70%)]"
-        style={{ opacity: p.exteriorHalo }}
+        style={{ opacity: ext.halo }}
       />
 
-      {/* INTERIOR CURVE — each accent light on its own multiplier */}
+      {/* INTERIOR CURVE — accent lights, console spill, rim */}
       <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_14%_38%,rgba(110,200,255,0.38)_0%,transparent_45%)] transition-opacity duration-500"
-        style={{ opacity: clamp(p.keyLight) }} />
+        style={{ opacity: clamp(int.key) }} />
       <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_86%_88%,rgba(255,180,100,0.34)_0%,transparent_52%)] transition-opacity duration-500"
-        style={{ opacity: clamp(p.warmFill) }} />
+        style={{ opacity: clamp(int.warm) }} />
       <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_92%_55%,rgba(210,130,255,0.22)_0%,transparent_42%)] transition-opacity duration-500"
-        style={{ opacity: clamp(p.rimLight) }} />
+        style={{ opacity: clamp(int.rim) }} />
       <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.42)_0%,transparent_65%)] transition-opacity duration-500"
-        style={{ opacity: clamp(p.floorGlow) }} />
+        style={{ opacity: clamp(int.floor) }} />
       <div className="absolute -inset-x-10 top-0 h-full pointer-events-none anim-drift transition-opacity duration-500"
         style={{
-          opacity: clamp(p.shaft),
+          opacity: clamp(int.shaft),
           background: "linear-gradient(115deg, transparent 40%, rgba(140,210,255,0.11) 50%, transparent 60%)",
         }}
       />
@@ -114,7 +117,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
       {/* Depth vignette + edge fades */}
       <div
         className="absolute inset-0 pointer-events-none transition-opacity duration-500 bg-[radial-gradient(ellipse_at_center,transparent_58%,rgba(5,7,10,1)_100%)]"
-        style={{ opacity: p.vignette }}
+        style={{ opacity: int.vignette }}
       />
       <div className="absolute inset-x-0 top-0 h-32 pointer-events-none bg-gradient-to-b from-background/80 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/90 to-transparent" />
@@ -129,18 +132,34 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           </div>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1 border border-primary/25 bg-background/50 backdrop-blur-sm px-1 py-1">
-              <span className="mono text-[0.55rem] tracking-[0.24em] text-muted-foreground px-2">LIGHTS</span>
-              {(["dim", "default", "bright"] as LightPreset[]).map((k) => (
+              <span className="mono text-[0.55rem] tracking-[0.24em] text-muted-foreground px-2">OUTSIDE</span>
+              {(["dim", "default", "bright"] as Level[]).map((k) => (
                 <button
                   key={k}
-                  onClick={() => setPreset(k)}
+                  onClick={() => setOutside(k)}
                   className={`mono text-[0.55rem] tracking-[0.24em] uppercase px-2 py-1 transition-colors ${
-                    preset === k
+                    outside === k
                       ? "bg-primary/20 text-primary border border-primary/50"
                       : "text-muted-foreground hover:text-primary/80 border border-transparent"
                   }`}
                 >
-                  {PRESETS[k].label}
+                  {EXTERIOR[k].label}
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-1 border border-primary/25 bg-background/50 backdrop-blur-sm px-1 py-1">
+              <span className="mono text-[0.55rem] tracking-[0.24em] text-muted-foreground px-2">INSIDE</span>
+              {(["dim", "default", "bright"] as Level[]).map((k) => (
+                <button
+                  key={k}
+                  onClick={() => setInside(k)}
+                  className={`mono text-[0.55rem] tracking-[0.24em] uppercase px-2 py-1 transition-colors ${
+                    inside === k
+                      ? "bg-primary/20 text-primary border border-primary/50"
+                      : "text-muted-foreground hover:text-primary/80 border border-transparent"
+                  }`}
+                >
+                  {INTERIOR[k].label}
                 </button>
               ))}
             </div>
