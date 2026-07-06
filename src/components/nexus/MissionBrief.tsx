@@ -21,7 +21,7 @@ interface Props {
 // Reusable dark-glass panel — reads like a wall display inside the office
 const Glass = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
   <div
-    className={`relative rounded-sm border border-[rgba(80,160,255,0.22)] bg-[rgba(8,16,28,0.74)] backdrop-blur-md shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.04),0_0_40px_rgba(40,120,220,0.08)] ${className}`}
+    className={`relative rounded-sm border border-[rgba(96,176,255,0.28)] bg-[rgba(12,24,40,0.70)] backdrop-blur-md shadow-[0_30px_80px_-30px_rgba(0,0,0,0.82),inset_0_1px_0_rgba(255,255,255,0.06),0_0_48px_rgba(60,145,240,0.12)] ${className}`}
   >
     {children}
   </div>
@@ -51,7 +51,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
         <img
           src={officeAsset.url}
           alt="Founder office — Mission Brief environment"
-          className={`absolute inset-0 w-full h-full object-cover brightness-[1.30] contrast-[1.10] transition-opacity duration-700 ease-out ${bgLoaded ? "opacity-100" : "opacity-0"}`}
+          className={`absolute inset-0 w-full h-full object-cover brightness-[1.50] contrast-[1.08] saturate-[1.06] transition-opacity duration-700 ease-out ${bgLoaded ? "opacity-100" : "opacity-0"}`}
           draggable={false}
           loading="eager"
           decoding="async"
@@ -59,9 +59,9 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
           onError={() => setBgLoaded(true)}
         />
         {/* Dim the room so the overlay reads — lights raised for briefing */}
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_60%_40%,rgba(5,7,10,0.06)_0%,rgba(5,7,10,0.28)_100%)]" />
-        <div className="absolute inset-x-0 top-0 h-24 pointer-events-none bg-gradient-to-b from-background/20 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/40 to-transparent" />
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_60%_40%,rgba(5,7,10,0.02)_0%,rgba(5,7,10,0.18)_100%)]" />
+        <div className="absolute inset-x-0 top-0 h-24 pointer-events-none bg-gradient-to-b from-background/10 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/24 to-transparent" />
 
         {/* HUD */}
         <div className="absolute inset-x-0 top-14 z-20">
@@ -80,7 +80,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
 
         {/* Wall-display overlay — sits over the office wall screen area */}
         <div className="relative container h-screen flex items-center justify-end pt-24 pb-16">
-          <Glass className="w-full md:w-[62%] lg:w-[58%] p-6 md:p-8 anim-fade-up shadow-[0_0_60px_rgba(40,120,220,0.14),0_30px_80px_-30px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.04)]">
+          <Glass className="w-full md:w-[62%] lg:w-[58%] p-6 md:p-8 anim-fade-up shadow-[0_0_70px_rgba(60,145,240,0.18),0_30px_80px_-30px_rgba(0,0,0,0.82),inset_0_1px_0_rgba(255,255,255,0.06)]">
             <div className="flex items-start justify-between mb-4">
               <div>
                 <div className="mono text-[0.65rem] tracking-[0.28em] uppercase text-[#4db7ff]">NEXUS</div>
@@ -93,7 +93,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
 
             <div className="grid md:grid-cols-2 gap-5">
               {/* Mission cell */}
-              <div className="border border-[rgba(80,160,255,0.18)] bg-[linear-gradient(180deg,rgba(10,22,38,0.55),rgba(6,14,26,0.70))] p-5">
+              <div className="border border-[rgba(96,176,255,0.24)] bg-[linear-gradient(180deg,rgba(16,34,56,0.64),rgba(10,22,38,0.76))] p-5">
                 <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">OUR MISSION</div>
                 <h1 className="text-2xl font-semibold tracking-tight leading-tight text-[#eef6ff]">
                   Divide the wave.<br/>Preserve the machine.
@@ -111,7 +111,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
               </div>
 
               {/* Founder overview cell */}
-              <div className="border border-[rgba(80,160,255,0.18)] bg-[linear-gradient(180deg,rgba(10,22,38,0.55),rgba(6,14,26,0.70))] p-5">
+              <div className="border border-[rgba(96,176,255,0.24)] bg-[linear-gradient(180deg,rgba(16,34,56,0.64),rgba(10,22,38,0.76))] p-5">
                 <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">FOUNDER OVERVIEW</div>
                 <div className="text-sm text-[#eef6ff] space-y-1">
                   <div>{BRAND.founder}</div>
@@ -176,7 +176,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
           <Glass className="p-5">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
               {CORE_STRENGTHS.map((s, i) => (
-                <div key={s} className="border border-[rgba(80,160,255,0.18)] bg-[linear-gradient(180deg,rgba(12,24,40,0.50),rgba(8,16,28,0.65))] px-3 py-2">
+                <div key={s} className="border border-[rgba(96,176,255,0.24)] bg-[linear-gradient(180deg,rgba(16,34,56,0.60),rgba(10,22,38,0.72))] px-3 py-2">
                   <div className="mono text-[0.55rem] tracking-[0.28em] text-[#4db7ff]">S{String(i + 1).padStart(2, "0")}</div>
                   <div className="text-xs text-[#c8d4e2] mt-1">{s}</div>
                 </div>
@@ -209,7 +209,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
               <a
                 key={c.id}
                 href={c.href ?? "#"}
-                className="group relative rounded-sm border border-[rgba(80,160,255,0.22)] bg-[linear-gradient(180deg,rgba(12,24,40,0.60),rgba(8,16,28,0.78))] backdrop-blur-md p-4 hover:border-[rgba(80,160,255,0.45)] transition-colors flex flex-col justify-between min-h-[140px]"
+                className="group relative rounded-sm border border-[rgba(96,176,255,0.28)] bg-[linear-gradient(180deg,rgba(16,34,56,0.68),rgba(10,22,38,0.80))] backdrop-blur-md p-4 hover:border-[rgba(96,176,255,0.52)] transition-colors flex flex-col justify-between min-h-[140px]"
               >
                 <div>
                   <div className="flex items-center justify-between">
