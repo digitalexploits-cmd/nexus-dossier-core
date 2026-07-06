@@ -144,6 +144,23 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
                 </button>
               ))}
             </div>
+            <div className="flex items-center gap-1 border border-primary/25 bg-background/50 backdrop-blur-sm px-1 py-1">
+              <span className="mono text-[0.55rem] tracking-[0.24em] text-muted-foreground px-2">CLARITY</span>
+              {(["soft", "standard", "sharp"] as Clarity[]).map((k) => (
+                <button
+                  key={k}
+                  onClick={() => setClarity(k)}
+                  className={`mono text-[0.55rem] tracking-[0.24em] uppercase px-2 py-1 transition-colors ${
+                    clarity === k
+                      ? "bg-primary/20 text-primary border border-primary/50"
+                      : "text-muted-foreground hover:text-primary/80 border border-transparent"
+                  }`}
+                  title={`Tone mapping · ${CLARITY[k].label}`}
+                >
+                  {CLARITY[k].label}
+                </button>
+              ))}
+            </div>
             <div className="hidden md:flex items-center gap-3">
               <span className="status-dot status-live" />
               <span>SHELL ONLINE</span>
