@@ -89,69 +89,92 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
           </div>
         </div>
 
-        {/* Wall-display overlay — sits over the office wall screen area */}
+        {/* Wall-display overlay — compact briefing card, expands on demand */}
         <div className="relative container h-screen flex items-center justify-end pt-24 pb-16">
-          <Glass className="w-full md:w-[62%] lg:w-[58%] p-6 md:p-8 anim-fade-up shadow-[0_0_82px_rgba(70,160,255,0.22),0_30px_80px_-30px_rgba(0,0,0,0.76),inset_0_1px_0_rgba(255,255,255,0.08)]">
-            <div className="flex items-start justify-between mb-4">
+          <CompactCard
+            className={`w-full md:w-[38%] lg:w-[34%] p-5 md:p-6 anim-fade-up ${expanded ? "md:w-[62%] lg:w-[58%]" : ""}`}
+          >
+            <div className="flex items-start justify-between mb-3">
               <div>
                 <div className="mono text-[0.65rem] tracking-[0.28em] uppercase text-[#4db7ff]">NEXUS</div>
-                <div className="mono text-[0.65rem] tracking-[0.28em] uppercase text-[#8fa3b8] mt-0.5">
+                <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#8fa3b8] mt-0.5">
                   MISSION BRIEF / FOUNDER DOSSIER
                 </div>
               </div>
-              <div className="mono text-[0.6rem] tracking-[0.24em] text-[#8fa3b8]">///-HC-0</div>
+              <div className="mono text-[0.55rem] tracking-[0.24em] text-[#8fa3b8]">///-HC-0</div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-5">
-              {/* Mission cell */}
-              <div className="border border-[rgba(110,190,255,0.30)] bg-[linear-gradient(180deg,rgba(24,46,72,0.70),rgba(14,28,48,0.80))] p-5">
-                <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">OUR MISSION</div>
-                <h1 className="text-2xl font-semibold tracking-tight leading-tight text-[#eef6ff]">
+            {!expanded ? (
+              <div className="space-y-4">
+                <h1 className="text-xl md:text-2xl font-semibold tracking-tight leading-tight text-[#eef6ff]">
                   Divide the wave.<br/>Preserve the machine.
                 </h1>
-                <p className="text-sm text-[#c8d4e2] mt-3 leading-relaxed">
-                  Deliver physics-first, evidence-labeled inspection to industrial reliability teams
-                  — without overclaim.
-                </p>
-                <div className="mt-4 mono text-[0.65rem] tracking-[0.24em] uppercase text-[#c8d4e2]">
-                  {BRAND.founder}
-                </div>
                 <div className="mono text-[0.6rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
-                  FOUNDER · {BRAND.company}
+                  {BRAND.founder} — FOUNDER · {BRAND.company}
+                </div>
+                <Button
+                  onClick={() => {
+                    setExpanded(true);
+                    setTimeout(() => dossierRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+                  }}
+                  className="mono tracking-widest text-[0.65rem] h-9 w-full"
+                >
+                  OPEN DOSSIER →
+                </Button>
+              </div>
+            ) : (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                <div className="grid md:grid-cols-2 gap-4">
+                  {/* Mission cell */}
+                  <div className="border border-[rgba(110,190,255,0.30)] bg-[linear-gradient(180deg,rgba(24,46,72,0.70),rgba(14,28,48,0.80))] p-4">
+                    <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">OUR MISSION</div>
+                    <h1 className="text-2xl font-semibold tracking-tight leading-tight text-[#eef6ff]">
+                      Divide the wave.<br/>Preserve the machine.
+                    </h1>
+                    <p className="text-sm text-[#c8d4e2] mt-3 leading-relaxed">
+                      Deliver physics-first, evidence-labeled inspection to industrial reliability teams
+                      — without overclaim.
+                    </p>
+                    <div className="mt-4 mono text-[0.65rem] tracking-[0.24em] uppercase text-[#c8d4e2]">
+                      {BRAND.founder}
+                    </div>
+                    <div className="mono text-[0.6rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
+                      FOUNDER · {BRAND.company}
+                    </div>
+                  </div>
+
+                  {/* Founder overview cell */}
+                  <div className="border border-[rgba(110,190,255,0.30)] bg-[linear-gradient(180deg,rgba(24,46,72,0.70),rgba(14,28,48,0.80))] p-4">
+                    <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">FOUNDER OVERVIEW</div>
+                    <div className="text-sm text-[#eef6ff] space-y-1">
+                      <div>{BRAND.founder}</div>
+                      <div className="text-[#c8d4e2]">{FOUNDER_SUMMARY.title}</div>
+                      <div className="text-[#c8d4e2]">{BRAND.company}</div>
+                    </div>
+                    <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mt-4 mb-2">DOCTRINE</div>
+                    <ul className="text-xs text-[#c8d4e2] space-y-1">
+                      <li>· Success over orthodoxy</li>
+                      <li>· Physics first</li>
+                      <li>· Evidence before adjectives</li>
+                      <li>· Every deliverable increases implementation readiness</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <Button onClick={onContact} className="mono tracking-widest text-[0.65rem] h-9">
+                    REQUEST BRIEFING
+                  </Button>
+                  <Button asChild variant="outline" className="mono tracking-widest text-[0.65rem] h-9">
+                    <a href={RESUME_URL} download>DOWNLOAD RESUME</a>
+                  </Button>
+                  <Button variant="ghost" onClick={onOpenVault} className="mono tracking-widest text-[0.65rem] h-9">
+                    EVIDENCE VAULT →
+                  </Button>
                 </div>
               </div>
-
-              {/* Founder overview cell */}
-              <div className="border border-[rgba(110,190,255,0.30)] bg-[linear-gradient(180deg,rgba(24,46,72,0.70),rgba(14,28,48,0.80))] p-5">
-                <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">FOUNDER OVERVIEW</div>
-                <div className="text-sm text-[#eef6ff] space-y-1">
-                  <div>{BRAND.founder}</div>
-                  <div className="text-[#c8d4e2]">{FOUNDER_SUMMARY.title}</div>
-                  <div className="text-[#c8d4e2]">{BRAND.company}</div>
-                </div>
-                <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mt-4 mb-2">DOCTRINE</div>
-                <ul className="text-xs text-[#c8d4e2] space-y-1">
-                  <li>· Success over orthodoxy</li>
-                  <li>· Physics first</li>
-                  <li>· Evidence before adjectives</li>
-                  <li>· Every deliverable increases implementation readiness</li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Actions strip */}
-            <div className="mt-5 flex flex-wrap gap-2">
-              <Button onClick={onContact} className="mono tracking-widest text-[0.65rem] h-9">
-                REQUEST BRIEFING
-              </Button>
-              <Button asChild variant="outline" className="mono tracking-widest text-[0.65rem] h-9">
-                <a href={RESUME_URL} download>DOWNLOAD RESUME</a>
-              </Button>
-              <Button variant="ghost" onClick={onOpenVault} className="mono tracking-widest text-[0.65rem] h-9">
-                EVIDENCE VAULT →
-              </Button>
-            </div>
-          </Glass>
+            )}
+          </CompactCard>
         </div>
       </section>
 
