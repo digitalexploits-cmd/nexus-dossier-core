@@ -244,7 +244,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
                 <a
                   key={c.id}
                   href={c.href ?? "#"}
-                  className="group relative rounded-sm border border-[rgba(110,190,255,0.34)] bg-[linear-gradient(180deg,rgba(24,46,72,0.72),rgba(14,28,48,0.84))] backdrop-blur-md p-4 hover:border-[rgba(110,190,255,0.58)] transition-colors flex flex-col justify-between min-h-[140px]"
+                  className="group relative rounded-sm border border-[rgba(130,205,255,0.42)] bg-[linear-gradient(180deg,rgba(38,64,100,0.80),rgba(22,40,66,0.88))] backdrop-blur-md p-4 hover:border-[rgba(130,205,255,0.65)] transition-colors flex flex-col justify-between min-h-[140px]"
                 >
                   <div>
                     <div className="flex items-center justify-between">
