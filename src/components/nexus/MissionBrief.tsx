@@ -30,7 +30,7 @@ const Glass = ({ children, className = "" }: { children: React.ReactNode; classN
 // Minimal glass badge / compact card
 const CompactCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
   <div
-    className={`relative rounded-sm border border-[rgba(110,190,255,0.40)] bg-[rgba(18,34,54,0.80)] backdrop-blur-md shadow-[0_20px_60px_-20px_rgba(0,0,0,0.70),inset_0_1px_0_rgba(255,255,255,0.10)] transition-all duration-500 ease-out ${className}`}
+    className={`relative rounded-sm border border-[rgba(130,205,255,0.48)] bg-[rgba(34,58,92,0.85)] backdrop-blur-md shadow-[0_20px_60px_-20px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.14)] transition-all duration-500 ease-out ${className}`}
   >
     {children}
   </div>
