@@ -21,7 +21,7 @@ interface Props {
 // Reusable dark-glass panel — reads like a wall display inside the office
 const Glass = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
   <div
-    className={`relative rounded-sm border border-[rgba(110,190,255,0.34)] bg-[rgba(18,34,54,0.72)] backdrop-blur-md shadow-[0_30px_80px_-30px_rgba(0,0,0,0.76),inset_0_1px_0_rgba(255,255,255,0.08),0_0_56px_rgba(70,160,255,0.16)] ${className}`}
+    className={`relative rounded-sm border border-[rgba(130,205,255,0.42)] bg-[rgba(30,55,88,0.78)] backdrop-blur-md shadow-[0_30px_80px_-30px_rgba(0,0,0,0.60),inset_0_1px_0_rgba(255,255,255,0.12),0_0_56px_rgba(90,180,255,0.22)] ${className}`}
   >
     {children}
   </div>
