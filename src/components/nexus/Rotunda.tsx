@@ -24,42 +24,70 @@ const CONSOLE_HOTSPOTS: Array<{ id: BayId; left: string }> = [
   { id: "operations", left: "58.5%" },
 ];
 
+type LightPreset = "dim" | "default" | "bright";
+
+const PRESETS: Record<LightPreset, {
+  imgClass: string;
+  exteriorOpacity: number; // 0..1 multiplier on outside dim overlay
+  interiorOpacity: number; // 0..1 multiplier on interior accent lights
+  vignette: number;        // 0..1 vignette strength
+  label: string;
+}> = {
+  dim:     { imgClass: "brightness-[1.05] contrast-[1.08] saturate-[1.10]", exteriorOpacity: 1.0, interiorOpacity: 0.75, vignette: 0.70, label: "DIM" },
+  default: { imgClass: "brightness-[1.22] contrast-[1.07] saturate-[1.14]", exteriorOpacity: 0.85, interiorOpacity: 1.0,  vignette: 0.55, label: "DEFAULT" },
+  bright:  { imgClass: "brightness-[1.45] contrast-[1.05] saturate-[1.16]", exteriorOpacity: 0.70, interiorOpacity: 1.25, vignette: 0.40, label: "BRIGHT" },
+};
+
 export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   const [ready, setReady] = useState(false);
+  const [preset, setPreset] = useState<LightPreset>("default");
   useEffect(() => { const t = setTimeout(() => setReady(true), 60); return () => clearTimeout(t); }, []);
 
   const bayLabel = (id: BayId) => BAYS.find(b => b.id === id)?.title ?? id;
+  const p = PRESETS[preset];
 
   return (
     <section className="relative h-screen w-full overflow-hidden bg-[#05070a]">
-      {/* Full-bleed rotunda environment */}
+      {/* Full-bleed rotunda environment — sharp, balanced */}
       <img
         src={rotundaAsset.url}
         alt="Nexus rotunda — command environment overlooking the Gateway Arch"
-        className="absolute inset-0 w-full h-full object-cover brightness-[1.25] contrast-[1.06] saturate-[1.12]"
+        className={`absolute inset-0 w-full h-full object-cover transition-[filter] duration-500 ${p.imgClass}`}
+        style={{ imageRendering: "auto" }}
         draggable={false}
       />
 
       {/* Dim the exterior (upper window band) — dusk outside the glass */}
-      <div className="absolute inset-x-0 top-0 h-[55%] pointer-events-none bg-[linear-gradient(180deg,rgba(4,8,16,0.62)_0%,rgba(4,8,16,0.35)_55%,transparent_100%)]" />
-      <div className="absolute inset-x-0 top-0 h-[45%] pointer-events-none bg-[radial-gradient(ellipse_at_50%_0%,rgba(3,6,12,0.55)_0%,transparent_70%)]" />
-
-      {/* Interior accent lighting — brighter room, cinematic color */}
-      {/* Cyan key beam from upper-left ceiling */}
-      <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_14%_38%,rgba(110,200,255,0.38)_0%,transparent_45%)]" />
-      {/* Warm amber console fill lower-right */}
-      <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_86%_88%,rgba(255,180,100,0.34)_0%,transparent_52%)]" />
-      {/* Magenta rim mid-right */}
-      <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_92%_55%,rgba(210,130,255,0.22)_0%,transparent_42%)]" />
-      {/* Signature blue floor / console spill */}
-      <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.42)_0%,transparent_65%)]" />
-      {/* Slow-drifting light shaft */}
-      <div className="absolute -inset-x-10 top-0 h-full pointer-events-none opacity-80 anim-drift"
-        style={{ background: "linear-gradient(115deg, transparent 40%, rgba(140,210,255,0.11) 50%, transparent 60%)" }}
+      <div
+        className="absolute inset-x-0 top-0 h-[60%] pointer-events-none transition-opacity duration-500 bg-[linear-gradient(180deg,rgba(3,6,12,0.78)_0%,rgba(3,6,12,0.48)_55%,transparent_100%)]"
+        style={{ opacity: p.exteriorOpacity }}
+      />
+      <div
+        className="absolute inset-x-0 top-0 h-[45%] pointer-events-none transition-opacity duration-500 bg-[radial-gradient(ellipse_at_50%_0%,rgba(2,4,10,0.60)_0%,transparent_70%)]"
+        style={{ opacity: p.exteriorOpacity }}
       />
 
+      {/* Interior accent lighting */}
+      <div className="absolute inset-0 pointer-events-none transition-opacity duration-500" style={{ opacity: p.interiorOpacity }}>
+        {/* Cyan key beam from upper-left ceiling */}
+        <div className="absolute inset-0 mix-blend-screen bg-[radial-gradient(ellipse_at_14%_38%,rgba(110,200,255,0.38)_0%,transparent_45%)]" />
+        {/* Warm amber console fill lower-right */}
+        <div className="absolute inset-0 mix-blend-screen bg-[radial-gradient(ellipse_at_86%_88%,rgba(255,180,100,0.34)_0%,transparent_52%)]" />
+        {/* Magenta rim mid-right */}
+        <div className="absolute inset-0 mix-blend-screen bg-[radial-gradient(ellipse_at_92%_55%,rgba(210,130,255,0.22)_0%,transparent_42%)]" />
+        {/* Signature blue floor / console spill */}
+        <div className="absolute inset-x-0 bottom-0 h-2/3 mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.42)_0%,transparent_65%)]" />
+        {/* Slow-drifting light shaft */}
+        <div className="absolute -inset-x-10 top-0 h-full opacity-80 anim-drift"
+          style={{ background: "linear-gradient(115deg, transparent 40%, rgba(140,210,255,0.11) 50%, transparent 60%)" }}
+        />
+      </div>
+
       {/* Softer vignette + edge fades */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_58%,rgba(5,7,10,0.55)_100%)]" />
+      <div
+        className="absolute inset-0 pointer-events-none transition-opacity duration-500 bg-[radial-gradient(ellipse_at_center,transparent_58%,rgba(5,7,10,1)_100%)]"
+        style={{ opacity: p.vignette }}
+      />
       <div className="absolute inset-x-0 top-0 h-32 pointer-events-none bg-gradient-to-b from-background/80 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/90 to-transparent" />
 
