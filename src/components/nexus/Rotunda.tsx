@@ -132,18 +132,34 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           </div>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1 border border-primary/25 bg-background/50 backdrop-blur-sm px-1 py-1">
-              <span className="mono text-[0.55rem] tracking-[0.24em] text-muted-foreground px-2">LIGHTS</span>
-              {(["dim", "default", "bright"] as LightPreset[]).map((k) => (
+              <span className="mono text-[0.55rem] tracking-[0.24em] text-muted-foreground px-2">OUTSIDE</span>
+              {(["dim", "default", "bright"] as Level[]).map((k) => (
                 <button
                   key={k}
-                  onClick={() => setPreset(k)}
+                  onClick={() => setOutside(k)}
                   className={`mono text-[0.55rem] tracking-[0.24em] uppercase px-2 py-1 transition-colors ${
-                    preset === k
+                    outside === k
                       ? "bg-primary/20 text-primary border border-primary/50"
                       : "text-muted-foreground hover:text-primary/80 border border-transparent"
                   }`}
                 >
-                  {PRESETS[k].label}
+                  {EXTERIOR[k].label}
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-1 border border-primary/25 bg-background/50 backdrop-blur-sm px-1 py-1">
+              <span className="mono text-[0.55rem] tracking-[0.24em] text-muted-foreground px-2">INSIDE</span>
+              {(["dim", "default", "bright"] as Level[]).map((k) => (
+                <button
+                  key={k}
+                  onClick={() => setInside(k)}
+                  className={`mono text-[0.55rem] tracking-[0.24em] uppercase px-2 py-1 transition-colors ${
+                    inside === k
+                      ? "bg-primary/20 text-primary border border-primary/50"
+                      : "text-muted-foreground hover:text-primary/80 border border-transparent"
+                  }`}
+                >
+                  {INTERIOR[k].label}
                 </button>
               ))}
             </div>
