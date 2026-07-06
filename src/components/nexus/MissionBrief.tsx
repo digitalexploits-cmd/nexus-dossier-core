@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import officeAsset from "@/assets/founder-office.jpg.asset.json";
@@ -27,8 +27,19 @@ const Glass = ({ children, className = "" }: { children: React.ReactNode; classN
   </div>
 );
 
+// Minimal glass badge / compact card
+const CompactCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+  <div
+    className={`relative rounded-sm border border-[rgba(110,190,255,0.40)] bg-[rgba(18,34,54,0.80)] backdrop-blur-md shadow-[0_20px_60px_-20px_rgba(0,0,0,0.70),inset_0_1px_0_rgba(255,255,255,0.10)] transition-all duration-500 ease-out ${className}`}
+  >
+    {children}
+  </div>
+);
+
 export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
   const [bgLoaded, setBgLoaded] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const dossierRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const img = new Image();
@@ -78,187 +89,212 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
           </div>
         </div>
 
-        {/* Wall-display overlay — sits over the office wall screen area */}
+        {/* Wall-display overlay — compact briefing card, expands on demand */}
         <div className="relative container h-screen flex items-center justify-end pt-24 pb-16">
-          <Glass className="w-full md:w-[62%] lg:w-[58%] p-6 md:p-8 anim-fade-up shadow-[0_0_82px_rgba(70,160,255,0.22),0_30px_80px_-30px_rgba(0,0,0,0.76),inset_0_1px_0_rgba(255,255,255,0.08)]">
-            <div className="flex items-start justify-between mb-4">
+          <CompactCard
+            className={`w-full md:w-[38%] lg:w-[34%] p-5 md:p-6 anim-fade-up ${expanded ? "md:w-[62%] lg:w-[58%]" : ""}`}
+          >
+            <div className="flex items-start justify-between mb-3">
               <div>
                 <div className="mono text-[0.65rem] tracking-[0.28em] uppercase text-[#4db7ff]">NEXUS</div>
-                <div className="mono text-[0.65rem] tracking-[0.28em] uppercase text-[#8fa3b8] mt-0.5">
+                <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#8fa3b8] mt-0.5">
                   MISSION BRIEF / FOUNDER DOSSIER
                 </div>
               </div>
-              <div className="mono text-[0.6rem] tracking-[0.24em] text-[#8fa3b8]">///-HC-0</div>
+              <div className="mono text-[0.55rem] tracking-[0.24em] text-[#8fa3b8]">///-HC-0</div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-5">
-              {/* Mission cell */}
-              <div className="border border-[rgba(110,190,255,0.30)] bg-[linear-gradient(180deg,rgba(24,46,72,0.70),rgba(14,28,48,0.80))] p-5">
-                <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">OUR MISSION</div>
-                <h1 className="text-2xl font-semibold tracking-tight leading-tight text-[#eef6ff]">
+            {!expanded ? (
+              <div className="space-y-4">
+                <h1 className="text-xl md:text-2xl font-semibold tracking-tight leading-tight text-[#eef6ff]">
                   Divide the wave.<br/>Preserve the machine.
                 </h1>
-                <p className="text-sm text-[#c8d4e2] mt-3 leading-relaxed">
-                  Deliver physics-first, evidence-labeled inspection to industrial reliability teams
-                  — without overclaim.
-                </p>
-                <div className="mt-4 mono text-[0.65rem] tracking-[0.24em] uppercase text-[#c8d4e2]">
-                  {BRAND.founder}
-                </div>
                 <div className="mono text-[0.6rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
-                  FOUNDER · {BRAND.company}
+                  {BRAND.founder} — FOUNDER · {BRAND.company}
+                </div>
+                <Button
+                  onClick={() => {
+                    setExpanded(true);
+                    setTimeout(() => dossierRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+                  }}
+                  className="mono tracking-widest text-[0.65rem] h-9 w-full"
+                >
+                  OPEN DOSSIER →
+                </Button>
+              </div>
+            ) : (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                <div className="grid md:grid-cols-2 gap-4">
+                  {/* Mission cell */}
+                  <div className="border border-[rgba(110,190,255,0.30)] bg-[linear-gradient(180deg,rgba(24,46,72,0.70),rgba(14,28,48,0.80))] p-4">
+                    <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">OUR MISSION</div>
+                    <h1 className="text-2xl font-semibold tracking-tight leading-tight text-[#eef6ff]">
+                      Divide the wave.<br/>Preserve the machine.
+                    </h1>
+                    <p className="text-sm text-[#c8d4e2] mt-3 leading-relaxed">
+                      Deliver physics-first, evidence-labeled inspection to industrial reliability teams
+                      — without overclaim.
+                    </p>
+                    <div className="mt-4 mono text-[0.65rem] tracking-[0.24em] uppercase text-[#c8d4e2]">
+                      {BRAND.founder}
+                    </div>
+                    <div className="mono text-[0.6rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
+                      FOUNDER · {BRAND.company}
+                    </div>
+                  </div>
+
+                  {/* Founder overview cell */}
+                  <div className="border border-[rgba(110,190,255,0.30)] bg-[linear-gradient(180deg,rgba(24,46,72,0.70),rgba(14,28,48,0.80))] p-4">
+                    <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">FOUNDER OVERVIEW</div>
+                    <div className="text-sm text-[#eef6ff] space-y-1">
+                      <div>{BRAND.founder}</div>
+                      <div className="text-[#c8d4e2]">{FOUNDER_SUMMARY.title}</div>
+                      <div className="text-[#c8d4e2]">{BRAND.company}</div>
+                    </div>
+                    <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mt-4 mb-2">DOCTRINE</div>
+                    <ul className="text-xs text-[#c8d4e2] space-y-1">
+                      <li>· Success over orthodoxy</li>
+                      <li>· Physics first</li>
+                      <li>· Evidence before adjectives</li>
+                      <li>· Every deliverable increases implementation readiness</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <Button onClick={onContact} className="mono tracking-widest text-[0.65rem] h-9">
+                    REQUEST BRIEFING
+                  </Button>
+                  <Button asChild variant="outline" className="mono tracking-widest text-[0.65rem] h-9">
+                    <a href={RESUME_URL} download>DOWNLOAD RESUME</a>
+                  </Button>
+                  <Button variant="ghost" onClick={onOpenVault} className="mono tracking-widest text-[0.65rem] h-9">
+                    EVIDENCE VAULT →
+                  </Button>
                 </div>
               </div>
-
-              {/* Founder overview cell */}
-              <div className="border border-[rgba(110,190,255,0.30)] bg-[linear-gradient(180deg,rgba(24,46,72,0.70),rgba(14,28,48,0.80))] p-5">
-                <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">FOUNDER OVERVIEW</div>
-                <div className="text-sm text-[#eef6ff] space-y-1">
-                  <div>{BRAND.founder}</div>
-                  <div className="text-[#c8d4e2]">{FOUNDER_SUMMARY.title}</div>
-                  <div className="text-[#c8d4e2]">{BRAND.company}</div>
-                </div>
-                <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mt-4 mb-2">DOCTRINE</div>
-                <ul className="text-xs text-[#c8d4e2] space-y-1">
-                  <li>· Success over orthodoxy</li>
-                  <li>· Physics first</li>
-                  <li>· Evidence before adjectives</li>
-                  <li>· Every deliverable increases implementation readiness</li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Actions strip */}
-            <div className="mt-5 flex flex-wrap gap-2">
-              <Button onClick={onContact} className="mono tracking-widest text-[0.65rem] h-9">
-                REQUEST BRIEFING
-              </Button>
-              <Button asChild variant="outline" className="mono tracking-widest text-[0.65rem] h-9">
-                <a href={RESUME_URL} download>DOWNLOAD RESUME</a>
-              </Button>
-              <Button variant="ghost" onClick={onOpenVault} className="mono tracking-widest text-[0.65rem] h-9">
-                EVIDENCE VAULT →
-              </Button>
-            </div>
-          </Glass>
+            )}
+          </CompactCard>
         </div>
       </section>
 
-      {/* ============ DOSSIER DETAIL (dark, on-brand, not white cards) ============ */}
-      <div className="relative bg-background">
-        {/* Bio + summary */}
-        <section className="container pt-16 pb-10">
-          <div className="grid md:grid-cols-[1fr_320px] gap-8">
-            <Glass className="p-6 md:p-8">
-              <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">01 / EXECUTIVE BIO</div>
-              <p className="text-[#eef6ff] leading-relaxed">{FOUNDER_BIO}</p>
-              <div className="rule my-5" />
-              <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">02 / BUILDER POSTURE</div>
-              <p className="text-[#c8d4e2] leading-relaxed text-sm">{FOUNDER_SUMMARY.summary}</p>
-            </Glass>
-            <Glass className="p-5 h-fit">
-              <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">TECHNICAL FOCUS</div>
-              <ul className="space-y-2">
-                {TECHNICAL_FOCUS.map((t) => (
-                  <li key={t} className="flex items-start gap-2 text-sm text-[#c8d4e2]">
-                    <span className="status-dot status-research mt-1.5 shrink-0" />
-                    <span>{t}</span>
-                  </li>
-                ))}
-              </ul>
-            </Glass>
-          </div>
-        </section>
+      {/* ============ DOSSIER DETAIL (hidden until opened) ============ */}
+      {expanded && (
+        <div ref={dossierRef} className="relative bg-background animate-in fade-in slide-in-from-bottom-4 duration-700">
+          {/* Bio + summary */}
+          <section className="container pt-16 pb-10">
+            <div className="grid md:grid-cols-[1fr_320px] gap-8">
+              <Glass className="p-6 md:p-8">
+                <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">01 / EXECUTIVE BIO</div>
+                <p className="text-[#eef6ff] leading-relaxed">{FOUNDER_BIO}</p>
+                <div className="rule my-5" />
+                <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">02 / BUILDER POSTURE</div>
+                <p className="text-[#c8d4e2] leading-relaxed text-sm">{FOUNDER_SUMMARY.summary}</p>
+              </Glass>
+              <Glass className="p-5 h-fit">
+                <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">TECHNICAL FOCUS</div>
+                <ul className="space-y-2">
+                  {TECHNICAL_FOCUS.map((t) => (
+                    <li key={t} className="flex items-start gap-2 text-sm text-[#c8d4e2]">
+                      <span className="status-dot status-research mt-1.5 shrink-0" />
+                      <span>{t}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Glass>
+            </div>
+          </section>
 
-        {/* Core strengths — compact dossier chips, not big cards */}
-        <section className="container py-10">
-          <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">03 / CORE STRENGTHS</div>
-          <Glass className="p-5">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
-              {CORE_STRENGTHS.map((s, i) => (
-                <div key={s} className="border border-[rgba(110,190,255,0.30)] bg-[linear-gradient(180deg,rgba(24,46,72,0.66),rgba(14,28,48,0.78))] px-3 py-2">
-                  <div className="mono text-[0.55rem] tracking-[0.28em] text-[#4db7ff]">S{String(i + 1).padStart(2, "0")}</div>
-                  <div className="text-xs text-[#c8d4e2] mt-1">{s}</div>
-                </div>
+          {/* Core strengths — compact dossier chips, not big cards */}
+          <section className="container py-10">
+            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">03 / CORE STRENGTHS</div>
+            <Glass className="p-5">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+                {CORE_STRENGTHS.map((s, i) => (
+                  <div key={s} className="border border-[rgba(110,190,255,0.30)] bg-[linear-gradient(180deg,rgba(24,46,72,0.66),rgba(14,28,48,0.78))] px-3 py-2">
+                    <div className="mono text-[0.55rem] tracking-[0.28em] text-[#4db7ff]">S{String(i + 1).padStart(2, "0")}</div>
+                    <div className="text-xs text-[#c8d4e2] mt-1">{s}</div>
+                  </div>
+                ))}
+              </div>
+            </Glass>
+          </section>
+
+          {/* Current work */}
+          <section className="container py-10">
+            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">04 / ACTIVE PROGRAMS</div>
+            <div className="grid md:grid-cols-3 gap-3">
+              {CURRENT_WORK.map((w, i) => (
+                <Glass key={w.org} className="p-5">
+                  <div className="mono text-[0.6rem] tracking-[0.24em] text-[#4db7ff]">PROG-{i + 1}</div>
+                  <div className="text-base font-semibold mt-1 text-[#eef6ff]">{w.org}</div>
+                  <div className="text-xs text-[#8fa3b8]">{w.role}</div>
+                  <div className="rule my-3" />
+                  <p className="text-sm text-[#c8d4e2]">{w.detail}</p>
+                </Glass>
               ))}
             </div>
-          </Glass>
-        </section>
+          </section>
 
-        {/* Current work */}
-        <section className="container py-10">
-          <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">04 / ACTIVE PROGRAMS</div>
-          <div className="grid md:grid-cols-3 gap-3">
-            {CURRENT_WORK.map((w, i) => (
-              <Glass key={w.org} className="p-5">
-                <div className="mono text-[0.6rem] tracking-[0.24em] text-[#4db7ff]">PROG-{i + 1}</div>
-                <div className="text-base font-semibold mt-1 text-[#eef6ff]">{w.org}</div>
-                <div className="text-xs text-[#8fa3b8]">{w.role}</div>
-                <div className="rule my-3" />
-                <p className="text-sm text-[#c8d4e2]">{w.detail}</p>
-              </Glass>
-            ))}
-          </div>
-        </section>
-
-        {/* Credentials — evidence cards, compact */}
-        <section className="container py-10">
-          <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">05 / CREDENTIALS · EVIDENCE</div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {CREDENTIALS.map((c) => (
-              <a
-                key={c.id}
-                href={c.href ?? "#"}
-                className="group relative rounded-sm border border-[rgba(110,190,255,0.34)] bg-[linear-gradient(180deg,rgba(24,46,72,0.72),rgba(14,28,48,0.84))] backdrop-blur-md p-4 hover:border-[rgba(110,190,255,0.58)] transition-colors flex flex-col justify-between min-h-[140px]"
-              >
-                <div>
-                  <div className="flex items-center justify-between">
-                    <Badge variant="outline" className="mono text-[0.55rem] tracking-[0.24em] border-[rgba(80,160,255,0.35)] text-[#4db7ff]">
-                      {c.category.toUpperCase()}
-                    </Badge>
-                    {c.year && <span className="mono text-[0.6rem] tracking-[0.24em] text-[#8fa3b8]">{c.year}</span>}
+          {/* Credentials — evidence cards, compact */}
+          <section className="container py-10">
+            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">05 / CREDENTIALS · EVIDENCE</div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {CREDENTIALS.map((c) => (
+                <a
+                  key={c.id}
+                  href={c.href ?? "#"}
+                  className="group relative rounded-sm border border-[rgba(110,190,255,0.34)] bg-[linear-gradient(180deg,rgba(24,46,72,0.72),rgba(14,28,48,0.84))] backdrop-blur-md p-4 hover:border-[rgba(110,190,255,0.58)] transition-colors flex flex-col justify-between min-h-[140px]"
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <Badge variant="outline" className="mono text-[0.55rem] tracking-[0.24em] border-[rgba(80,160,255,0.35)] text-[#4db7ff]">
+                        {c.category.toUpperCase()}
+                      </Badge>
+                      {c.year && <span className="mono text-[0.6rem] tracking-[0.24em] text-[#8fa3b8]">{c.year}</span>}
+                    </div>
+                    <div className="mt-2 text-sm font-medium leading-snug text-[#eef6ff]">{c.title}</div>
+                    <div className="text-xs text-[#8fa3b8] mt-0.5">{c.issuer}</div>
                   </div>
-                  <div className="mt-2 text-sm font-medium leading-snug text-[#eef6ff]">{c.title}</div>
-                  <div className="text-xs text-[#8fa3b8] mt-0.5">{c.issuer}</div>
-                </div>
-                <div className="mt-3 flex items-center justify-between">
-                  <span className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
-                    {c.href ? "FILE ATTACHED" : "PLACEHOLDER"}
-                  </span>
-                  <span className="mono text-[0.6rem] text-[#4db7ff] group-hover:text-[#7dd3ff]">OPEN →</span>
-                </div>
-              </a>
-            ))}
-          </div>
-        </section>
-
-        {/* Engage strip */}
-        <section className="container py-16">
-          <Glass className="p-8 md:p-10 overflow-hidden">
-            <div className="grid md:grid-cols-[1fr_auto] gap-6 items-end">
-              <div className="space-y-2">
-                <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff]">06 / ENGAGE</div>
-                <h3 className="text-2xl md:text-3xl font-semibold tracking-tight text-[#eef6ff]">
-                  Bring the machine into the room.
-                </h3>
-                <p className="text-[#8fa3b8] max-w-xl text-sm">
-                  Briefings scheduled directly through the founder. Every artifact shared is labeled by
-                  claim boundary and evidence status.
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <Button onClick={onContact} className="mono tracking-widest text-[0.65rem] h-9">REQUEST BRIEFING</Button>
-                <Button asChild variant="outline" className="mono tracking-widest text-[0.65rem] h-9">
-                  <a href={RESUME_URL} download>DOWNLOAD RESUME</a>
-                </Button>
-                <Button variant="ghost" onClick={onOpenVault} className="mono tracking-widest text-[0.65rem] h-9">
-                  EVIDENCE VAULT
-                </Button>
-              </div>
+                  <div className="mt-3 flex items-center justify-between">
+                    <span className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
+                      {c.href ? "FILE ATTACHED" : "PLACEHOLDER"}
+                    </span>
+                    <span className="mono text-[0.6rem] text-[#4db7ff] group-hover:text-[#7dd3ff]">OPEN →</span>
+                  </div>
+                </a>
+              ))}
             </div>
-          </Glass>
-        </section>
-      </div>
+          </section>
+
+          {/* Engage strip */}
+          <section className="container py-16">
+            <Glass className="p-8 md:p-10 overflow-hidden">
+              <div className="grid md:grid-cols-[1fr_auto] gap-6 items-end">
+                <div className="space-y-2">
+                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff]">06 / ENGAGE</div>
+                  <h3 className="text-2xl md:text-3xl font-semibold tracking-tight text-[#eef6ff]">
+                    Bring the machine into the room.
+                  </h3>
+                  <p className="text-[#8fa3b8] max-w-xl text-sm">
+                    Briefings scheduled directly through the founder. Every artifact shared is labeled by
+                    claim boundary and evidence status.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Button onClick={onContact} className="mono tracking-widest text-[0.65rem] h-9">REQUEST BRIEFING</Button>
+                  <Button asChild variant="outline" className="mono tracking-widest text-[0.65rem] h-9">
+                    <a href={RESUME_URL} download>DOWNLOAD RESUME</a>
+                  </Button>
+                  <Button variant="ghost" onClick={onOpenVault} className="mono tracking-widest text-[0.65rem] h-9">
+                    EVIDENCE VAULT
+                  </Button>
+                </div>
+              </div>
+            </Glass>
+          </section>
+        </div>
+      )}
     </div>
   );
 };
