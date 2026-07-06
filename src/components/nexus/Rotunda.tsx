@@ -1,123 +1,114 @@
 import { useEffect, useState } from "react";
-import rotunda from "@/assets/rotunda.jpg";
+import rotundaAsset from "@/assets/nexus-rotunda.jpg.asset.json";
 import { BAYS, BRAND, type BayId } from "@/data/content";
-import { Button } from "@/components/ui/button";
 
 interface Props {
   onSelect: (id: BayId) => void;
   onOpenVault: () => void;
 }
 
+// Hotspot positions calibrated to the approved rotunda image.
+// Each entry: bay id, left%, top%, width (vw), height (vh)
+const BAY_HOTSPOTS: Array<{ id: BayId; left: string; top: string; w: string; h: string }> = [
+  { id: "mission",    left: "6%",  top: "28%", w: "11vw", h: "22vh" },
+  { id: "technical",  left: "27%", top: "28%", w: "13vw", h: "22vh" },
+  { id: "capability", left: "58%", top: "28%", w: "13vw", h: "22vh" },
+  { id: "operations", left: "82%", top: "28%", w: "11vw", h: "22vh" },
+];
+
+// Small console-button hotspots over the physical console in the image
+const CONSOLE_HOTSPOTS: Array<{ id: BayId; left: string }> = [
+  { id: "mission",    left: "40.5%" },
+  { id: "technical",  left: "46.5%" },
+  { id: "capability", left: "52.5%" },
+  { id: "operations", left: "58.5%" },
+];
+
 export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   const [ready, setReady] = useState(false);
   useEffect(() => { const t = setTimeout(() => setReady(true), 60); return () => clearTimeout(t); }, []);
 
+  const bayLabel = (id: BayId) => BAYS.find(b => b.id === id)?.title ?? id;
+
   return (
-    <section className="relative min-h-screen w-full overflow-hidden pt-12">
-      {/* Rotunda backdrop */}
-      <div className="absolute inset-0">
-        <img
-          src={rotunda}
-          alt=""
-          width={1920}
-          height={1088}
-          className="w-full h-full object-cover object-center scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-vignette" />
-        <div className="absolute inset-0 bg-[hsl(218_22%_4%_/_0.55)]" />
-        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-background to-transparent" />
+    <section className="relative h-screen w-full overflow-hidden bg-[#05070a]">
+      {/* Full-bleed rotunda environment */}
+      <img
+        src={rotundaAsset.url}
+        alt="Nexus rotunda — command environment overlooking the Gateway Arch"
+        className="absolute inset-0 w-full h-full object-cover"
+        draggable={false}
+      />
+
+      {/* Subtle vignette + top/bottom fades */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(5,7,10,0.75)_100%)]" />
+      <div className="absolute inset-x-0 top-0 h-32 pointer-events-none bg-gradient-to-b from-background/90 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background to-transparent" />
+
+      {/* HUD top strip */}
+      <div className={`absolute inset-x-0 top-12 z-20 ${ready ? "anim-fade-up" : "opacity-0"}`}>
+        <div className="container flex items-center justify-between text-[0.68rem] mono tracking-[0.28em] uppercase text-foreground/80">
+          <div className="flex items-center gap-3">
+            <span className="text-primary">NEXUS</span>
+            <span className="text-muted-foreground">|</span>
+            <span>{BRAND.company}</span>
+          </div>
+          <div className="hidden md:flex items-center gap-3">
+            <span className="status-dot status-live" />
+            <span>SHELL ONLINE</span>
+            <span className="text-muted-foreground">·</span>
+            <span className="status-dot status-research" />
+            <span>SINE~WAIV / RESEARCH</span>
+          </div>
+        </div>
       </div>
 
-      <div className="relative container pt-6 md:pt-10 pb-40">
-        {/* Signage */}
-        <div className={`flex flex-col md:flex-row md:items-end md:justify-between gap-4 ${ready ? "anim-fade-up" : "opacity-0"}`}>
-          <div className="space-y-3">
-            <div className="tick">{BRAND.company} / OPERATING SHELL</div>
-            <h1 className="text-4xl md:text-6xl font-semibold tracking-tight leading-[1.05]">
-              Nexus
-              <span className="block text-lg md:text-xl font-normal text-muted-foreground mt-3 max-w-xl">
-                {BRAND.line}
-              </span>
-            </h1>
+      {/* HUD bottom brand line */}
+      <div className={`absolute inset-x-0 bottom-6 z-20 ${ready ? "anim-fade-up" : "opacity-0"}`} style={{ animationDelay: "300ms" }}>
+        <div className="container flex flex-col md:flex-row items-center justify-between gap-2 text-center md:text-left">
+          <div className="mono text-[0.68rem] tracking-[0.28em] uppercase text-foreground/70">
+            {BRAND.line}
           </div>
-          <div className="panel px-4 py-3 min-w-[220px]">
-            <div className="tick mb-1">STATUS</div>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="status-dot status-live" /> Shell online
-            </div>
-            <div className="flex items-center gap-2 text-sm mt-1">
-              <span className="status-dot status-research" /> SINE~WaiV — research stage
-            </div>
-          </div>
+          <button
+            onClick={onOpenVault}
+            className="mono text-[0.65rem] tracking-[0.28em] uppercase text-primary/80 hover:text-primary border border-primary/30 hover:border-primary/70 px-3 py-1.5 transition-colors bg-background/40 backdrop-blur-sm"
+          >
+            OPEN EVIDENCE VAULT →
+          </button>
         </div>
+      </div>
 
-        {/* Bay row */}
-        <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-          {BAYS.map((bay, i) => (
-            <button
-              key={bay.id}
-              onClick={() => onSelect(bay.id)}
-              style={{ animationDelay: `${120 + i * 90}ms` }}
-              className={`group relative text-left panel corner-frame p-5 h-56 flex flex-col justify-between hover:border-primary/60 transition-all duration-500 hover:-translate-y-1 hover:shadow-bay ${ready ? "anim-fade-up" : "opacity-0"}`}
-            >
-              <div className="rim-sweep opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="tick">{bay.code}</div>
-                  <div className="mt-2 text-xl font-semibold tracking-tight">{bay.title}</div>
-                  <div className="text-sm text-muted-foreground">{bay.subtitle}</div>
-                </div>
-                <div className="mono text-3xl text-foreground/30 group-hover:text-primary/70 transition-colors">
-                  {bay.index}
-                </div>
-              </div>
-              <div className="space-y-2">
-                <p className="text-xs text-muted-foreground leading-relaxed">{bay.blurb}</p>
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-2 tick">
-                    <span className={`status-dot ${bay.statusClass}`} /> {bay.status}
-                  </span>
-                  <span className="mono text-xs text-primary/70 group-hover:text-primary transition-colors">
-                    ENTER →
-                  </span>
-                </div>
-              </div>
-            </button>
-          ))}
-        </div>
+      {/* Bay door hotspots — minimal, image-first */}
+      {BAY_HOTSPOTS.map((h, i) => (
+        <button
+          key={`bay-${h.id}`}
+          onClick={() => onSelect(h.id)}
+          aria-label={`Enter ${bayLabel(h.id)}`}
+          className="hotspot group absolute rounded-md border border-primary/15 bg-primary/[0.02] hover:border-primary/60 hover:bg-primary/10 hover:shadow-[0_0_40px_rgba(70,150,255,0.28)] transition-all duration-200 z-10"
+          style={{ left: h.left, top: h.top, width: h.w, height: h.h }}
+        >
+          <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap mono text-[0.6rem] tracking-[0.28em] uppercase text-primary/0 group-hover:text-primary/90 transition-colors">
+            0{i + 1} · {bayLabel(h.id)} →
+          </span>
+        </button>
+      ))}
 
-        {/* Central objective console */}
-        <div className={`mt-12 ${ready ? "anim-fade-up" : "opacity-0"}`} style={{ animationDelay: "560ms" }}>
-          <div className="panel brushed glow-console p-5 md:p-6">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
-              <div>
-                <div className="tick">OBJECTIVE CONSOLE</div>
-                <div className="text-lg font-semibold mt-1">Select a brief</div>
-              </div>
-              <div className="flex items-center gap-3">
-                <Button variant="outline" size="sm" onClick={onOpenVault} className="mono tracking-widest text-xs">
-                  OPEN EVIDENCE VAULT
-                </Button>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-              {BAYS.map((bay) => (
-                <button
-                  key={bay.id}
-                  onClick={() => onSelect(bay.id)}
-                  className="group relative border border-border hover:border-primary/60 bg-surface-raised/60 hover:bg-surface-raised p-4 text-left transition-all"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="mono text-xs tracking-widest text-primary/80">{bay.index}</span>
-                    <span className={`status-dot ${bay.statusClass}`} />
-                  </div>
-                  <div className="mt-3 text-sm font-medium">{bay.title}</div>
-                  <div className="text-xs text-muted-foreground">{bay.subtitle}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
+      {/* Console-button hotspots — tiny glowing dots aligned to physical console */}
+      <div className="absolute inset-x-0 bottom-[14%] z-10 pointer-events-none">
+        {CONSOLE_HOTSPOTS.map((h, i) => (
+          <button
+            key={`console-${h.id}`}
+            onClick={() => onSelect(h.id)}
+            aria-label={`Console · ${bayLabel(h.id)}`}
+            className="hotspot-dot pointer-events-auto absolute -translate-x-1/2 group"
+            style={{ left: h.left, bottom: 0 }}
+          >
+            <span className="block w-2 h-2 rounded-full bg-primary/70 shadow-[0_0_10px_rgba(70,150,255,0.9)] group-hover:bg-primary group-hover:scale-125 transition-transform anim-flicker" />
+            <span className="absolute top-3 left-1/2 -translate-x-1/2 whitespace-nowrap mono text-[0.55rem] tracking-[0.24em] uppercase text-primary/0 group-hover:text-primary/90 transition-colors">
+              0{i + 1}
+            </span>
+          </button>
+        ))}
       </div>
     </section>
   );
