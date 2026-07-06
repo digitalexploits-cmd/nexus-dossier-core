@@ -58,11 +58,11 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
       {/* ============ IMMERSIVE OFFICE STAGE ============ */}
       <section className="relative min-h-screen w-full overflow-hidden bg-[#05070a]">
         {/* Fallback dark gradient — always painted, visible if image fails/slow */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_40%,#0b1220_0%,#05070a_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_40%,#111d2e_0%,#080c14_70%)]" />
         <img
           src={officeAsset.url}
           alt="Founder office — Mission Brief environment"
-          className={`absolute inset-0 w-full h-full object-cover brightness-[2] contrast-[1.04] saturate-[1.12] transition-opacity duration-700 ease-out ${bgLoaded ? "opacity-100" : "opacity-0"}`}
+          className={`absolute inset-0 w-full h-full object-cover brightness-[3.5] contrast-[1.02] saturate-[1.16] transition-opacity duration-700 ease-out ${bgLoaded ? "opacity-100" : "opacity-0"}`}
           draggable={false}
           loading="eager"
           decoding="async"
@@ -70,9 +70,9 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
           onError={() => setBgLoaded(true)}
         />
         {/* Dim the room so the overlay reads — lights raised for briefing */}
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_60%_40%,rgba(5,7,10,0)_0%,rgba(5,7,10,0.08)_100%)]" />
-        <div className="absolute inset-x-0 top-0 h-24 pointer-events-none bg-gradient-to-b from-background/5 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/12 to-transparent" />
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_60%_40%,rgba(5,7,10,0)_0%,rgba(5,7,10,0.03)_100%)]" />
+        <div className="absolute inset-x-0 top-0 h-24 pointer-events-none bg-gradient-to-b from-background/3 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/6 to-transparent" />
 
         {/* HUD */}
         <div className="absolute inset-x-0 top-14 z-20">
