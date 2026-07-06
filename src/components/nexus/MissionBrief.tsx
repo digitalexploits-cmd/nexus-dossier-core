@@ -28,15 +28,35 @@ const Glass = ({ children, className = "" }: { children: React.ReactNode; classN
 );
 
 export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
+  const [bgLoaded, setBgLoaded] = useState(false);
+
+  useEffect(() => {
+    const img = new Image();
+    img.decoding = "async";
+    img.src = officeAsset.url;
+    const done = () => setBgLoaded(true);
+    if (img.complete && img.naturalWidth > 0) done();
+    else {
+      img.onload = done;
+      img.onerror = done; // fallback gradient stays visible
+    }
+  }, []);
+
   return (
     <div className="relative">
       {/* ============ IMMERSIVE OFFICE STAGE ============ */}
       <section className="relative min-h-screen w-full overflow-hidden bg-[#05070a]">
+        {/* Fallback dark gradient — always painted, visible if image fails/slow */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_40%,#0b1220_0%,#05070a_70%)]" />
         <img
           src={officeAsset.url}
           alt="Founder office — Mission Brief environment"
-          className="absolute inset-0 w-full h-full object-cover"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-out ${bgLoaded ? "opacity-100" : "opacity-0"}`}
           draggable={false}
+          loading="eager"
+          decoding="async"
+          onLoad={() => setBgLoaded(true)}
+          onError={() => setBgLoaded(true)}
         />
         {/* Dim the room so the overlay reads */}
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_60%_40%,rgba(5,7,10,0.35)_0%,rgba(5,7,10,0.85)_100%)]" />
