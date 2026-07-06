@@ -31,7 +31,7 @@ export const Contact = () => {
           <div className="tick">CONTACT / REQUEST BRIEFING</div>
           <h3 className="text-3xl font-semibold tracking-tight">Open a channel to the founder.</h3>
           <p className="text-muted-foreground">
-            Briefings are handled directly. Share your context and we\u2019ll respond with a scoped briefing package appropriate to your audience level.
+            Briefings are handled directly. Share your context and we’ll respond with a scoped briefing package appropriate to your audience level.
           </p>
           <div className="rule" />
           <div className="space-y-1 text-sm">

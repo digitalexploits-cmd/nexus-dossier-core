@@ -29,7 +29,7 @@ export const BottomBar = () => (
         <div className="mono text-sm tracking-widest">{BRAND.company}</div>
         <div className="tick">{BRAND.line}</div>
       </div>
-      <div className="tick">© {new Date().getFullYear()} \u00B7 Nexus operating shell</div>
+      <div className="tick">© {new Date().getFullYear()} · Nexus operating shell</div>
     </div>
   </footer>
 );
