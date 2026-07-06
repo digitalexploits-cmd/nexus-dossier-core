@@ -33,50 +33,45 @@ type LightPreset = "dim" | "default" | "bright";
  * and readable — outside never blooms, inside never crushes.
  */
 const PRESETS: Record<LightPreset, {
-  // Image tone
-  imgClass: string;
+  // Base tone (brightness/saturate). Contrast is layered on by the clarity control.
+  brightness: number;
+  saturate: number;
+  baseContrast: number;
   // Exterior curve — dim overlay on upper window band
-  exteriorDim: number;   // 0..1 opacity of the top gradient dim
-  exteriorHalo: number;  // 0..1 opacity of the ceiling-halo darkener
+  exteriorDim: number;
+  exteriorHalo: number;
   // Interior curve — accent lighting
-  keyLight: number;      // cyan key beam
-  warmFill: number;      // amber console fill
-  rimLight: number;      // magenta rim
-  floorGlow: number;     // signature blue floor spill
-  shaft: number;         // drifting shaft
-  // Depth
+  keyLight: number; warmFill: number; rimLight: number; floorGlow: number; shaft: number;
   vignette: number;
   label: string;
 }> = {
-  dim: {
-    imgClass: "brightness-[1.00] contrast-[1.12] saturate-[1.08]",
-    exteriorDim: 0.95, exteriorHalo: 0.90,
-    keyLight: 0.55, warmFill: 0.55, rimLight: 0.50, floorGlow: 0.70, shaft: 0.60,
-    vignette: 0.72, label: "DIM",
-  },
-  default: {
-    imgClass: "brightness-[1.20] contrast-[1.10] saturate-[1.14]",
-    exteriorDim: 0.75, exteriorHalo: 0.65,
-    keyLight: 1.0, warmFill: 1.0, rimLight: 1.0, floorGlow: 1.0, shaft: 0.85,
-    vignette: 0.52, label: "DEFAULT",
-  },
-  bright: {
-    imgClass: "brightness-[1.42] contrast-[1.08] saturate-[1.18]",
-    exteriorDim: 0.55, exteriorHalo: 0.45,
-    keyLight: 1.35, warmFill: 1.30, rimLight: 1.25, floorGlow: 1.40, shaft: 1.10,
-    vignette: 0.36, label: "BRIGHT",
-  },
+  dim:     { brightness: 1.00, saturate: 1.08, baseContrast: 1.10, exteriorDim: 0.95, exteriorHalo: 0.90, keyLight: 0.55, warmFill: 0.55, rimLight: 0.50, floorGlow: 0.70, shaft: 0.60, vignette: 0.72, label: "DIM" },
+  default: { brightness: 1.20, saturate: 1.14, baseContrast: 1.08, exteriorDim: 0.75, exteriorHalo: 0.65, keyLight: 1.00, warmFill: 1.00, rimLight: 1.00, floorGlow: 1.00, shaft: 0.85, vignette: 0.52, label: "DEFAULT" },
+  bright:  { brightness: 1.42, saturate: 1.18, baseContrast: 1.06, exteriorDim: 0.55, exteriorHalo: 0.45, keyLight: 1.35, warmFill: 1.30, rimLight: 1.25, floorGlow: 1.40, shaft: 1.10, vignette: 0.36, label: "BRIGHT" },
+};
+
+// Clarity control — small tone-mapping nudges per preset for panel/OLED/glare screens.
+// Each level adds contrast + micro-saturation on top of the preset's base tone.
+type Clarity = "soft" | "standard" | "sharp";
+const CLARITY: Record<Clarity, { contrastAdd: number; satAdd: number; label: string }> = {
+  soft:     { contrastAdd: -0.04, satAdd: -0.02, label: "SOFT" },
+  standard: { contrastAdd:  0.00, satAdd:  0.00, label: "STD" },
+  sharp:    { contrastAdd:  0.08, satAdd:  0.03, label: "SHARP" },
 };
 
 export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   const [ready, setReady] = useState(false);
   const [preset, setPreset] = useState<LightPreset>("default");
+  const [clarity, setClarity] = useState<Clarity>("standard");
   useEffect(() => { const t = setTimeout(() => setReady(true), 60); return () => clearTimeout(t); }, []);
 
   const bayLabel = (id: BayId) => BAYS.find(b => b.id === id)?.title ?? id;
   const p = PRESETS[preset];
-  // Clamp so mix-blend-screen layers can exceed 1 without visual glitches
+  const c = CLARITY[clarity];
   const clamp = (v: number) => Math.min(1, Math.max(0, v));
+  const contrast = Math.max(0.9, p.baseContrast + c.contrastAdd);
+  const saturate = Math.max(0.9, p.saturate + c.satAdd);
+  const imgFilter = `brightness(${p.brightness}) contrast(${contrast}) saturate(${saturate})`;
 
   return (
     <section className="relative h-screen w-full overflow-hidden bg-[#05070a]">
@@ -84,10 +79,11 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
       <img
         src={rotundaAsset.url}
         alt="Nexus rotunda — command environment overlooking the Gateway Arch"
-        className={`absolute inset-0 w-full h-full object-cover transition-[filter] duration-500 ${p.imgClass}`}
-        style={{ imageRendering: "auto" }}
+        className="absolute inset-0 w-full h-full object-cover transition-[filter] duration-500"
+        style={{ filter: imgFilter, imageRendering: "auto" }}
         draggable={false}
       />
+
 
       {/* EXTERIOR CURVE — dim outside the glass, independent of interior */}
       <div
@@ -145,6 +141,23 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
                   }`}
                 >
                   {PRESETS[k].label}
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-1 border border-primary/25 bg-background/50 backdrop-blur-sm px-1 py-1">
+              <span className="mono text-[0.55rem] tracking-[0.24em] text-muted-foreground px-2">CLARITY</span>
+              {(["soft", "standard", "sharp"] as Clarity[]).map((k) => (
+                <button
+                  key={k}
+                  onClick={() => setClarity(k)}
+                  className={`mono text-[0.55rem] tracking-[0.24em] uppercase px-2 py-1 transition-colors ${
+                    clarity === k
+                      ? "bg-primary/20 text-primary border border-primary/50"
+                      : "text-muted-foreground hover:text-primary/80 border border-transparent"
+                  }`}
+                  title={`Tone mapping · ${CLARITY[k].label}`}
+                >
+                  {CLARITY[k].label}
                 </button>
               ))}
             </div>
