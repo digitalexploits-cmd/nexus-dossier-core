@@ -61,17 +61,18 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
         <img
           src="/founder-office.jpg"
           alt="Founder office — Mission Brief environment"
-          className={`absolute inset-0 w-full h-full object-cover brightness-[1.25] contrast-[1.05] transition-opacity duration-700 ease-out ${bgLoaded ? "opacity-100" : "opacity-0"}`}
+          className={`absolute inset-0 w-full h-full object-cover brightness-[1.55] contrast-[1.02] saturate-[1.1] transition-opacity duration-700 ease-out ${bgLoaded ? "opacity-100" : "opacity-0"}`}
           draggable={false}
           loading="eager"
           decoding="async"
           onLoad={() => setBgLoaded(true)}
           onError={() => setBgLoaded(true)}
         />
-        {/* Dim the room so the overlay reads — lights raised for briefing */}
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_60%_40%,rgba(5,7,10,0)_0%,rgba(5,7,10,0.03)_100%)]" />
-        <div className="absolute inset-x-0 top-0 h-24 pointer-events-none bg-gradient-to-b from-background/3 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/6 to-transparent" />
+        {/* Premium accent lighting — warm key light + cool rim */}
+        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_18%_22%,rgba(255,190,120,0.18)_0%,transparent_45%)]" />
+        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_82%_78%,rgba(90,180,255,0.16)_0%,transparent_50%)]" />
+        <div className="absolute inset-x-0 top-0 h-24 pointer-events-none bg-gradient-to-b from-background/5 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/8 to-transparent" />
 
         {/* HUD */}
         <div className="absolute inset-x-0 top-14 z-20">

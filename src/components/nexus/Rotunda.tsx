@@ -36,14 +36,28 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
       <img
         src={rotundaAsset.url}
         alt="Nexus rotunda — command environment overlooking the Gateway Arch"
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover brightness-[1.35] contrast-[1.04] saturate-[1.12]"
         draggable={false}
       />
 
-      {/* Subtle vignette + top/bottom fades */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(5,7,10,0.75)_100%)]" />
-      <div className="absolute inset-x-0 top-0 h-32 pointer-events-none bg-gradient-to-b from-background/90 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background to-transparent" />
+      {/* Premium accent lighting — cinematic colored beams + rim */}
+      {/* Cyan key beam from upper-left */}
+      <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_12%_8%,rgba(90,190,255,0.28)_0%,transparent_45%)]" />
+      {/* Warm amber fill from lower-right console */}
+      <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_88%_92%,rgba(255,170,90,0.22)_0%,transparent_50%)]" />
+      {/* Magenta rim from upper-right */}
+      <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_92%_10%,rgba(200,120,255,0.16)_0%,transparent_40%)]" />
+      {/* Floor glow — signature blue console spill */}
+      <div className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(70,150,255,0.30)_0%,transparent_65%)]" />
+      {/* Slow-drifting light shaft */}
+      <div className="absolute -inset-x-10 top-0 h-full pointer-events-none opacity-70 anim-drift"
+        style={{ background: "linear-gradient(115deg, transparent 40%, rgba(120,200,255,0.09) 50%, transparent 60%)" }}
+      />
+
+      {/* Softer vignette — keep depth, don't crush the room */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(5,7,10,0.55)_100%)]" />
+      <div className="absolute inset-x-0 top-0 h-32 pointer-events-none bg-gradient-to-b from-background/70 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/90 to-transparent" />
 
       {/* HUD top strip */}
       <div className={`absolute inset-x-0 top-12 z-20 ${ready ? "anim-fade-up" : "opacity-0"}`}>
