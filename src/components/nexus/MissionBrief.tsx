@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import officeAsset from "@/assets/founder-office.png.asset.json";
+import officeAsset from "@/assets/founder-office.jpg.asset.json";
 import {
   BRAND,
   CORE_STRENGTHS,
