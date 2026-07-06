@@ -43,7 +43,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
   useEffect(() => {
     const img = new Image();
     img.decoding = "async";
-    img.src = officeAsset.url;
+    img.src = "/founder-office.jpg";
     const done = () => setBgLoaded(true);
     if (img.complete && img.naturalWidth > 0) done();
     else {
