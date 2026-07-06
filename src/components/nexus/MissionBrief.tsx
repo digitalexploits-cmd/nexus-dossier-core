@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import officeAsset from "@/assets/founder-office.jpg.asset.json";
 import {
   BRAND,
   CORE_STRENGTHS,
@@ -21,7 +20,7 @@ interface Props {
 // Reusable dark-glass panel — reads like a wall display inside the office
 const Glass = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
   <div
-    className={`relative rounded-sm border border-[rgba(110,190,255,0.34)] bg-[rgba(18,34,54,0.72)] backdrop-blur-md shadow-[0_30px_80px_-30px_rgba(0,0,0,0.76),inset_0_1px_0_rgba(255,255,255,0.08),0_0_56px_rgba(70,160,255,0.16)] ${className}`}
+    className={`relative rounded-sm border border-[rgba(130,205,255,0.42)] bg-[rgba(30,55,88,0.78)] backdrop-blur-md shadow-[0_30px_80px_-30px_rgba(0,0,0,0.60),inset_0_1px_0_rgba(255,255,255,0.12),0_0_56px_rgba(90,180,255,0.22)] ${className}`}
   >
     {children}
   </div>
@@ -30,7 +29,7 @@ const Glass = ({ children, className = "" }: { children: React.ReactNode; classN
 // Minimal glass badge / compact card
 const CompactCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
   <div
-    className={`relative rounded-sm border border-[rgba(110,190,255,0.40)] bg-[rgba(18,34,54,0.80)] backdrop-blur-md shadow-[0_20px_60px_-20px_rgba(0,0,0,0.70),inset_0_1px_0_rgba(255,255,255,0.10)] transition-all duration-500 ease-out ${className}`}
+    className={`relative rounded-sm border border-[rgba(130,205,255,0.48)] bg-[rgba(34,58,92,0.85)] backdrop-blur-md shadow-[0_20px_60px_-20px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.14)] transition-all duration-500 ease-out ${className}`}
   >
     {children}
   </div>
@@ -44,7 +43,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
   useEffect(() => {
     const img = new Image();
     img.decoding = "async";
-    img.src = officeAsset.url;
+    img.src = "/founder-office.jpg";
     const done = () => setBgLoaded(true);
     if (img.complete && img.naturalWidth > 0) done();
     else {
@@ -58,11 +57,11 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
       {/* ============ IMMERSIVE OFFICE STAGE ============ */}
       <section className="relative min-h-screen w-full overflow-hidden bg-[#05070a]">
         {/* Fallback dark gradient — always painted, visible if image fails/slow */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_40%,#0b1220_0%,#05070a_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_40%,#111d2e_0%,#080c14_70%)]" />
         <img
-          src={officeAsset.url}
+          src="/founder-office.jpg"
           alt="Founder office — Mission Brief environment"
-          className={`absolute inset-0 w-full h-full object-cover brightness-[2] contrast-[1.04] saturate-[1.12] transition-opacity duration-700 ease-out ${bgLoaded ? "opacity-100" : "opacity-0"}`}
+          className={`absolute inset-0 w-full h-full object-cover brightness-[1.25] contrast-[1.05] transition-opacity duration-700 ease-out ${bgLoaded ? "opacity-100" : "opacity-0"}`}
           draggable={false}
           loading="eager"
           decoding="async"
@@ -70,9 +69,9 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
           onError={() => setBgLoaded(true)}
         />
         {/* Dim the room so the overlay reads — lights raised for briefing */}
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_60%_40%,rgba(5,7,10,0)_0%,rgba(5,7,10,0.08)_100%)]" />
-        <div className="absolute inset-x-0 top-0 h-24 pointer-events-none bg-gradient-to-b from-background/5 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/12 to-transparent" />
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_60%_40%,rgba(5,7,10,0)_0%,rgba(5,7,10,0.03)_100%)]" />
+        <div className="absolute inset-x-0 top-0 h-24 pointer-events-none bg-gradient-to-b from-background/3 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/6 to-transparent" />
 
         {/* HUD */}
         <div className="absolute inset-x-0 top-14 z-20">
@@ -126,7 +125,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
               <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
                 <div className="grid md:grid-cols-2 gap-4">
                   {/* Mission cell */}
-                  <div className="border border-[rgba(110,190,255,0.30)] bg-[linear-gradient(180deg,rgba(24,46,72,0.70),rgba(14,28,48,0.80))] p-4">
+                  <div className="border border-[rgba(130,205,255,0.38)] bg-[linear-gradient(180deg,rgba(36,62,98,0.78),rgba(22,40,66,0.86))] p-4">
                     <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">OUR MISSION</div>
                     <h1 className="text-2xl font-semibold tracking-tight leading-tight text-[#eef6ff]">
                       Divide the wave.<br/>Preserve the machine.
@@ -144,7 +143,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
                   </div>
 
                   {/* Founder overview cell */}
-                  <div className="border border-[rgba(110,190,255,0.30)] bg-[linear-gradient(180deg,rgba(24,46,72,0.70),rgba(14,28,48,0.80))] p-4">
+                  <div className="border border-[rgba(130,205,255,0.38)] bg-[linear-gradient(180deg,rgba(36,62,98,0.78),rgba(22,40,66,0.86))] p-4">
                     <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">FOUNDER OVERVIEW</div>
                     <div className="text-sm text-[#eef6ff] space-y-1">
                       <div>{BRAND.founder}</div>
@@ -211,7 +210,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
             <Glass className="p-5">
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
                 {CORE_STRENGTHS.map((s, i) => (
-                  <div key={s} className="border border-[rgba(110,190,255,0.30)] bg-[linear-gradient(180deg,rgba(24,46,72,0.66),rgba(14,28,48,0.78))] px-3 py-2">
+                  <div key={s} className="border border-[rgba(130,205,255,0.38)] bg-[linear-gradient(180deg,rgba(36,62,98,0.74),rgba(22,40,66,0.84))] px-3 py-2">
                     <div className="mono text-[0.55rem] tracking-[0.28em] text-[#4db7ff]">S{String(i + 1).padStart(2, "0")}</div>
                     <div className="text-xs text-[#c8d4e2] mt-1">{s}</div>
                   </div>
@@ -244,7 +243,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
                 <a
                   key={c.id}
                   href={c.href ?? "#"}
-                  className="group relative rounded-sm border border-[rgba(110,190,255,0.34)] bg-[linear-gradient(180deg,rgba(24,46,72,0.72),rgba(14,28,48,0.84))] backdrop-blur-md p-4 hover:border-[rgba(110,190,255,0.58)] transition-colors flex flex-col justify-between min-h-[140px]"
+                  className="group relative rounded-sm border border-[rgba(130,205,255,0.42)] bg-[linear-gradient(180deg,rgba(38,64,100,0.80),rgba(22,40,66,0.88))] backdrop-blur-md p-4 hover:border-[rgba(130,205,255,0.65)] transition-colors flex flex-col justify-between min-h-[140px]"
                 >
                   <div>
                     <div className="flex items-center justify-between">
