@@ -61,17 +61,19 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
         <img
           src="/founder-office.jpg"
           alt="Founder office — Mission Brief environment"
-          className={`absolute inset-0 w-full h-full object-cover brightness-[1.55] contrast-[1.02] saturate-[1.1] transition-opacity duration-700 ease-out ${bgLoaded ? "opacity-100" : "opacity-0"}`}
+          className={`absolute inset-0 w-full h-full object-cover brightness-[1.35] contrast-[1.04] saturate-[1.12] transition-opacity duration-700 ease-out ${bgLoaded ? "opacity-100" : "opacity-0"}`}
           draggable={false}
           loading="eager"
           decoding="async"
           onLoad={() => setBgLoaded(true)}
           onError={() => setBgLoaded(true)}
         />
-        {/* Premium accent lighting — warm key light + cool rim */}
-        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_18%_22%,rgba(255,190,120,0.18)_0%,transparent_45%)]" />
-        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_82%_78%,rgba(90,180,255,0.16)_0%,transparent_50%)]" />
-        <div className="absolute inset-x-0 top-0 h-24 pointer-events-none bg-gradient-to-b from-background/5 to-transparent" />
+        {/* Dim the exterior (upper window band) — dusk outside */}
+        <div className="absolute inset-x-0 top-0 h-[55%] pointer-events-none bg-[linear-gradient(180deg,rgba(4,8,16,0.55)_0%,rgba(4,8,16,0.28)_60%,transparent_100%)]" />
+        {/* Interior accent lighting — warm key + cool rim */}
+        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_18%_60%,rgba(255,195,130,0.28)_0%,transparent_48%)]" />
+        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_82%_82%,rgba(110,190,255,0.24)_0%,transparent_52%)]" />
+        <div className="absolute inset-x-0 top-0 h-24 pointer-events-none bg-gradient-to-b from-background/10 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/8 to-transparent" />
 
         {/* HUD */}
