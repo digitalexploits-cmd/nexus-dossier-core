@@ -58,10 +58,10 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
           onLoad={() => setBgLoaded(true)}
           onError={() => setBgLoaded(true)}
         />
-        {/* Dim the room so the overlay reads — lighter than before */}
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_60%_40%,rgba(5,7,10,0.12)_0%,rgba(5,7,10,0.45)_100%)]" />
-        <div className="absolute inset-x-0 top-0 h-24 pointer-events-none bg-gradient-to-b from-background/35 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/60 to-transparent" />
+        {/* Dim the room so the overlay reads — lights raised for briefing */}
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_60%_40%,rgba(5,7,10,0.06)_0%,rgba(5,7,10,0.28)_100%)]" />
+        <div className="absolute inset-x-0 top-0 h-24 pointer-events-none bg-gradient-to-b from-background/20 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/40 to-transparent" />
 
         {/* HUD */}
         <div className="absolute inset-x-0 top-14 z-20">
