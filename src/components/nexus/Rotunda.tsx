@@ -99,12 +99,30 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
             <span className="text-muted-foreground">|</span>
             <span>{BRAND.company}</span>
           </div>
-          <div className="hidden md:flex items-center gap-3">
-            <span className="status-dot status-live" />
-            <span>SHELL ONLINE</span>
-            <span className="text-muted-foreground">·</span>
-            <span className="status-dot status-research" />
-            <span>SINE~WAIV / RESEARCH</span>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1 border border-primary/25 bg-background/50 backdrop-blur-sm px-1 py-1">
+              <span className="mono text-[0.55rem] tracking-[0.24em] text-muted-foreground px-2">LIGHTS</span>
+              {(["dim", "default", "bright"] as LightPreset[]).map((k) => (
+                <button
+                  key={k}
+                  onClick={() => setPreset(k)}
+                  className={`mono text-[0.55rem] tracking-[0.24em] uppercase px-2 py-1 transition-colors ${
+                    preset === k
+                      ? "bg-primary/20 text-primary border border-primary/50"
+                      : "text-muted-foreground hover:text-primary/80 border border-transparent"
+                  }`}
+                >
+                  {PRESETS[k].label}
+                </button>
+              ))}
+            </div>
+            <div className="hidden md:flex items-center gap-3">
+              <span className="status-dot status-live" />
+              <span>SHELL ONLINE</span>
+              <span className="text-muted-foreground">·</span>
+              <span className="status-dot status-research" />
+              <span>SINE~WAIV / RESEARCH</span>
+            </div>
           </div>
         </div>
       </div>
