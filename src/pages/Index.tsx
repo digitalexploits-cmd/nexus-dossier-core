@@ -1,16 +1,146 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Rotunda } from "@/components/nexus/Rotunda";
+import { MissionBrief } from "@/components/nexus/MissionBrief";
+import { BayPlaceholder } from "@/components/nexus/BayPlaceholder";
+import { EvidenceVault } from "@/components/nexus/EvidenceVault";
+import { Contact } from "@/components/nexus/Contact";
+import { TopBar, BottomBar } from "@/components/nexus/Chrome";
+import { Button } from "@/components/ui/button";
+import type { BayId } from "@/data/content";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+type View = "home" | BayId;
+
+const VIEW_HASH: Record<View, string> = {
+  home: "",
+  mission: "#mission",
+  technical: "#technical",
+  capability: "#capability",
+  operations: "#operations",
+};
+
+const hashToView = (h: string): View => {
+  const clean = h.replace("#", "");
+  if (["mission", "technical", "capability", "operations"].includes(clean)) return clean as View;
+  return "home";
+};
+
+const Index = () => {
+  const [view, setView] = useState<View>(() => hashToView(window.location.hash));
+  const [vaultOpen, setVaultOpen] = useState(false);
+
+  useEffect(() => {
+    const onHash = () => {
+      if (window.location.hash === "#vault") { setVaultOpen(true); return; }
+      setView(hashToView(window.location.hash));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+    window.addEventListener("hashchange", onHash);
+    if (window.location.hash === "#vault") setVaultOpen(true);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+
+  const goHome = useCallback(() => { window.location.hash = ""; setView("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }, []);
+  const goBay = useCallback((id: BayId) => { window.location.hash = VIEW_HASH[id]; setView(id); }, []);
+  const openVault = useCallback(() => setVaultOpen(true), []);
+  const goContact = useCallback(() => {
+    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
+  const viewLabel = useMemo(() => (view === "home" ? "ROTUNDA" : view.toUpperCase()), [view]);
+
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
+    <div className="min-h-screen flex flex-col">
+      <TopBar view={viewLabel} />
+
+      {view !== "home" && (
+        <div className="fixed top-12 inset-x-0 z-30 border-b border-border/60 bg-background/70 backdrop-blur-md">
+          <div className="container h-10 flex items-center justify-between">
+            <button onClick={goHome} className="mono text-xs tracking-widest text-muted-foreground hover:text-foreground">
+              ← RETURN TO ROTUNDA
+            </button>
+            <div className="hidden md:flex gap-2">
+              {(["mission", "technical", "capability", "operations"] as BayId[]).map((b, i) => (
+                <button
+                  key={b}
+                  onClick={() => goBay(b)}
+                  className={`mono text-[0.65rem] tracking-widest px-2 py-1 border transition-colors ${
+                    view === b ? "border-primary text-primary bg-primary/10" : "border-border/60 text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {`0${i + 1}`} · {b.toUpperCase()}
+                </button>
+              ))}
+            </div>
+            <Button variant="ghost" size="sm" onClick={openVault} className="mono text-[0.65rem] tracking-widest">
+              EVIDENCE VAULT
+            </Button>
+          </div>
+        </div>
+      )}
+
+      <main className={view !== "home" ? "pt-10" : ""}>
+        {view === "home" && <Rotunda onSelect={goBay} onOpenVault={openVault} />}
+        {view === "mission" && <MissionBrief onOpenVault={openVault} onContact={goContact} />}
+        {view === "technical" && (
+          <BayPlaceholder
+            code="BAY 02"
+            title="Technical Brief"
+            subtitle="Research Lab"
+            intro="SINE~WaiV State Inspector is being developed as a research-stage, physics-informed motor-current inspection system. This section will organize signal-path diagrams, validation graphics, research notes, and technical evidence."
+            labels={["Research Stage", "Prototype", "Validation Needed"]}
+            disclaimer="No field validation is claimed. No digital twin claim is made. All artifacts here are labeled by evidence status."
+            blocks={[
+              { title: "Signal-Path Notes", body: "Motor current i(t) reasoning, sampling considerations, and structured inspection framing.", status: "RESEARCH" },
+              { title: "FFT / Frequency-Domain Sketches", body: "Illustrative frequency-domain reasoning artifacts. Not validation output.", status: "HYPOTHESIS" },
+              { title: "Artifact-Aware Framing", body: "How measurement artifacts are separated from candidate machine-state signals.", status: "RESEARCH" },
+              { title: "Validation Path", body: "Planned progression from bench observation to structured validation runs.", status: "VALIDATION NEEDED" },
+            ]}
+            onOpenVault={openVault}
+            onContact={goContact}
+          />
+        )}
+        {view === "capability" && (
+          <BayPlaceholder
+            code="BAY 03"
+            title="Capability Brief"
+            subtitle="Capability Gallery"
+            intro="Capability framing across industrial reliability, maintenance decision support, pilot candidate scoping, and commercialization pathway."
+            labels={["Reliability", "Pilot Candidate", "Commercial Candidate"]}
+            blocks={[
+              { title: "Industrial Reliability", body: "How signal-derived evidence integrates into reliability decision cycles.", status: "COMMERCIAL CANDIDATE" },
+              { title: "Maintenance Decision Support", body: "Structured evidence at the point of maintenance judgment, without overclaiming.", status: "PROTOTYPE" },
+              { title: "Pilot Candidate Framing", body: "Framing document for prospective pilot engagements and their success criteria.", status: "VALIDATION NEEDED" },
+              { title: "Customer Problem Cards", body: "Discrete problem statements the platform is designed to address.", status: "RESEARCH" },
+            ]}
+            onOpenVault={openVault}
+            onContact={goContact}
+          />
+        )}
+        {view === "operations" && (
+          <BayPlaceholder
+            code="BAY 04"
+            title="Operations Center"
+            subtitle="Command & Control"
+            intro="Command surface for Nexus itself: project status, evidence vault access, document routing, deployment state, and contact path."
+            labels={["Online", "Monitored", "Evidence Routed"]}
+            blocks={[
+              { title: "Project Status", body: "Current program state across founder, technical, and commercial tracks.", status: "ONLINE" },
+              { title: "Evidence Vault Access", body: "Open the vault to browse evidence objects with claim boundaries and audience labels.", status: "ONLINE" },
+              { title: "Document Access", body: "Resume, credentials, and briefing documents route through the founder office.", status: "ONLINE" },
+              { title: "Deployment Status", body: "Nexus operating shell is live. Static deployment. No user data collected.", status: "LIVE" },
+            ]}
+            onOpenVault={openVault}
+            onContact={goContact}
+          />
+        )}
+
+        <Contact />
+      </main>
+
+      <BottomBar />
+      <EvidenceVault open={vaultOpen} onOpenChange={setVaultOpen} />
     </div>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
