@@ -126,7 +126,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
               <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
                 <div className="grid md:grid-cols-2 gap-4">
                   {/* Mission cell */}
-                  <div className="border border-[rgba(110,190,255,0.30)] bg-[linear-gradient(180deg,rgba(24,46,72,0.70),rgba(14,28,48,0.80))] p-4">
+                  <div className="border border-[rgba(130,205,255,0.38)] bg-[linear-gradient(180deg,rgba(36,62,98,0.78),rgba(22,40,66,0.86))] p-4">
                     <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">OUR MISSION</div>
                     <h1 className="text-2xl font-semibold tracking-tight leading-tight text-[#eef6ff]">
                       Divide the wave.<br/>Preserve the machine.
