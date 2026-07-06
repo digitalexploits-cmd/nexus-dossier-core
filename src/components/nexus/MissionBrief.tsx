@@ -211,7 +211,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
             <Glass className="p-5">
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
                 {CORE_STRENGTHS.map((s, i) => (
-                  <div key={s} className="border border-[rgba(110,190,255,0.30)] bg-[linear-gradient(180deg,rgba(24,46,72,0.66),rgba(14,28,48,0.78))] px-3 py-2">
+                  <div key={s} className="border border-[rgba(130,205,255,0.38)] bg-[linear-gradient(180deg,rgba(36,62,98,0.74),rgba(22,40,66,0.84))] px-3 py-2">
                     <div className="mono text-[0.55rem] tracking-[0.28em] text-[#4db7ff]">S{String(i + 1).padStart(2, "0")}</div>
                     <div className="text-xs text-[#c8d4e2] mt-1">{s}</div>
                   </div>
