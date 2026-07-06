@@ -59,7 +59,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
         {/* Fallback dark gradient — always painted, visible if image fails/slow */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_40%,#111d2e_0%,#080c14_70%)]" />
         <img
-          src={officeAsset.url}
+          src="/founder-office.jpg"
           alt="Founder office — Mission Brief environment"
           className={`absolute inset-0 w-full h-full object-cover brightness-[3.5] contrast-[1.02] saturate-[1.16] transition-opacity duration-700 ease-out ${bgLoaded ? "opacity-100" : "opacity-0"}`}
           draggable={false}
