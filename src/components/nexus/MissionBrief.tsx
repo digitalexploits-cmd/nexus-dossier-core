@@ -38,6 +38,8 @@ const CompactCard = ({ children, className = "" }: { children: React.ReactNode; 
 
 export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
   const [bgLoaded, setBgLoaded] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const dossierRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const img = new Image();
