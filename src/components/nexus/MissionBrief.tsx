@@ -61,7 +61,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
         <img
           src="/founder-office.jpg"
           alt="Founder office — Mission Brief environment"
-          className={`absolute inset-0 w-full h-full object-cover brightness-[3.5] contrast-[1.02] saturate-[1.16] transition-opacity duration-700 ease-out ${bgLoaded ? "opacity-100" : "opacity-0"}`}
+          className={`absolute inset-0 w-full h-full object-cover brightness-[1.25] contrast-[1.05] transition-opacity duration-700 ease-out ${bgLoaded ? "opacity-100" : "opacity-0"}`}
           draggable={false}
           loading="eager"
           decoding="async"
