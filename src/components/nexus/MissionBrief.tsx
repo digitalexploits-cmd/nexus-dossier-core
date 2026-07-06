@@ -178,121 +178,123 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
         </div>
       </section>
 
-      {/* ============ DOSSIER DETAIL (dark, on-brand, not white cards) ============ */}
-      <div className="relative bg-background">
-        {/* Bio + summary */}
-        <section className="container pt-16 pb-10">
-          <div className="grid md:grid-cols-[1fr_320px] gap-8">
-            <Glass className="p-6 md:p-8">
-              <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">01 / EXECUTIVE BIO</div>
-              <p className="text-[#eef6ff] leading-relaxed">{FOUNDER_BIO}</p>
-              <div className="rule my-5" />
-              <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">02 / BUILDER POSTURE</div>
-              <p className="text-[#c8d4e2] leading-relaxed text-sm">{FOUNDER_SUMMARY.summary}</p>
-            </Glass>
-            <Glass className="p-5 h-fit">
-              <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">TECHNICAL FOCUS</div>
-              <ul className="space-y-2">
-                {TECHNICAL_FOCUS.map((t) => (
-                  <li key={t} className="flex items-start gap-2 text-sm text-[#c8d4e2]">
-                    <span className="status-dot status-research mt-1.5 shrink-0" />
-                    <span>{t}</span>
-                  </li>
-                ))}
-              </ul>
-            </Glass>
-          </div>
-        </section>
+      {/* ============ DOSSIER DETAIL (hidden until opened) ============ */}
+      {expanded && (
+        <div ref={dossierRef} className="relative bg-background animate-in fade-in slide-in-from-bottom-4 duration-700">
+          {/* Bio + summary */}
+          <section className="container pt-16 pb-10">
+            <div className="grid md:grid-cols-[1fr_320px] gap-8">
+              <Glass className="p-6 md:p-8">
+                <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">01 / EXECUTIVE BIO</div>
+                <p className="text-[#eef6ff] leading-relaxed">{FOUNDER_BIO}</p>
+                <div className="rule my-5" />
+                <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">02 / BUILDER POSTURE</div>
+                <p className="text-[#c8d4e2] leading-relaxed text-sm">{FOUNDER_SUMMARY.summary}</p>
+              </Glass>
+              <Glass className="p-5 h-fit">
+                <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">TECHNICAL FOCUS</div>
+                <ul className="space-y-2">
+                  {TECHNICAL_FOCUS.map((t) => (
+                    <li key={t} className="flex items-start gap-2 text-sm text-[#c8d4e2]">
+                      <span className="status-dot status-research mt-1.5 shrink-0" />
+                      <span>{t}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Glass>
+            </div>
+          </section>
 
-        {/* Core strengths — compact dossier chips, not big cards */}
-        <section className="container py-10">
-          <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">03 / CORE STRENGTHS</div>
-          <Glass className="p-5">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
-              {CORE_STRENGTHS.map((s, i) => (
-                <div key={s} className="border border-[rgba(110,190,255,0.30)] bg-[linear-gradient(180deg,rgba(24,46,72,0.66),rgba(14,28,48,0.78))] px-3 py-2">
-                  <div className="mono text-[0.55rem] tracking-[0.28em] text-[#4db7ff]">S{String(i + 1).padStart(2, "0")}</div>
-                  <div className="text-xs text-[#c8d4e2] mt-1">{s}</div>
-                </div>
+          {/* Core strengths — compact dossier chips, not big cards */}
+          <section className="container py-10">
+            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">03 / CORE STRENGTHS</div>
+            <Glass className="p-5">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+                {CORE_STRENGTHS.map((s, i) => (
+                  <div key={s} className="border border-[rgba(110,190,255,0.30)] bg-[linear-gradient(180deg,rgba(24,46,72,0.66),rgba(14,28,48,0.78))] px-3 py-2">
+                    <div className="mono text-[0.55rem] tracking-[0.28em] text-[#4db7ff]">S{String(i + 1).padStart(2, "0")}</div>
+                    <div className="text-xs text-[#c8d4e2] mt-1">{s}</div>
+                  </div>
+                ))}
+              </div>
+            </Glass>
+          </section>
+
+          {/* Current work */}
+          <section className="container py-10">
+            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">04 / ACTIVE PROGRAMS</div>
+            <div className="grid md:grid-cols-3 gap-3">
+              {CURRENT_WORK.map((w, i) => (
+                <Glass key={w.org} className="p-5">
+                  <div className="mono text-[0.6rem] tracking-[0.24em] text-[#4db7ff]">PROG-{i + 1}</div>
+                  <div className="text-base font-semibold mt-1 text-[#eef6ff]">{w.org}</div>
+                  <div className="text-xs text-[#8fa3b8]">{w.role}</div>
+                  <div className="rule my-3" />
+                  <p className="text-sm text-[#c8d4e2]">{w.detail}</p>
+                </Glass>
               ))}
             </div>
-          </Glass>
-        </section>
+          </section>
 
-        {/* Current work */}
-        <section className="container py-10">
-          <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">04 / ACTIVE PROGRAMS</div>
-          <div className="grid md:grid-cols-3 gap-3">
-            {CURRENT_WORK.map((w, i) => (
-              <Glass key={w.org} className="p-5">
-                <div className="mono text-[0.6rem] tracking-[0.24em] text-[#4db7ff]">PROG-{i + 1}</div>
-                <div className="text-base font-semibold mt-1 text-[#eef6ff]">{w.org}</div>
-                <div className="text-xs text-[#8fa3b8]">{w.role}</div>
-                <div className="rule my-3" />
-                <p className="text-sm text-[#c8d4e2]">{w.detail}</p>
-              </Glass>
-            ))}
-          </div>
-        </section>
-
-        {/* Credentials — evidence cards, compact */}
-        <section className="container py-10">
-          <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">05 / CREDENTIALS · EVIDENCE</div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {CREDENTIALS.map((c) => (
-              <a
-                key={c.id}
-                href={c.href ?? "#"}
-                className="group relative rounded-sm border border-[rgba(110,190,255,0.34)] bg-[linear-gradient(180deg,rgba(24,46,72,0.72),rgba(14,28,48,0.84))] backdrop-blur-md p-4 hover:border-[rgba(110,190,255,0.58)] transition-colors flex flex-col justify-between min-h-[140px]"
-              >
-                <div>
-                  <div className="flex items-center justify-between">
-                    <Badge variant="outline" className="mono text-[0.55rem] tracking-[0.24em] border-[rgba(80,160,255,0.35)] text-[#4db7ff]">
-                      {c.category.toUpperCase()}
-                    </Badge>
-                    {c.year && <span className="mono text-[0.6rem] tracking-[0.24em] text-[#8fa3b8]">{c.year}</span>}
+          {/* Credentials — evidence cards, compact */}
+          <section className="container py-10">
+            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">05 / CREDENTIALS · EVIDENCE</div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {CREDENTIALS.map((c) => (
+                <a
+                  key={c.id}
+                  href={c.href ?? "#"}
+                  className="group relative rounded-sm border border-[rgba(110,190,255,0.34)] bg-[linear-gradient(180deg,rgba(24,46,72,0.72),rgba(14,28,48,0.84))] backdrop-blur-md p-4 hover:border-[rgba(110,190,255,0.58)] transition-colors flex flex-col justify-between min-h-[140px]"
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <Badge variant="outline" className="mono text-[0.55rem] tracking-[0.24em] border-[rgba(80,160,255,0.35)] text-[#4db7ff]">
+                        {c.category.toUpperCase()}
+                      </Badge>
+                      {c.year && <span className="mono text-[0.6rem] tracking-[0.24em] text-[#8fa3b8]">{c.year}</span>}
+                    </div>
+                    <div className="mt-2 text-sm font-medium leading-snug text-[#eef6ff]">{c.title}</div>
+                    <div className="text-xs text-[#8fa3b8] mt-0.5">{c.issuer}</div>
                   </div>
-                  <div className="mt-2 text-sm font-medium leading-snug text-[#eef6ff]">{c.title}</div>
-                  <div className="text-xs text-[#8fa3b8] mt-0.5">{c.issuer}</div>
-                </div>
-                <div className="mt-3 flex items-center justify-between">
-                  <span className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
-                    {c.href ? "FILE ATTACHED" : "PLACEHOLDER"}
-                  </span>
-                  <span className="mono text-[0.6rem] text-[#4db7ff] group-hover:text-[#7dd3ff]">OPEN →</span>
-                </div>
-              </a>
-            ))}
-          </div>
-        </section>
-
-        {/* Engage strip */}
-        <section className="container py-16">
-          <Glass className="p-8 md:p-10 overflow-hidden">
-            <div className="grid md:grid-cols-[1fr_auto] gap-6 items-end">
-              <div className="space-y-2">
-                <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff]">06 / ENGAGE</div>
-                <h3 className="text-2xl md:text-3xl font-semibold tracking-tight text-[#eef6ff]">
-                  Bring the machine into the room.
-                </h3>
-                <p className="text-[#8fa3b8] max-w-xl text-sm">
-                  Briefings scheduled directly through the founder. Every artifact shared is labeled by
-                  claim boundary and evidence status.
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <Button onClick={onContact} className="mono tracking-widest text-[0.65rem] h-9">REQUEST BRIEFING</Button>
-                <Button asChild variant="outline" className="mono tracking-widest text-[0.65rem] h-9">
-                  <a href={RESUME_URL} download>DOWNLOAD RESUME</a>
-                </Button>
-                <Button variant="ghost" onClick={onOpenVault} className="mono tracking-widest text-[0.65rem] h-9">
-                  EVIDENCE VAULT
-                </Button>
-              </div>
+                  <div className="mt-3 flex items-center justify-between">
+                    <span className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
+                      {c.href ? "FILE ATTACHED" : "PLACEHOLDER"}
+                    </span>
+                    <span className="mono text-[0.6rem] text-[#4db7ff] group-hover:text-[#7dd3ff]">OPEN →</span>
+                  </div>
+                </a>
+              ))}
             </div>
-          </Glass>
-        </section>
-      </div>
+          </section>
+
+          {/* Engage strip */}
+          <section className="container py-16">
+            <Glass className="p-8 md:p-10 overflow-hidden">
+              <div className="grid md:grid-cols-[1fr_auto] gap-6 items-end">
+                <div className="space-y-2">
+                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff]">06 / ENGAGE</div>
+                  <h3 className="text-2xl md:text-3xl font-semibold tracking-tight text-[#eef6ff]">
+                    Bring the machine into the room.
+                  </h3>
+                  <p className="text-[#8fa3b8] max-w-xl text-sm">
+                    Briefings scheduled directly through the founder. Every artifact shared is labeled by
+                    claim boundary and evidence status.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Button onClick={onContact} className="mono tracking-widest text-[0.65rem] h-9">REQUEST BRIEFING</Button>
+                  <Button asChild variant="outline" className="mono tracking-widest text-[0.65rem] h-9">
+                    <a href={RESUME_URL} download>DOWNLOAD RESUME</a>
+                  </Button>
+                  <Button variant="ghost" onClick={onOpenVault} className="mono tracking-widest text-[0.65rem] h-9">
+                    EVIDENCE VAULT
+                  </Button>
+                </div>
+              </div>
+            </Glass>
+          </section>
+        </div>
+      )}
     </div>
   );
 };
