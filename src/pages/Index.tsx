@@ -14,18 +14,32 @@ import transitionMission from "../../public/media/transition-mission.mp4.asset.j
 import transitionTechnical from "../../public/media/transition-technical.mp4.asset.json";
 import transitionOperations from "../../public/media/transition-operations.mp4.asset.json";
 import transitionVault from "../../public/media/transition-vault.mp4.asset.json";
+import cinematicMission from "../../public/media/cinematic-mission.mp4.asset.json";
+import cinematicTechnical from "../../public/media/cinematic-technical.mp4.asset.json";
+import cinematicCapability from "../../public/media/cinematic-capability.mp4.asset.json";
+import cinematicOperations from "../../public/media/cinematic-operations.mp4.asset.json";
+import cinematicVault from "../../public/media/cinematic-vault.mp4.asset.json";
 
-// Bay-specific transition videos — cinematic push-in from Rotunda into each
-// destination environment. Vault has its own transition too (played when the
-// vault overlay opens). Missing → CSS wipe fallback.
-const TRANSITION_VIDEOS: Record<BayId, string | null> = {
+// Two-stage cinematic entry per bay:
+//   1) TRANSITION  — first-person walk from the Rotunda to the bay archway
+//   2) CINEMATIC   — the room comes alive (in-bay atmosphere)
+// After both play, the still hero image takes over.
+const TRANSITION_VIDEOS: Record<BayId, string> = {
   mission:    transitionMission.url,
   technical:  transitionTechnical.url,
   capability: "/media/transition-capability.mp4",
   operations: transitionOperations.url,
 };
 
+const CINEMATIC_VIDEOS: Record<BayId, string> = {
+  mission:    cinematicMission.url,
+  technical:  cinematicTechnical.url,
+  capability: cinematicCapability.url,
+  operations: cinematicOperations.url,
+};
+
 const VAULT_TRANSITION_URL = transitionVault.url;
+const VAULT_CINEMATIC_URL = cinematicVault.url;
 
 // Hero image per bay — the stable landing state after transition.
 const HERO_IMAGES: Record<BayId, string> = {
@@ -82,7 +96,7 @@ const Index = () => {
     try { return sessionStorage.getItem("nexus:intro") === "done"; } catch { return false; }
   });
   const [transition, setTransition] = useState<{ label: string; kind: TransitionKind } | null>(null);
-  const [videoTransition, setVideoTransition] = useState<{ src: string; next: View } | null>(null);
+  const [videoTransition, setVideoTransition] = useState<{ sources: string[] } | null>(null);
   const pendingRef = useRef<View | null>(null);
 
   const syncFromHash = useCallback(() => {
@@ -137,23 +151,26 @@ const Index = () => {
   const goBay = useCallback((id: BayId) => {
     if (view === id) return;
     audio.blip(880);
-    const videoSrc = TRANSITION_VIDEOS[id];
-    if (videoSrc && !prefersReducedMotion()) {
-      // Commit destination first — video overlay is cinematic dressing;
-      // when it ends we reveal the already-mounted hero image landing.
-      commitView(id);
-      setVideoTransition({ src: videoSrc, next: id });
+    if (prefersReducedMotion()) {
+      runTransition(bayLabel(id), "advance", id);
       return;
     }
-    runTransition(bayLabel(id), "advance", id);
+    // Two-stage cinematic entry: Rotunda → bay archway, then in-bay reveal.
+    // Commit destination first so the hero image is already mounted when the
+    // cinematic finishes and the overlay lifts.
+    commitView(id);
+    setVideoTransition({
+      sources: [TRANSITION_VIDEOS[id], CINEMATIC_VIDEOS[id]],
+    });
   }, [view, runTransition, commitView]);
 
   const openVault = useCallback(() => {
     audio.blip(740);
     if (prefersReducedMotion()) { setVaultOpen(true); return; }
-    // Play the cinematic vault push-in first, then reveal the vault overlay.
-    setVideoTransition({ src: VAULT_TRANSITION_URL, next: view });
-    setTimeout(() => setVaultOpen(true), 900);
+    // Rotunda → vault door, then interior reveal. Overlay opens right as the
+    // second clip lands so the vault UI feels like the settled destination.
+    setVideoTransition({ sources: [VAULT_TRANSITION_URL, VAULT_CINEMATIC_URL] });
+    setTimeout(() => setVaultOpen(true), 4800);
   }, [view]);
   const goContact = useCallback(() => {
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -233,7 +250,7 @@ const Index = () => {
 
       {videoTransition && (
         <VideoTransition
-          src={videoTransition.src}
+          sources={videoTransition.sources}
           onDone={() => setVideoTransition(null)}
         />
       )}
