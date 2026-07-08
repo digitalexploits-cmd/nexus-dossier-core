@@ -128,7 +128,8 @@ export const BayShell = ({
         <img
           src={heroImage}
           alt={`${bayMeta.title} — immersive environment`}
-          className={`absolute inset-0 w-full h-full object-cover brightness-[1.20] contrast-[1.04] saturate-[1.10] transition-opacity duration-700 ease-out ${heroLoaded ? "opacity-100" : "opacity-0"}`}
+          className={`absolute inset-0 w-full h-full object-cover contrast-[1.04] saturate-[1.10] transition-opacity duration-700 ease-out ${heroLoaded ? "opacity-100" : "opacity-0"}`}
+          style={{ filter: `brightness(${ambientBrightness.toFixed(3)}) contrast(1.04) saturate(1.10)` }}
           draggable={false}
           loading="eager"
           decoding="async"
@@ -138,9 +139,25 @@ export const BayShell = ({
         {/* Legibility overlays — quiet, do not clutter */}
         <div className="absolute inset-x-0 top-0 h-[45%] pointer-events-none bg-[linear-gradient(180deg,rgba(4,8,16,0.55)_0%,rgba(4,8,16,0.15)_60%,transparent_100%)]" />
         <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/50 to-transparent" />
-        {/* Restrained accent lighting — cyan edge */}
-        <div className="absolute inset-0 pointer-events-none mix-blend-screen"
-             style={{ background: `radial-gradient(ellipse at 82% 82%, ${accent}22 0%, transparent 55%)` }} />
+        {/* Premium accent lighting — layered rim glows, driven by the accent slider */}
+        <div
+          className="absolute inset-0 pointer-events-none mix-blend-screen transition-opacity duration-500"
+          style={{
+            background: `
+              radial-gradient(ellipse 55% 45% at 12% 88%, ${accent}${accentA(90)} 0%, transparent 60%),
+              radial-gradient(ellipse 60% 40% at 88% 82%, ${accent}${accentA(80)} 0%, transparent 62%),
+              radial-gradient(ellipse 40% 30% at 50% 8%, ${accent}${accentA(55)} 0%, transparent 65%)
+            `,
+          }}
+        />
+        {/* Fine top edge — cinematic key light */}
+        <div
+          className="absolute inset-x-0 top-0 h-[2px] pointer-events-none transition-opacity duration-500"
+          style={{
+            background: `linear-gradient(90deg, transparent, ${accent}${accentA(200)}, transparent)`,
+            boxShadow: `0 0 24px ${accent}${accentA(160)}`,
+          }}
+        />
 
         {/* HUD label — the only text on the hero */}
         <div className="absolute inset-x-0 top-14 z-20">
