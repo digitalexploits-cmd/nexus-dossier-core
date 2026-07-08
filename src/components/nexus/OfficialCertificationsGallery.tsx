@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { OFFICIAL_CERTIFICATIONS, driveViewUrl, type OfficialCertification } from "@/data/officialCertifications";
+import { downloadCertificate } from "@/lib/downloads";
 
 // Full-width image gallery of the official certification badges/certificates.
 // Images are page-1 renders of the source PDFs; clicking opens the original in Drive.
