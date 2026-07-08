@@ -301,7 +301,9 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
               );
             })}
           </section>
+          <OfficialCertificationsGallery />
           <DocumentShelf bay="mission" eyebrow="06 / FILES ON RECORD" title="Dossier Files" />
+
 
 
           {/* Engage strip */}
