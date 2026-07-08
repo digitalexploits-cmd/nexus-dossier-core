@@ -226,6 +226,60 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
             </div>
           </section>
 
+          {/* Featured official documents — LLC certificate + White House correspondence */}
+          <section className="container py-10">
+            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[hsl(var(--interactive))] mb-3">
+              02B / OFFICIAL RECORD · FEATURED
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              {[
+                {
+                  src: llcCert.url,
+                  title: "State of Missouri — Certificate of Organization",
+                  meta: "AI Base³ LLC · LC014726944 · Effective April 21, 2026",
+                  alt: "State of Missouri Certificate of Organization for AI Base³ LLC",
+                },
+                {
+                  src: whiteHouseLetter.url,
+                  title: "The White House — Correspondence",
+                  meta: "Washington · June 13, 2025 · Addressed to Mr. McGee",
+                  alt: "Letter from The White House addressed to Mr. McGee, dated June 13, 2025",
+                },
+              ].map((doc) => (
+                <a
+                  key={doc.title}
+                  href={doc.src}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-no-interactive
+                  className="group relative block rounded-sm border border-[rgba(130,205,255,0.42)] bg-[rgba(11,18,32,0.85)] overflow-hidden transition-all duration-300 hover:border-[hsl(var(--interactive))] hover:shadow-[0_0_0_1px_hsl(var(--interactive)/0.55),0_20px_50px_-20px_hsl(var(--interactive)/0.35)]"
+                  aria-label={`Open ${doc.title}`}
+                >
+                  <div className="relative w-full bg-[#050810] flex items-center justify-center p-4 md:p-6">
+                    <img
+                      src={doc.src}
+                      alt={doc.alt}
+                      loading="lazy"
+                      decoding="async"
+                      className="max-h-[520px] w-auto object-contain transition-transform duration-500 group-hover:scale-[1.02]"
+                    />
+                  </div>
+                  <div className="p-4 border-t border-[rgba(130,205,255,0.28)]">
+                    <div className="text-sm text-[#eef6ff] leading-snug">{doc.title}</div>
+                    <div className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8] mt-1">
+                      {doc.meta}
+                    </div>
+                    <div className="mono text-[0.55rem] tracking-[0.24em] uppercase mt-2 text-[#8fa3b8] group-hover:text-[hsl(var(--interactive))]">
+                      OPEN FULL SIZE →
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+
+
+
           {/* Core strengths — compact dossier chips, not big cards */}
           <section className="container py-10">
             <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">03 / CORE STRENGTHS</div>
