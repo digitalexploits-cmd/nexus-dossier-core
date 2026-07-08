@@ -17,7 +17,7 @@ import { audio, prefersReducedMotion } from "@/lib/audio";
 const TRANSITION_VIDEOS: Record<BayId, string | null> = {
   mission: "/media/transition-mission.mp4",
   technical: "/media/transition-technical.mp4",
-  capability: null,
+  capability: "/media/transition-capability.mp4",
   operations: null,
 };
 
