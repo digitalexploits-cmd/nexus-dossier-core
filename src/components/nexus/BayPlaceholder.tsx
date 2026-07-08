@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SectionHeader } from "./Chrome";
+import { DocumentShelf } from "./DocumentShelf";
+import type { BayId } from "@/data/content";
 
 interface PanelBlock {
   title: string;
