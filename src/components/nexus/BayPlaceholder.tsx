@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SectionHeader } from "./Chrome";
+import { DocumentShelf } from "./DocumentShelf";
+import type { BayId } from "@/data/content";
 
 interface PanelBlock {
   title: string;
@@ -16,12 +18,13 @@ interface Props {
   labels: string[];
   blocks: PanelBlock[];
   disclaimer?: string;
+  bayId?: BayId;
   onOpenVault: () => void;
   onContact: () => void;
 }
 
 export const BayPlaceholder = ({
-  code, title, subtitle, intro, labels, blocks, disclaimer, onOpenVault, onContact,
+  code, title, subtitle, intro, labels, blocks, disclaimer, bayId, onOpenVault, onContact,
 }: Props) => (
   <div className="pt-16 pb-24">
     <section className="container">
@@ -66,6 +69,9 @@ export const BayPlaceholder = ({
         </div>
       ))}
     </section>
+
+    {bayId && <DocumentShelf bay={bayId} />}
+
 
     <section className="container mt-12">
       <SectionHeader eyebrow="BAY STATE" title="Coming online" note="This bay is in a polished placeholder state. Content will populate as evidence is prepared." />

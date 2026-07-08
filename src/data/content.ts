@@ -205,6 +205,52 @@ export const CREDENTIAL_ISSUER_ORDER: string[] = [
   "Coursiv",
 ];
 
+// ============================================================
+// DOCUMENTS — per-bay document shelves rendered by DocumentShelf
+// ============================================================
+export type DocKind = "pdf" | "image" | "video" | "html" | "text";
+export type DocItem = {
+  id: string;
+  title: string;
+  bay: BayId;
+  kind: DocKind;
+  href: string;
+  description?: string;
+  date?: string;
+  featured?: boolean;
+  category?: string;
+};
+
+export const DOCUMENTS: DocItem[] = [
+  // MISSION
+  { id: "d_resume", title: "Chronological AI Technical Solutions Résumé (v6)", bay: "mission", kind: "pdf", href: "/dossier/anthony-mcgee-resume-v6.pdf", category: "Résumé", date: "2026-07", featured: true },
+  { id: "d_dossier", title: "Executive Dossier", bay: "mission", kind: "html", href: "/dossier/executive-dossier.html", category: "Dossier", featured: true },
+  { id: "d_portfolio", title: "Master Executive Portfolio", bay: "mission", kind: "html", href: "/dossier/master-executive-portfolio.html", category: "Portfolio" },
+  { id: "d_deck", title: "AI Base³ Presentation", bay: "mission", kind: "pdf", href: "/dossier/ai-base3-presentation.pdf", category: "Deck" },
+  { id: "d_cover", title: "AI Implementation Cover Letter (v6)", bay: "mission", kind: "pdf", href: "/dossier/cover-letter-v6.pdf", category: "Cover Letter", date: "2026-07" },
+
+  // TECHNICAL
+  { id: "t_diag", title: "SINE~WaiV Algorithmic Motor Diagnostics", bay: "technical", kind: "pdf", href: "/technical/sine-waiv-algorithmic-motor-diagnostics.pdf", category: "Technical Paper", featured: true },
+  { id: "t_defense", title: "SINE~WaiV Technical Defense Framework", bay: "technical", kind: "pdf", href: "/technical/sine-waiv-technical-defense-framework.pdf", category: "Framework", featured: true },
+  { id: "t_infographic", title: "Predictive Maintenance Software Infographic", bay: "technical", kind: "image", href: "/technical/predictive-maintenance-infographic.png", category: "Infographic" },
+
+  // CAPABILITY
+  { id: "c_nsf", title: "NSF SBIR Phase I — Full Draft (Canonical)", bay: "capability", kind: "pdf", href: "/proposals/nsf-sbir-phase1-canonical.pdf", category: "Proposal", featured: true },
+  { id: "c_sbir2", title: "SBIR Proposal (2026-07-01)", bay: "capability", kind: "pdf", href: "/proposals/sbir-proposal-2026-07-01.pdf", category: "Proposal", date: "2026-07-01" },
+  { id: "c_wwt", title: "Executive Brief", bay: "capability", kind: "pdf", href: "/proposals/wwt-executive-brief.pdf", category: "Brief" },
+
+  // OPERATIONS
+  { id: "o_paderborn", title: "Official Paderborn Validation Results", bay: "operations", kind: "pdf", href: "/evidence/paderborn-validation-results.pdf", category: "Validation", featured: true },
+  { id: "o_femto", title: "IEEE PHM 2012 FEMTO Bearing Diagnostic Results", bay: "operations", kind: "pdf", href: "/evidence/ieee-phm-femto-bearing-results.pdf", category: "Validation" },
+  { id: "o_evmanifest", title: "NSF Evidence Manifest", bay: "operations", kind: "text", href: "/evidence/nsf-evidence-manifest.txt", category: "Evidence" },
+  { id: "o_console", title: "Validation Console Output", bay: "operations", kind: "text", href: "/evidence/validation-console-output.txt", category: "Evidence" },
+];
+
+export const documentsForBay = (bay: BayId): DocItem[] => {
+  const items = DOCUMENTS.filter((d) => d.bay === bay);
+  return items.sort((a, b) => Number(!!b.featured) - Number(!!a.featured));
+};
+
 export type EvidenceStatus =
   | "Observed"
   | "Prototype"
