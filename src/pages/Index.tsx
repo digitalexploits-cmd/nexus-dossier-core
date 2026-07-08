@@ -96,7 +96,7 @@ const Index = () => {
     try { return sessionStorage.getItem("nexus:intro") === "done"; } catch { return false; }
   });
   const [transition, setTransition] = useState<{ label: string; kind: TransitionKind } | null>(null);
-  const [videoTransition, setVideoTransition] = useState<{ src: string; next: View } | null>(null);
+  const [videoTransition, setVideoTransition] = useState<{ sources: string[] } | null>(null);
   const pendingRef = useRef<View | null>(null);
 
   const syncFromHash = useCallback(() => {
