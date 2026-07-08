@@ -42,8 +42,29 @@ export const OfficialCertificationsGallery = () => {
                 {c.issuer}
               </div>
               <div className="text-sm text-[#eef6ff] mt-1 leading-snug">{c.title}</div>
-              <div className="mt-2 mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8] group-hover:text-[hsl(var(--interactive))]">
-                VIEW CERTIFICATE →
+              <div className="mt-2 flex items-center justify-between gap-2">
+                <span className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8] group-hover:text-[hsl(var(--interactive))]">
+                  VIEW →
+                </span>
+                <span
+                  role="button"
+                  tabIndex={0}
+                  onClick={(ev) => {
+                    ev.stopPropagation();
+                    downloadCertificate(c);
+                  }}
+                  onKeyDown={(ev) => {
+                    if (ev.key === "Enter" || ev.key === " ") {
+                      ev.preventDefault();
+                      ev.stopPropagation();
+                      downloadCertificate(c);
+                    }
+                  }}
+                  className="interactive mono text-[0.55rem] tracking-[0.24em] uppercase px-2 py-1 border border-[rgba(130,205,255,0.42)] text-[#c8d4e2] hover:border-[hsl(var(--interactive))] hover:text-[hsl(var(--interactive))] transition-colors cursor-pointer"
+                  aria-label={`Download PDF of ${c.title}`}
+                >
+                  ↓ PDF
+                </span>
               </div>
             </div>
           </button>
