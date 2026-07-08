@@ -130,7 +130,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
               </div>
             </div>
           ) : (
-            <CompactCard className="w-full md:w-[62%] lg:w-[58%] p-5 md:p-6 anim-fade-up">
+            <CompactCard key="expanded" className="w-full md:w-[62%] lg:w-[58%] p-5 md:p-6 anim-swap-in">
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <div className="mono text-[0.65rem] tracking-[0.28em] uppercase text-[#4db7ff]">NEXUS</div>
