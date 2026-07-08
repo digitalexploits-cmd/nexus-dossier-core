@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Rotunda } from "@/components/nexus/Rotunda";
 import { MissionBrief } from "@/components/nexus/MissionBrief";
-import { BayPlaceholder } from "@/components/nexus/BayPlaceholder";
+import { BayDetail } from "@/components/nexus/BayDetail";
 import { EvidenceVault } from "@/components/nexus/EvidenceVault";
 import { Contact } from "@/components/nexus/Contact";
 import { TopBar, BottomBar } from "@/components/nexus/Chrome";
