@@ -316,9 +316,11 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <Button onClick={onContact} className="mono tracking-widest text-[0.65rem] h-9">REQUEST BRIEFING</Button>
-                  <Button asChild variant="outline" className="mono tracking-widest text-[0.65rem] h-9">
-                    <a href={RESUME_URL} download>DOWNLOAD RESUME</a>
-                  </Button>
+                  {RESUME_AVAILABLE && (
+                    <Button asChild variant="outline" className="mono tracking-widest text-[0.65rem] h-9">
+                      <a href={RESUME_URL} download>DOWNLOAD RESUME</a>
+                    </Button>
+                  )}
                   <Button variant="ghost" onClick={onOpenVault} className="mono tracking-widest text-[0.65rem] h-9">
                     EVIDENCE VAULT
                   </Button>
