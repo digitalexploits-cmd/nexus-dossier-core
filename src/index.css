@@ -209,3 +209,47 @@
     animation: rim-sweep 5s ease-in-out infinite;
   }
 }
+
+/* ============================================================
+   Interactive affordance layer
+   One unified color (neon green) marks anything clickable.
+   Non-invasive: only affects color/border/shadow, not layout.
+   ============================================================ */
+@layer components {
+  /* Primary CTAs (shadcn Button default variant uses bg-primary) */
+  .bg-primary { background-color: hsl(var(--interactive)) !important; color: hsl(var(--interactive-foreground)) !important; }
+  .hover\:bg-primary\/90:hover { background-color: hsl(var(--interactive) / 0.9) !important; }
+  .text-primary { color: hsl(var(--interactive)) !important; }
+  .border-primary { border-color: hsl(var(--interactive)) !important; }
+  .ring-primary { --tw-ring-color: hsl(var(--interactive)) !important; }
+
+  /* Outline / ghost / link buttons — give them the same interactive hue */
+  button:not(:disabled):not([data-no-interactive]),
+  [role="button"]:not([data-no-interactive]),
+  a[href]:not([data-no-interactive]) {
+    --focus-color: hsl(var(--interactive));
+  }
+  button:not(:disabled):focus-visible,
+  [role="button"]:focus-visible,
+  a[href]:focus-visible {
+    outline: 2px solid hsl(var(--interactive));
+    outline-offset: 2px;
+  }
+
+  /* Anchors inside content — neon-green with subtle underline on hover */
+  a[href]:not([data-no-interactive]):not(.no-underline) {
+    color: hsl(var(--interactive));
+    text-decoration-color: hsl(var(--interactive) / 0.55);
+  }
+  a[href]:not([data-no-interactive]):hover {
+    color: hsl(var(--interactive));
+    text-shadow: 0 0 12px hsl(var(--interactive) / 0.45);
+  }
+
+  /* Utility for elements that must broadcast "clickable" */
+  .interactive { position: relative; }
+  .interactive:hover { color: hsl(var(--interactive)); }
+
+  ::selection { background: hsl(var(--interactive) / 0.35); color: hsl(var(--foreground)); }
+}
+
