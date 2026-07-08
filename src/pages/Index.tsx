@@ -185,6 +185,7 @@ const Index = () => {
         {view === "operations" && (
           <BayPlaceholder
             bayId="operations"
+            heroImage="/media/operations-landing.jpg"
             code="BAY 04"
             title="Operations Center"
             subtitle="Command & Control"
