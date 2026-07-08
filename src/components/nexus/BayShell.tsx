@@ -200,7 +200,75 @@ export const BayShell = ({
         >
           ▼ ENTER
         </button>
+
+        {/* ============ LIGHTING CONSOLE — premium HUD ============ */}
+        {lightingControls && (
+          <div className="absolute right-4 md:right-6 top-24 md:top-28 z-30 select-none">
+            {/* Toggle chip */}
+            <button
+              type="button"
+              onClick={() => setLightingOpen((v) => !v)}
+              className="mono text-[0.6rem] tracking-[0.3em] uppercase px-3 py-1.5 border backdrop-blur-md transition-all"
+              style={{
+                color: accent,
+                borderColor: `${accent}80`,
+                background: "rgba(6,14,26,0.55)",
+                boxShadow: lightingOpen ? `0 0 0 1px ${accent}, 0 10px 30px -10px ${accent}88` : undefined,
+              }}
+              aria-expanded={lightingOpen}
+              aria-controls="lighting-console"
+            >
+              ✦ LIGHTING {lightingOpen ? "▲" : "▼"}
+            </button>
+
+            {/* Panel */}
+            {lightingOpen && (
+              <div
+                id="lighting-console"
+                className="mt-2 w-[260px] p-4 border backdrop-blur-xl animate-fade-in"
+                style={{
+                  borderColor: `${accent}55`,
+                  background: "linear-gradient(180deg, rgba(10,20,36,0.88), rgba(6,12,22,0.92))",
+                  boxShadow: `0 0 0 1px ${accent}22, 0 30px 60px -20px rgba(0,0,0,0.7)`,
+                }}
+              >
+                <div className="mono text-[0.55rem] tracking-[0.32em] uppercase text-[#8fa3b8] mb-3">
+                  ROOM · LIGHTING
+                </div>
+
+                <LightingSlider
+                  label="Accent"
+                  value={accentLevel}
+                  accent={accent}
+                  onChange={(v) => { setAccentLevel(v); persist("accent", v); }}
+                />
+
+                <div className="h-3" />
+
+                <LightingSlider
+                  label="Ambient"
+                  value={ambientLevel}
+                  accent={accent}
+                  onChange={(v) => { setAmbientLevel(v); persist("ambient", v); }}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAccentLevel(55); persist("accent", 55);
+                    setAmbientLevel(60); persist("ambient", 60);
+                  }}
+                  className="mt-4 w-full mono text-[0.55rem] tracking-[0.28em] uppercase px-2 py-1.5 border text-[#c8d4e2] hover:text-[hsl(var(--interactive))] transition-colors"
+                  style={{ borderColor: "rgba(130,205,255,0.25)" }}
+                >
+                  ↺ RESET
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </section>
+
 
       {/* ============ LAYER 1 — CATEGORY RAIL ============ */}
       <section id="bay-category-rail" className="container pt-14 pb-6">
