@@ -8,6 +8,7 @@ interface Props {
   bay: BayId;
   eyebrow?: string;
   title?: string;
+  extras?: React.ReactNode;
 }
 
 const kindIcon: Record<DocItem["kind"], string> = {
@@ -18,7 +19,7 @@ const kindIcon: Record<DocItem["kind"], string> = {
   text: "≡",
 };
 
-export const DocumentShelf = ({ bay, eyebrow = "FILES ON RECORD", title = "Documents" }: Props) => {
+export const DocumentShelf = ({ bay, eyebrow = "FILES ON RECORD", title = "Documents", extras }: Props) => {
   const items = documentsForBay(bay);
   const [active, setActive] = useState<DocItem | null>(null);
 
@@ -70,6 +71,7 @@ export const DocumentShelf = ({ bay, eyebrow = "FILES ON RECORD", title = "Docum
             </div>
           </button>
         ))}
+        {extras}
       </div>
 
       <DocViewer doc={active} onOpenChange={(o) => { if (!o) setActive(null); }} />

@@ -4,8 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   BRAND,
   CORE_STRENGTHS,
-  CREDENTIALS,
-  CREDENTIAL_ISSUER_ORDER,
   CURRENT_WORK,
   FOUNDER_BIO,
   FOUNDER_SUMMARY,
@@ -14,7 +12,7 @@ import {
   TECHNICAL_FOCUS,
 } from "@/data/content";
 import { DocumentShelf } from "./DocumentShelf";
-import { OfficialCertificationsGallery } from "./OfficialCertificationsGallery";
+import { CredentialsDialog } from "./CredentialsDialog";
 import llcCert from "@/assets/ai-base3-llc-certificate.jpg.asset.json";
 import whiteHouseLetter from "@/assets/white-house-letter.jpg.asset.json";
 
@@ -44,6 +42,7 @@ const CompactCard = ({ children, className = "" }: { children: React.ReactNode; 
 export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
   const [bgLoaded, setBgLoaded] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [certsOpen, setCertsOpen] = useState(false);
   const dossierRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -311,65 +310,36 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
             </div>
           </section>
 
-          {/* Credentials — grouped by issuer, real files */}
-          <section className="container py-10">
-            <div className="flex items-baseline justify-between mb-3 flex-wrap gap-2">
-              <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff]">
-                05 / CREDENTIALS · EVIDENCE
-              </div>
-              <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#8fa3b8]">
-                {CREDENTIALS.length} VERIFIED CERTIFICATIONS
-              </div>
-            </div>
-
-            {CREDENTIAL_ISSUER_ORDER.map((issuer) => {
-              const items = CREDENTIALS.filter((c) => c.issuer === issuer);
-              if (items.length === 0) return null;
-              return (
-                <div key={issuer} className="mb-6">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="mono text-[0.65rem] tracking-[0.28em] uppercase text-[#eef6ff]">
-                      {issuer}
-                    </div>
-                    <div className="h-px flex-1 bg-[rgba(130,205,255,0.22)]" />
-                    <div className="mono text-[0.55rem] tracking-[0.24em] text-[#8fa3b8]">
-                      {String(items.length).padStart(2, "0")}
-                    </div>
+          <CredentialsDialog open={certsOpen} onOpenChange={setCertsOpen} />
+          <DocumentShelf
+            bay="mission"
+            eyebrow="06 / FILES ON RECORD"
+            title="Dossier Files"
+            extras={
+              <button
+                type="button"
+                onClick={() => setCertsOpen(true)}
+                className="group relative text-left rounded-sm border border-[rgba(130,205,255,0.42)] bg-[linear-gradient(180deg,rgba(38,64,100,0.80),rgba(22,40,66,0.88))] backdrop-blur-md p-4 hover:border-[rgba(130,205,255,0.65)] transition-colors flex flex-col justify-between min-h-[150px]"
+              >
+                <div>
+                  <div className="flex items-center justify-between">
+                    <Badge variant="outline" className="mono text-[0.55rem] tracking-[0.24em] border-[rgba(80,160,255,0.35)] text-[#4db7ff]">
+                      CERTIFICATES
+                    </Badge>
+                    <span className="mono text-[0.6rem] tracking-[0.24em] text-[#8fa3b8]">BUNDLE</span>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {items.map((c) => (
-                      <a
-                        key={c.id}
-                        href={c.href ?? "#"}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group relative rounded-sm border border-[rgba(130,205,255,0.42)] bg-[linear-gradient(180deg,rgba(38,64,100,0.80),rgba(22,40,66,0.88))] backdrop-blur-md p-4 hover:border-[rgba(130,205,255,0.65)] transition-colors flex flex-col justify-between min-h-[140px]"
-                      >
-                        <div>
-                          <div className="flex items-center justify-between">
-                            <Badge variant="outline" className="mono text-[0.55rem] tracking-[0.24em] border-[rgba(80,160,255,0.35)] text-[#4db7ff]">
-                              {c.category.toUpperCase()}
-                            </Badge>
-                            {c.year && <span className="mono text-[0.6rem] tracking-[0.24em] text-[#8fa3b8]">{c.year}</span>}
-                          </div>
-                          <div className="mt-2 text-sm font-medium leading-snug text-[#eef6ff]">{c.title}</div>
-                          <div className="text-xs text-[#8fa3b8] mt-0.5">{c.issuer}</div>
-                        </div>
-                        <div className="mt-3 flex items-center justify-between">
-                          <span className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
-                            FILE ATTACHED
-                          </span>
-                          <span className="mono text-[0.6rem] text-[#4db7ff] group-hover:text-[#7dd3ff]">OPEN →</span>
-                        </div>
-                      </a>
-                    ))}
-                  </div>
+                  <div className="mt-2 text-sm font-medium leading-snug text-[#eef6ff]">Credentials & Certifications</div>
+                  <div className="text-xs text-[#8fa3b8] mt-1 line-clamp-2">Verified credentials and official certification gallery.</div>
                 </div>
-              );
-            })}
-          </section>
-          <OfficialCertificationsGallery />
-          <DocumentShelf bay="mission" eyebrow="06 / FILES ON RECORD" title="Dossier Files" />
+                <div className="mt-3 flex items-center justify-between">
+                  <span className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
+                    <span className="mr-2 text-[#4db7ff]">◫</span>BUNDLE
+                  </span>
+                  <span className="mono text-[0.6rem] text-[#4db7ff] group-hover:text-[#7dd3ff]">OPEN →</span>
+                </div>
+              </button>
+            }
+          />
 
 
 
