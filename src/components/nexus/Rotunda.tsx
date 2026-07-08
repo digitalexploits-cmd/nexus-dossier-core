@@ -284,9 +284,10 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
       </div>
 
       {/* CAMERA-FIXED OVERLAYS */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_58%,rgba(5,7,10,0.95)_100%)]" />
-      <div className="absolute inset-x-0 top-0 h-24 pointer-events-none bg-gradient-to-b from-background/80 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/95 to-transparent" />
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_72%,rgba(5,7,10,0.55)_100%)]" />
+      <div className="absolute inset-x-0 top-0 h-20 pointer-events-none bg-gradient-to-b from-background/50 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-32 pointer-events-none bg-gradient-to-t from-background/60 to-transparent" />
+
 
       {/* Reticle */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
