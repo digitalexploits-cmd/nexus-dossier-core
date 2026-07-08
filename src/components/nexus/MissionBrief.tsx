@@ -98,7 +98,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
         </div>
 
         {/* Wall-display overlay — compact briefing card, expands on demand */}
-        <div className="relative container h-screen flex items-center justify-end pt-24 pb-16">
+        <div className="relative container h-screen flex items-end justify-end pt-24 pb-16">
           {!expanded ? (
             // Collapsed: ~1/3 of original size, transparent — reads like an HUD label on the wall.
             <div className="anim-fade-up w-[62%] md:w-[22%] lg:w-[18%] p-3 rounded-sm border border-[hsl(var(--interactive)/0.45)] bg-transparent backdrop-blur-[2px] shadow-[0_0_24px_hsl(var(--interactive)/0.18)]">
