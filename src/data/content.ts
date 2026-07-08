@@ -136,14 +136,73 @@ export type Credential = {
   href?: string;
 };
 
+export const RESUME_AVAILABLE = false; // flip to true once /public/resume/ has the file
+
+const cert = (id: string, title: string, issuer: string, file: string): Credential => ({
+  id,
+  title,
+  issuer,
+  category: "Certificate",
+  year: "2026",
+  href: `/credentials/${file}`,
+});
+
 export const CREDENTIALS: Credential[] = [
-  { id: "c1", title: "Google / Cloud / AI Learning Track", issuer: "Google", category: "Learning", year: "2024\u20132026" },
-  { id: "c2", title: "Industrial Technical Certificate", issuer: "Placeholder Institution", category: "Certificate" },
-  { id: "c3", title: "AI Base\u00B3 Solutions LLC Formation", issuer: "State Filing", category: "Founder Document" },
-  { id: "c4", title: "Founder Resume (PDF)", issuer: "Anthony McGee", category: "Resume", href: RESUME_URL },
-  { id: "c5", title: "SINE~WaiV Concept White Paper", issuer: "AI Base\u00B3", category: "White Paper" },
-  { id: "c6", title: "Signal Validation Graphics", issuer: "Research Notes", category: "Validation" },
-  { id: "c7", title: "Nexus Platform Screenshots", issuer: "AI Base\u00B3", category: "Project" },
+  // Google
+  cert("g01", "Google AI Essentials", "Google", "google-ai-essentials.pdf"),
+  cert("g02", "Google AI Professional Certificate", "Google", "google-ai-pro.pdf"),
+  cert("g03", "Google Prompting Essentials", "Google", "google-prompting-master.pdf"),
+  cert("g04", "Start Writing Prompts like a Pro", "Google", "google-prompt-master.pdf"),
+  cert("g05", "AI for App Building", "Google", "google-ai-app-building.pdf"),
+  cert("g06", "AI for Brainstorming and Planning", "Google", "google-ai-brainstorming-planning.pdf"),
+  cert("g07", "AI for Writing and Communicating", "Google", "google-ai-communication-writing.pdf"),
+  cert("g08", "Use AI as a Creative or Expert Partner", "Google", "google-ai-creative-expert.pdf"),
+  cert("g09", "Design Prompts for Everyday Work Tasks", "Google", "google-ai-everyday-work-tasks.pdf"),
+  cert("g10", "AI Fundamentals", "Google", "google-ai-fundamentals.pdf"),
+  cert("g11", "AI for Research and Insights", "Google", "google-ai-research.pdf"),
+  cert("g12", "AI for Content Creation", "Google", "google-content-creation.pdf"),
+  cert("g13", "AI for Data Analysis", "Google", "google-data-analysis.pdf"),
+  cert("g14", "Speed Up Data Analysis and Presentation Building", "Google", "google-data-analysis-presentation-building.pdf"),
+  cert("g15", "Uncover Your Transferable Skills with AI", "Google", "google-transferable-skills.pdf"),
+  cert("g16", "Foundations of User Experience (UX) Design", "Google", "google-ux-design.pdf"),
+
+  // Google Cloud
+  cert("gc01", "Introduction to Generative AI Learning Path", "Google Cloud", "gen-ai-learning-path.pdf"),
+  cert("gc02", "Introduction to Generative AI", "Google Cloud", "google-gen-ai.pdf"),
+  cert("gc03", "Gen AI: Beyond the Chatbot", "Google Cloud", "google-beyond-chatbots.pdf"),
+  cert("gc04", "Gen AI: Navigate the Landscape", "Google Cloud", "google-gen-ai-navigating.pdf"),
+  cert("gc05", "Gen AI: Unlock Foundational Concepts", "Google Cloud", "google-unlock-foundational-concepts.pdf"),
+  cert("gc06", "Gen AI Agents: Transform Your Organization", "Google Cloud", "google-gen-ai-agents-organization.pdf"),
+  cert("gc07", "Gen AI Apps: Transform Your Work", "Google Cloud", "google-gen-ai-apps-for-work.pdf"),
+  cert("gc08", "Introduction to Large Language Models", "Google Cloud", "google-intro-llms.pdf"),
+  cert("gc09", "Introduction to Responsible AI", "Google Cloud", "google-responsible-ai-1.pdf"),
+  cert("gc10", "Responsible AI: Applying AI Principles with Google Cloud", "Google Cloud", "google-responsible-ai-2.pdf"),
+
+  // Anthropic
+  cert("a01", "AI Fundamentals with Claude \u2014 Collaboration", "Anthropic", "anthropic-claude-collaboration.pdf"),
+  cert("a02", "AI Fundamentals with Claude \u2014 Mastery", "Anthropic", "anthropic-claude-master.pdf"),
+
+  // Coursera
+  cert("cs01", "Coursera Verified Certificate", "Coursera", "coursera-3bwz2j6k2jh7.pdf"),
+
+  // Coursiv
+  cert("cv01", "Claude", "Coursiv", "coursiv-claude.pdf"),
+  cert("cv02", "ChatGPT", "Coursiv", "coursiv-chatgpt.pdf"),
+  cert("cv03", "ChatGPT: Deep Dive", "Coursiv", "coursiv-chatgpt-deep-dive.pdf"),
+  cert("cv04", "Gemini", "Coursiv", "coursiv-gemini.pdf"),
+  cert("cv05", "Perplexity", "Coursiv", "coursiv-perplexity.pdf"),
+  cert("cv06", "Midjourney", "Coursiv", "coursiv-midjourney.pdf"),
+  cert("cv07", "Stable Diffusion", "Coursiv", "coursiv-stable-diffusion.pdf"),
+  cert("cv08", "Jasper AI", "Coursiv", "coursiv-jasper.pdf"),
+  cert("cv09", "Lovable", "Coursiv", "coursiv-lovable.pdf"),
+];
+
+export const CREDENTIAL_ISSUER_ORDER: string[] = [
+  "Google",
+  "Google Cloud",
+  "Anthropic",
+  "Coursera",
+  "Coursiv",
 ];
 
 export type EvidenceStatus =
