@@ -20,10 +20,10 @@ interface Props {
 
 const BAYS = ["01", "02", "03", "04"] as const;
 const BAY_LABEL: Record<(typeof BAYS)[number], string> = {
-  "01": "Mission",
-  "02": "Technical",
-  "03": "Capability",
-  "04": "Operations",
+  "01": "Mission Brief",
+  "02": "Sine Wave",
+  "03": "Capability Brief",
+  "04": "Operations Center",
 };
 
 const statusTone: Record<EvidenceStatus, string> = {
