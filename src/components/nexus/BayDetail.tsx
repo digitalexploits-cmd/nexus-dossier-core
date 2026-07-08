@@ -19,6 +19,58 @@ export interface BayDetailSection {
   items?: string[];
 }
 
+export type BayTheme = "lab" | "gallery" | "command";
+
+interface ThemeTokens {
+  /** Eyebrow / MOD label / heading accent color. */
+  accent: string;
+  /** Slightly brighter variant for interactive-adjacent bits. */
+  accentHi: string;
+  /** Warm/tinted radial overlay CSS. */
+  overlayWarm: string;
+  /** Cool/rim radial overlay CSS. */
+  overlayCool: string;
+  /** Ambient badge text shown in the HUD strip. */
+  ambient: string;
+  /** Glass panel border color. */
+  glassBorder: string;
+  /** Glass panel background. */
+  glassBg: string;
+}
+
+const THEMES: Record<BayTheme, ThemeTokens> = {
+  // Research Lab — cool cyan/teal, schematic and clinical.
+  lab: {
+    accent: "#5fe1d6",
+    accentHi: "#8ff5ea",
+    overlayWarm: "radial-gradient(ellipse at 20% 30%, rgba(95,225,214,0.16) 0%, transparent 55%)",
+    overlayCool: "radial-gradient(ellipse at 82% 82%, rgba(90,150,220,0.26) 0%, transparent 52%)",
+    ambient: "CALIBRATED",
+    glassBorder: "rgba(120,215,205,0.42)",
+    glassBg: "rgba(22,52,58,0.78)",
+  },
+  // Capability Gallery — warm gold/amber, curated showroom.
+  gallery: {
+    accent: "#e8b96b",
+    accentHi: "#f6d68d",
+    overlayWarm: "radial-gradient(ellipse at 22% 55%, rgba(255,190,110,0.28) 0%, transparent 50%)",
+    overlayCool: "radial-gradient(ellipse at 82% 82%, rgba(160,120,80,0.22) 0%, transparent 55%)",
+    ambient: "ON DISPLAY",
+    glassBorder: "rgba(232,185,107,0.40)",
+    glassBg: "rgba(50,38,24,0.80)",
+  },
+  // Command & Control — amber/red tactical HUD, live and monitored.
+  command: {
+    accent: "#ff8f5c",
+    accentHi: "#ffb896",
+    overlayWarm: "radial-gradient(ellipse at 18% 60%, rgba(255,120,70,0.24) 0%, transparent 48%)",
+    overlayCool: "radial-gradient(ellipse at 82% 82%, rgba(120,180,255,0.22) 0%, transparent 52%)",
+    ambient: "MONITORED · LIVE",
+    glassBorder: "rgba(255,143,92,0.38)",
+    glassBg: "rgba(46,26,20,0.80)",
+  },
+};
+
 interface Props {
   bayId: BayId;
   code: string;           // "BAY 02"
@@ -31,14 +83,28 @@ interface Props {
   sections?: BayDetailSection[];
   disclaimer?: string;
   heroImage?: string;
+  theme?: BayTheme;
   onOpenVault: () => void;
   onContact: () => void;
 }
 
-// Reusable dark-glass panel — matches Mission Brief look
-const Glass = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+// Themed dark-glass panel — atmosphere matches the bay.
+const Glass = ({
+  children,
+  className = "",
+  tokens,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  tokens: ThemeTokens;
+}) => (
   <div
-    className={`relative rounded-sm border border-[rgba(130,205,255,0.42)] bg-[rgba(30,55,88,0.78)] backdrop-blur-md shadow-[0_30px_80px_-30px_rgba(0,0,0,0.60),inset_0_1px_0_rgba(255,255,255,0.12),0_0_56px_rgba(90,180,255,0.22)] ${className}`}
+    className={`relative rounded-sm border backdrop-blur-md shadow-[0_30px_80px_-30px_rgba(0,0,0,0.60),inset_0_1px_0_rgba(255,255,255,0.10)] ${className}`}
+    style={{
+      borderColor: tokens.glassBorder,
+      background: tokens.glassBg,
+      boxShadow: `0 30px 80px -30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1), 0 0 56px ${tokens.accent}22`,
+    }}
   >
     {children}
   </div>
@@ -56,9 +122,11 @@ export const BayDetail = ({
   sections,
   disclaimer,
   heroImage,
+  theme = "lab",
   onOpenVault,
   onContact,
 }: Props) => {
+  const tokens = THEMES[theme];
   const [bgLoaded, setBgLoaded] = useState(!heroImage);
   const [expanded, setExpanded] = useState(false);
   const dossierRef = useRef<HTMLDivElement>(null);
@@ -94,21 +162,22 @@ export const BayDetail = ({
 
         {/* Legibility + accent lighting */}
         <div className="absolute inset-x-0 top-0 h-[55%] pointer-events-none bg-[linear-gradient(180deg,rgba(4,8,16,0.55)_0%,rgba(4,8,16,0.28)_60%,transparent_100%)]" />
-        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_18%_60%,rgba(255,195,130,0.22)_0%,transparent_48%)]" />
-        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_82%_82%,rgba(110,190,255,0.24)_0%,transparent_52%)]" />
+        {/* Themed accent lighting */}
+        <div className="absolute inset-0 pointer-events-none mix-blend-screen" style={{ background: tokens.overlayWarm }} />
+        <div className="absolute inset-0 pointer-events-none mix-blend-screen" style={{ background: tokens.overlayCool }} />
         <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/40 to-transparent" />
 
         {/* HUD */}
         <div className="absolute inset-x-0 top-14 z-20">
           <div className="container flex items-center justify-between mono text-[0.68rem] tracking-[0.28em] uppercase text-[#8fa3b8]">
             <div className="flex items-center gap-3">
-              <span className="text-[#4db7ff]">NEXUS</span>
+              <span style={{ color: tokens.accent }}>NEXUS</span>
               <span className="text-[#8fa3b8]">/</span>
               <span>{code} · {title.toUpperCase()} · {subtitle.toUpperCase()}</span>
             </div>
             <div className="hidden md:flex items-center gap-2">
               <span className="status-dot status-live" />
-              <span>ON RECORD</span>
+              <span>{tokens.ambient}</span>
             </div>
           </div>
         </div>
@@ -154,11 +223,12 @@ export const BayDetail = ({
           ) : (
             <div
               key="expanded"
-              className="anim-swap-in w-full md:w-[62%] lg:w-[58%] p-5 md:p-6 rounded-sm border border-[rgba(130,205,255,0.48)] bg-[rgba(34,58,92,0.85)] backdrop-blur-md shadow-[0_20px_60px_-20px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.14)]"
+              className="anim-swap-in w-full md:w-[62%] lg:w-[58%] p-5 md:p-6 rounded-sm border backdrop-blur-md shadow-[0_20px_60px_-20px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.14)]"
+              style={{ borderColor: tokens.glassBorder, background: tokens.glassBg }}
             >
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <div className="mono text-[0.65rem] tracking-[0.28em] uppercase text-[#4db7ff]">NEXUS</div>
+                  <div className="mono text-[0.65rem] tracking-[0.28em] uppercase" style={{ color: tokens.accent }}>NEXUS</div>
                   <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#8fa3b8] mt-0.5">
                     {code} / {title.toUpperCase()}
                   </div>
@@ -169,8 +239,14 @@ export const BayDetail = ({
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
-                <div className="border border-[rgba(130,205,255,0.38)] bg-[linear-gradient(180deg,rgba(36,62,98,0.78),rgba(22,40,66,0.86))] p-4">
-                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">
+                <div
+                  className="border p-4"
+                  style={{
+                    borderColor: tokens.glassBorder,
+                    background: `linear-gradient(180deg, ${tokens.glassBg}, rgba(10,16,26,0.9))`,
+                  }}
+                >
+                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase mb-2" style={{ color: tokens.accent }}>
                     THESIS
                   </div>
                   <h1 className="text-2xl font-semibold tracking-tight leading-tight text-[#eef6ff]">
@@ -179,8 +255,14 @@ export const BayDetail = ({
                   <p className="text-sm text-[#c8d4e2] mt-3 leading-relaxed">{intro}</p>
                 </div>
 
-                <div className="border border-[rgba(130,205,255,0.38)] bg-[linear-gradient(180deg,rgba(36,62,98,0.78),rgba(22,40,66,0.86))] p-4">
-                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">
+                <div
+                  className="border p-4"
+                  style={{
+                    borderColor: tokens.glassBorder,
+                    background: `linear-gradient(180deg, ${tokens.glassBg}, rgba(10,16,26,0.9))`,
+                  }}
+                >
+                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase mb-2" style={{ color: tokens.accent }}>
                     POSTURE LABELS
                   </div>
                   <div className="flex flex-wrap gap-1.5">
@@ -188,7 +270,8 @@ export const BayDetail = ({
                       <Badge
                         key={l}
                         variant="outline"
-                        className="mono text-[0.55rem] tracking-[0.24em] border-[rgba(80,160,255,0.45)] text-[#4db7ff]"
+                        className="mono text-[0.55rem] tracking-[0.24em]"
+                        style={{ borderColor: `${tokens.accent}80`, color: tokens.accentHi }}
                       >
                         {l.toUpperCase()}
                       </Badge>
@@ -234,15 +317,15 @@ export const BayDetail = ({
         >
           {/* Intro re-affirm */}
           <section className="container pt-16 pb-8">
-            <Glass className="p-6 md:p-8">
-              <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">
+            <Glass tokens={tokens} className="p-6 md:p-8">
+              <div className="mono text-[0.6rem] tracking-[0.28em] uppercase mb-2" style={{ color: tokens.accent }}>
                 01 / OVERVIEW
               </div>
               <p className="text-[#eef6ff] leading-relaxed">{intro}</p>
               {disclaimer && (
                 <>
                   <div className="rule my-5" />
-                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">
+                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase mb-2" style={{ color: tokens.accent }}>
                     DISCLAIMER
                   </div>
                   <p className="text-[#c8d4e2] leading-relaxed text-sm">{disclaimer}</p>
@@ -253,14 +336,14 @@ export const BayDetail = ({
 
           {/* Module blocks */}
           <section className="container py-10">
-            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">
+            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase mb-3" style={{ color: tokens.accent }}>
               02 / MODULES
             </div>
             <div className="grid md:grid-cols-2 gap-3">
               {blocks.map((b, i) => (
-                <Glass key={b.title} className="p-5">
+                <Glass key={b.title} tokens={tokens} className="p-5">
                   <div className="flex items-center justify-between">
-                    <div className="mono text-[0.6rem] tracking-[0.28em] text-[#4db7ff]">
+                    <div className="mono text-[0.6rem] tracking-[0.28em]" style={{ color: tokens.accent }}>
                       MOD-{String(i + 1).padStart(2, "0")}
                     </div>
                     {b.status && (
@@ -279,10 +362,10 @@ export const BayDetail = ({
           {/* Optional custom sections */}
           {sections?.map((s) => (
             <section key={s.index} className="container py-10">
-              <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">
+              <div className="mono text-[0.6rem] tracking-[0.28em] uppercase mb-3" style={{ color: tokens.accent }}>
                 {s.index} / {s.eyebrow.toUpperCase()}
               </div>
-              <Glass className="p-6">
+              <Glass tokens={tokens} className="p-6">
                 {s.title && (
                   <h3 className="text-xl font-semibold text-[#eef6ff] mb-2">{s.title}</h3>
                 )}
@@ -293,7 +376,10 @@ export const BayDetail = ({
                   <ul className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
                     {s.items.map((it) => (
                       <li key={it} className="flex items-start gap-2 text-sm text-[#c8d4e2]">
-                        <span className="status-dot status-research mt-1.5 shrink-0" />
+                        <span
+                          className="mt-1.5 shrink-0 w-1.5 h-1.5 rounded-full"
+                          style={{ background: tokens.accent, boxShadow: `0 0 8px ${tokens.accent}` }}
+                        />
                         <span>{it}</span>
                       </li>
                     ))}
@@ -308,10 +394,10 @@ export const BayDetail = ({
 
           {/* Engage strip */}
           <section className="container py-16">
-            <Glass className="p-8 md:p-10 overflow-hidden">
+            <Glass tokens={tokens} className="p-8 md:p-10 overflow-hidden">
               <div className="grid md:grid-cols-[1fr_auto] gap-6 items-end">
                 <div className="space-y-2">
-                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff]">
+                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase" style={{ color: tokens.accent }}>
                     05 / ENGAGE
                   </div>
                   <h3 className="text-2xl md:text-3xl font-semibold tracking-tight text-[#eef6ff]">
