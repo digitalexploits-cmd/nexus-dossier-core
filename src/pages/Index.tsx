@@ -151,23 +151,26 @@ const Index = () => {
   const goBay = useCallback((id: BayId) => {
     if (view === id) return;
     audio.blip(880);
-    const videoSrc = TRANSITION_VIDEOS[id];
-    if (videoSrc && !prefersReducedMotion()) {
-      // Commit destination first — video overlay is cinematic dressing;
-      // when it ends we reveal the already-mounted hero image landing.
-      commitView(id);
-      setVideoTransition({ src: videoSrc, next: id });
+    if (prefersReducedMotion()) {
+      runTransition(bayLabel(id), "advance", id);
       return;
     }
-    runTransition(bayLabel(id), "advance", id);
+    // Two-stage cinematic entry: Rotunda → bay archway, then in-bay reveal.
+    // Commit destination first so the hero image is already mounted when the
+    // cinematic finishes and the overlay lifts.
+    commitView(id);
+    setVideoTransition({
+      sources: [TRANSITION_VIDEOS[id], CINEMATIC_VIDEOS[id]],
+    });
   }, [view, runTransition, commitView]);
 
   const openVault = useCallback(() => {
     audio.blip(740);
     if (prefersReducedMotion()) { setVaultOpen(true); return; }
-    // Play the cinematic vault push-in first, then reveal the vault overlay.
-    setVideoTransition({ src: VAULT_TRANSITION_URL, next: view });
-    setTimeout(() => setVaultOpen(true), 900);
+    // Rotunda → vault door, then interior reveal. Overlay opens right as the
+    // second clip lands so the vault UI feels like the settled destination.
+    setVideoTransition({ sources: [VAULT_TRANSITION_URL, VAULT_CINEMATIC_URL] });
+    setTimeout(() => setVaultOpen(true), 4800);
   }, [view]);
   const goContact = useCallback(() => {
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
