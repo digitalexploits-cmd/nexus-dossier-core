@@ -14,18 +14,32 @@ import transitionMission from "../../public/media/transition-mission.mp4.asset.j
 import transitionTechnical from "../../public/media/transition-technical.mp4.asset.json";
 import transitionOperations from "../../public/media/transition-operations.mp4.asset.json";
 import transitionVault from "../../public/media/transition-vault.mp4.asset.json";
+import cinematicMission from "../../public/media/cinematic-mission.mp4.asset.json";
+import cinematicTechnical from "../../public/media/cinematic-technical.mp4.asset.json";
+import cinematicCapability from "../../public/media/cinematic-capability.mp4.asset.json";
+import cinematicOperations from "../../public/media/cinematic-operations.mp4.asset.json";
+import cinematicVault from "../../public/media/cinematic-vault.mp4.asset.json";
 
-// Bay-specific transition videos — cinematic push-in from Rotunda into each
-// destination environment. Vault has its own transition too (played when the
-// vault overlay opens). Missing → CSS wipe fallback.
-const TRANSITION_VIDEOS: Record<BayId, string | null> = {
+// Two-stage cinematic entry per bay:
+//   1) TRANSITION  — first-person walk from the Rotunda to the bay archway
+//   2) CINEMATIC   — the room comes alive (in-bay atmosphere)
+// After both play, the still hero image takes over.
+const TRANSITION_VIDEOS: Record<BayId, string> = {
   mission:    transitionMission.url,
   technical:  transitionTechnical.url,
   capability: "/media/transition-capability.mp4",
   operations: transitionOperations.url,
 };
 
+const CINEMATIC_VIDEOS: Record<BayId, string> = {
+  mission:    cinematicMission.url,
+  technical:  cinematicTechnical.url,
+  capability: cinematicCapability.url,
+  operations: cinematicOperations.url,
+};
+
 const VAULT_TRANSITION_URL = transitionVault.url;
+const VAULT_CINEMATIC_URL = cinematicVault.url;
 
 // Hero image per bay — the stable landing state after transition.
 const HERO_IMAGES: Record<BayId, string> = {
