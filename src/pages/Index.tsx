@@ -18,7 +18,7 @@ const TRANSITION_VIDEOS: Record<BayId, string | null> = {
   mission: "/media/transition-mission.mp4",
   technical: "/media/transition-technical.mp4",
   capability: "/media/transition-capability.mp4",
-  operations: null,
+  operations: "/media/transition-operations.mp4",
 };
 
 type View = "home" | BayId;
