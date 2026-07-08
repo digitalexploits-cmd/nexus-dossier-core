@@ -311,6 +311,8 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
             </div>
           </section>
 
+          <OfficialCertificationsGallery />
+
           <CredentialsDialog open={certsOpen} onOpenChange={setCertsOpen} />
           <DocumentShelf
             bay="mission"
@@ -325,12 +327,12 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
                 <div>
                   <div className="flex items-center justify-between">
                     <Badge variant="outline" className="mono text-[0.55rem] tracking-[0.24em] border-[rgba(80,160,255,0.35)] text-[#4db7ff]">
-                      CERTIFICATES
+                      CREDENTIALS
                     </Badge>
                     <span className="mono text-[0.6rem] tracking-[0.24em] text-[#8fa3b8]">BUNDLE</span>
                   </div>
-                  <div className="mt-2 text-sm font-medium leading-snug text-[#eef6ff]">Credentials & Certifications</div>
-                  <div className="text-xs text-[#8fa3b8] mt-1 line-clamp-2">Verified credentials and official certification gallery.</div>
+                  <div className="mt-2 text-sm font-medium leading-snug text-[#eef6ff]">Credentials Bundle</div>
+                  <div className="text-xs text-[#8fa3b8] mt-1 line-clamp-2">All verified credentials, grouped by issuer, in one place.</div>
                 </div>
                 <div className="mt-3 flex items-center justify-between">
                   <span className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
@@ -341,6 +343,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
               </button>
             }
           />
+
 
 
 
