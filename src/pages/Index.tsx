@@ -171,6 +171,7 @@ const Index = () => {
               <BayDetail
                 bayId="technical"
                 theme="lab"
+                heroImage="/media/technical-landing.jpg"
                 code="BAY 02"
                 title="Technical Brief"
                 subtitle="Research Lab"
