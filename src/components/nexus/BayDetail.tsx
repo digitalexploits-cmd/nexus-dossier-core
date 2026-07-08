@@ -162,21 +162,22 @@ export const BayDetail = ({
 
         {/* Legibility + accent lighting */}
         <div className="absolute inset-x-0 top-0 h-[55%] pointer-events-none bg-[linear-gradient(180deg,rgba(4,8,16,0.55)_0%,rgba(4,8,16,0.28)_60%,transparent_100%)]" />
-        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_18%_60%,rgba(255,195,130,0.22)_0%,transparent_48%)]" />
-        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_82%_82%,rgba(110,190,255,0.24)_0%,transparent_52%)]" />
+        {/* Themed accent lighting */}
+        <div className="absolute inset-0 pointer-events-none mix-blend-screen" style={{ background: tokens.overlayWarm }} />
+        <div className="absolute inset-0 pointer-events-none mix-blend-screen" style={{ background: tokens.overlayCool }} />
         <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/40 to-transparent" />
 
         {/* HUD */}
         <div className="absolute inset-x-0 top-14 z-20">
           <div className="container flex items-center justify-between mono text-[0.68rem] tracking-[0.28em] uppercase text-[#8fa3b8]">
             <div className="flex items-center gap-3">
-              <span className="text-[#4db7ff]">NEXUS</span>
+              <span style={{ color: tokens.accent }}>NEXUS</span>
               <span className="text-[#8fa3b8]">/</span>
               <span>{code} · {title.toUpperCase()} · {subtitle.toUpperCase()}</span>
             </div>
             <div className="hidden md:flex items-center gap-2">
               <span className="status-dot status-live" />
-              <span>ON RECORD</span>
+              <span>{tokens.ambient}</span>
             </div>
           </div>
         </div>
