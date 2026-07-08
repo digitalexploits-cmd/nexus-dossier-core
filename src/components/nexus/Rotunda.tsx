@@ -20,11 +20,11 @@ type Zone = {
 };
 
 const ZONES: Zone[] = [
-  { id: "mission",    label: "Mission Brief",     sub: "Founder Office",      index: "01", pos: 0.08 },
-  { id: "technical",  label: "Technical Brief",   sub: "Research Lab",        index: "02", pos: 0.30 },
-  { id: "capability", label: "Capability Brief",  sub: "Capability Gallery",  index: "03", pos: 0.58 },
-  { id: "operations", label: "Operations Center", sub: "Command & Control",   index: "04", pos: 0.82 },
-  { id: "vault",      label: "Evidence Vault",    sub: "Secured Archive",     index: "05", pos: 0.97, synthetic: true },
+  { id: "mission",    label: "Mission Brief",     sub: "The Founder / Boss",   index: "01", pos: 0.08 },
+  { id: "technical",  label: "Sine Wave",         sub: "Algorithm Data Bank",  index: "02", pos: 0.30 },
+  { id: "capability", label: "Capability Brief",  sub: "Capability Gallery",   index: "03", pos: 0.58 },
+  { id: "operations", label: "Operations Center", sub: "Command & Control",    index: "04", pos: 0.82 },
+  { id: "vault",      label: "Evidence Vault",    sub: "Secured Archive",      index: "05", pos: 0.97, synthetic: true },
 ];
 
 const LOCK_THRESHOLD = 0.035;
