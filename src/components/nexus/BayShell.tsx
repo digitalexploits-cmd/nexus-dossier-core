@@ -42,6 +42,8 @@ interface Props {
   ambient?: string;
   /** Accent color (CSS color) for this bay's chrome accents. Default cyan. */
   accent?: string;
+  /** Show the premium accent + ambient lighting console on the hero. */
+  lightingControls?: boolean;
   onOpenVault: () => void;
   onContact: () => void;
 }
@@ -54,6 +56,7 @@ export const BayShell = ({
   tagline,
   ambient = "ON RECORD",
   accent = DEFAULT_ACCENT,
+  lightingControls = false,
   onOpenVault,
   onContact,
 }: Props) => {
@@ -65,6 +68,29 @@ export const BayShell = ({
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
   const [viewingAsset, setViewingAsset] = useState<Asset | null>(null);
   const [certsOpen, setCertsOpen] = useState(false);
+
+  // Lighting console — accent rim glow (0–100) and ambient exposure (0–100).
+  // Persisted per-bay so the room "remembers" how the user lit it.
+  const lightingKey = `nexus:lighting:${bayId}`;
+  const [accentLevel, setAccentLevel] = useState<number>(() => {
+    try { const v = localStorage.getItem(`${lightingKey}:accent`); return v ? Number(v) : 55; } catch { return 55; }
+  });
+  const [ambientLevel, setAmbientLevel] = useState<number>(() => {
+    try { const v = localStorage.getItem(`${lightingKey}:ambient`); return v ? Number(v) : 60; } catch { return 60; }
+  });
+  const [lightingOpen, setLightingOpen] = useState(false);
+
+  // Persist changes
+  const persist = useCallback((k: "accent" | "ambient", v: number) => {
+    try { localStorage.setItem(`${lightingKey}:${k}`, String(v)); } catch { /* ignore */ }
+  }, [lightingKey]);
+
+  // Derived visual values.
+  // Ambient maps 0..100 → brightness 0.55..1.55 (dim room ↔ full exposure).
+  const ambientBrightness = 0.55 + (ambientLevel / 100) * 1.0;
+  // Accent maps 0..100 → gradient alpha strength.
+  const accentA = (v: number) => Math.round((accentLevel / 100) * v).toString(16).padStart(2, "0");
+
 
   const activeCategory = useMemo(
     () => content.categories.find((c) => c.id === activeCategoryId) ?? null,
@@ -102,7 +128,8 @@ export const BayShell = ({
         <img
           src={heroImage}
           alt={`${bayMeta.title} — immersive environment`}
-          className={`absolute inset-0 w-full h-full object-cover brightness-[1.20] contrast-[1.04] saturate-[1.10] transition-opacity duration-700 ease-out ${heroLoaded ? "opacity-100" : "opacity-0"}`}
+          className={`absolute inset-0 w-full h-full object-cover contrast-[1.04] saturate-[1.10] transition-opacity duration-700 ease-out ${heroLoaded ? "opacity-100" : "opacity-0"}`}
+          style={{ filter: `brightness(${ambientBrightness.toFixed(3)}) contrast(1.04) saturate(1.10)` }}
           draggable={false}
           loading="eager"
           decoding="async"
@@ -112,9 +139,25 @@ export const BayShell = ({
         {/* Legibility overlays — quiet, do not clutter */}
         <div className="absolute inset-x-0 top-0 h-[45%] pointer-events-none bg-[linear-gradient(180deg,rgba(4,8,16,0.55)_0%,rgba(4,8,16,0.15)_60%,transparent_100%)]" />
         <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/50 to-transparent" />
-        {/* Restrained accent lighting — cyan edge */}
-        <div className="absolute inset-0 pointer-events-none mix-blend-screen"
-             style={{ background: `radial-gradient(ellipse at 82% 82%, ${accent}22 0%, transparent 55%)` }} />
+        {/* Premium accent lighting — layered rim glows, driven by the accent slider */}
+        <div
+          className="absolute inset-0 pointer-events-none mix-blend-screen transition-opacity duration-500"
+          style={{
+            background: `
+              radial-gradient(ellipse 55% 45% at 12% 88%, ${accent}${accentA(90)} 0%, transparent 60%),
+              radial-gradient(ellipse 60% 40% at 88% 82%, ${accent}${accentA(80)} 0%, transparent 62%),
+              radial-gradient(ellipse 40% 30% at 50% 8%, ${accent}${accentA(55)} 0%, transparent 65%)
+            `,
+          }}
+        />
+        {/* Fine top edge — cinematic key light */}
+        <div
+          className="absolute inset-x-0 top-0 h-[2px] pointer-events-none transition-opacity duration-500"
+          style={{
+            background: `linear-gradient(90deg, transparent, ${accent}${accentA(200)}, transparent)`,
+            boxShadow: `0 0 24px ${accent}${accentA(160)}`,
+          }}
+        />
 
         {/* HUD label — the only text on the hero */}
         <div className="absolute inset-x-0 top-14 z-20">
@@ -157,7 +200,75 @@ export const BayShell = ({
         >
           ▼ ENTER
         </button>
+
+        {/* ============ LIGHTING CONSOLE — premium HUD ============ */}
+        {lightingControls && (
+          <div className="absolute right-4 md:right-6 top-24 md:top-28 z-30 select-none">
+            {/* Toggle chip */}
+            <button
+              type="button"
+              onClick={() => setLightingOpen((v) => !v)}
+              className="mono text-[0.6rem] tracking-[0.3em] uppercase px-3 py-1.5 border backdrop-blur-md transition-all"
+              style={{
+                color: accent,
+                borderColor: `${accent}80`,
+                background: "rgba(6,14,26,0.55)",
+                boxShadow: lightingOpen ? `0 0 0 1px ${accent}, 0 10px 30px -10px ${accent}88` : undefined,
+              }}
+              aria-expanded={lightingOpen}
+              aria-controls="lighting-console"
+            >
+              ✦ LIGHTING {lightingOpen ? "▲" : "▼"}
+            </button>
+
+            {/* Panel */}
+            {lightingOpen && (
+              <div
+                id="lighting-console"
+                className="mt-2 w-[260px] p-4 border backdrop-blur-xl animate-fade-in"
+                style={{
+                  borderColor: `${accent}55`,
+                  background: "linear-gradient(180deg, rgba(10,20,36,0.88), rgba(6,12,22,0.92))",
+                  boxShadow: `0 0 0 1px ${accent}22, 0 30px 60px -20px rgba(0,0,0,0.7)`,
+                }}
+              >
+                <div className="mono text-[0.55rem] tracking-[0.32em] uppercase text-[#8fa3b8] mb-3">
+                  ROOM · LIGHTING
+                </div>
+
+                <LightingSlider
+                  label="Accent"
+                  value={accentLevel}
+                  accent={accent}
+                  onChange={(v) => { setAccentLevel(v); persist("accent", v); }}
+                />
+
+                <div className="h-3" />
+
+                <LightingSlider
+                  label="Ambient"
+                  value={ambientLevel}
+                  accent={accent}
+                  onChange={(v) => { setAmbientLevel(v); persist("ambient", v); }}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAccentLevel(55); persist("accent", 55);
+                    setAmbientLevel(60); persist("ambient", 60);
+                  }}
+                  className="mt-4 w-full mono text-[0.55rem] tracking-[0.28em] uppercase px-2 py-1.5 border text-[#c8d4e2] hover:text-[hsl(var(--interactive))] transition-colors"
+                  style={{ borderColor: "rgba(130,205,255,0.25)" }}
+                >
+                  ↺ RESET
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </section>
+
 
       {/* ============ LAYER 1 — CATEGORY RAIL ============ */}
       <section id="bay-category-rail" className="container pt-14 pb-6">
@@ -276,7 +387,41 @@ export const BayShell = ({
   );
 };
 
-// ------------------------------ Asset card ------------------------------
+// ------------------------------ Lighting slider ------------------------------
+
+interface LightingSliderProps {
+  label: string;
+  value: number;
+  accent: string;
+  onChange: (v: number) => void;
+}
+
+const LightingSlider = ({ label, value, accent, onChange }: LightingSliderProps) => (
+  <div>
+    <div className="flex items-center justify-between mb-1.5">
+      <span className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#c8d4e2]">{label}</span>
+      <span className="mono text-[0.6rem] tracking-[0.2em] text-[#8fa3b8]">
+        {value.toString().padStart(3, "0")}
+      </span>
+    </div>
+    <input
+      type="range"
+      min={0}
+      max={100}
+      value={value}
+      onChange={(e) => onChange(Number(e.target.value))}
+      aria-label={`${label} lighting level`}
+      className="w-full h-1 appearance-none rounded-full cursor-pointer outline-none"
+      style={{
+        background: `linear-gradient(90deg, ${accent} 0%, ${accent} ${value}%, rgba(130,205,255,0.18) ${value}%, rgba(130,205,255,0.18) 100%)`,
+        // WebKit thumb styling via inline is limited; rely on generic ::-webkit-slider-thumb defaults
+        accentColor: accent,
+      }}
+    />
+  </div>
+);
+
+
 
 const kindGlyph: Record<Asset["kind"], string> = {
   pdf: "▤", image: "◫", video: "▷", audio: "♪", html: "◈", doc: "≡", text: "≡", markdown: "≡", link: "↗",
