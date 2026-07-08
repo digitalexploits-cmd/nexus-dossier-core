@@ -147,8 +147,8 @@ const Index = () => {
                 <button
                   key={b}
                   onClick={() => goBay(b)}
-                  className={`mono text-[0.65rem] tracking-widest px-2 py-1 border transition-colors ${
-                    view === b ? "border-primary text-primary bg-primary/10" : "border-border/60 text-muted-foreground hover:text-foreground"
+                  className={`bay-hover-glow mono text-[0.65rem] tracking-widest px-2 py-1 border ${
+                    view === b ? "border-primary text-primary bg-primary/10" : "border-border/60 text-muted-foreground"
                   }`}
                 >
                   {`0${i + 1}`} · {b.toUpperCase()}
