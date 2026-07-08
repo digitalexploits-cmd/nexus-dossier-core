@@ -1,194 +1,105 @@
-import { useEffect, useRef, useState } from "react";
-import rotundaAsset from "@/assets/nexus-rotunda.jpg.asset.json";
-import { BRAND } from "@/data/content";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { audio, prefersReducedMotion } from "@/lib/audio";
 
 interface Props {
   onComplete: () => void;
 }
 
-type Phase = "standby" | "pushing" | "done";
+const INTRO_SRC = "/media/intro-load.mp4";
 
 /**
- * Cold-open cinematic. Standby card → user click → first-person push-in
- * over the rotunda image with HUD boot-lines → hand off to <Rotunda />.
+ * Cold-open intro. Plays /media/intro-load.mp4 fullscreen (muted autoplay
+ * so browsers allow it), overlays SKIP + SOUND toggle, then fades out and
+ * boots ambient audio. Reduced-motion skips straight through.
  */
 export const IntroOverlay = ({ onComplete }: Props) => {
-  const [phase, setPhase] = useState<Phase>("standby");
-  const [bootLines, setBootLines] = useState<string[]>([]);
-  const reduced = useRef(prefersReducedMotion());
+  const reducedRef = useRef(prefersReducedMotion());
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [fading, setFading] = useState(false);
+  const [done, setDone] = useState(false);
+  const [muted, setMuted] = useState(true);
 
-  const finish = () => {
-    setPhase("done");
-    // brief fade-out beat, then unmount
-    setTimeout(onComplete, 350);
-  };
+  const finish = useCallback(async () => {
+    if (fading || done) return;
+    setFading(true);
+    try { await audio.start(); } catch { /* ignore */ }
+    setTimeout(() => { setDone(true); onComplete(); }, 400);
+  }, [fading, done, onComplete]);
 
-  const skip = () => {
-    audio.start(); // still start audio on skip click gesture
-    finish();
-  };
+  // Reduced motion: skip immediately
+  useEffect(() => {
+    if (reducedRef.current) {
+      onComplete();
+      setDone(true);
+    }
+  }, [onComplete]);
 
-  const enter = async () => {
-    await audio.start();
-    audio.blip(660);
-
-    if (reduced.current) { finish(); return; }
-
-    setPhase("pushing");
-
-    // Boot-line schedule during the ~3s push-in
-    const lines = [
-      "BOOT // SHELL ONLINE",
-      "LINK // AI BASE³ SOLUTIONS",
-      "RENDER // ROTUNDA",
-      "HUD // OBJECTIVE CONSOLE READY",
-    ];
-    lines.forEach((l, i) => {
-      setTimeout(() => setBootLines((prev) => [...prev, l]), 250 + i * 480);
-    });
-
-    setTimeout(finish, 3100);
-  };
-
-  // Escape key to skip
+  // Escape to skip
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && phase !== "done") skip();
-      if ((e.key === "Enter" || e.key === " ") && phase === "standby") { e.preventDefault(); enter(); }
+      if (e.key === "Escape") finish();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase]);
+  }, [finish]);
 
-  if (phase === "done") return null;
+  // Safety timeout in case video fails to fire onEnded
+  useEffect(() => {
+    const t = window.setTimeout(() => { finish(); }, 30_000);
+    return () => window.clearTimeout(t);
+  }, [finish]);
+
+  const toggleSound = useCallback(async () => {
+    const v = videoRef.current;
+    if (!v) return;
+    const next = !muted;
+    v.muted = next ? false : true; // next=true → unmute
+    setMuted(!next);
+    if (next) {
+      try { await v.play(); } catch { /* ignore */ }
+    }
+  }, [muted]);
+
+  if (done) return null;
 
   return (
     <div
-      className={`fixed inset-0 z-[100] bg-[#04060a] overflow-hidden ${
-        phase === "pushing" ? "pointer-events-none" : ""
-      }`}
+      className="fixed inset-0 z-[100] bg-[#04060a] overflow-hidden"
+      style={{
+        opacity: fading ? 0 : 1,
+        transition: "opacity 400ms ease-out",
+      }}
     >
-      {/* Rotunda camera layer */}
-      <img
-        src={rotundaAsset.url}
-        alt=""
-        aria-hidden
+      <video
+        ref={videoRef}
+        src={INTRO_SRC}
         className="absolute inset-0 w-full h-full object-cover"
-        style={{
-          transformOrigin: "50% 52%",
-          transform: phase === "pushing" ? "scale(1.0)" : "scale(1.25)",
-          filter: phase === "pushing"
-            ? "brightness(1.05) blur(0px) saturate(1.1)"
-            : "brightness(0.35) blur(6px) saturate(0.85)",
-          transition: phase === "pushing"
-            ? "transform 3000ms cubic-bezier(0.22,1,0.36,1), filter 2600ms cubic-bezier(0.22,1,0.36,1)"
-            : "none",
-        }}
-        draggable={false}
+        autoPlay
+        muted
+        playsInline
+        loop={false}
+        onEnded={finish}
+        onError={finish}
       />
 
-      {/* Vertical settle micro-motion (headset feel) */}
-      {phase === "pushing" && (
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ animation: "intro-settle 3000ms cubic-bezier(0.22,1,0.36,1) forwards" }}
-        >
-          <img
-            src={rotundaAsset.url}
-            alt=""
-            aria-hidden
-            className="w-full h-full object-cover opacity-0"
-            draggable={false}
-          />
-        </div>
-      )}
+      {/* Subtle vignette */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_60%,rgba(2,4,8,0.85)_100%)]" />
 
-      {/* Heavy vignette that lifts as we push in */}
-      <div
-        className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(2,4,8,1)_100%)]"
-        style={{
-          opacity: phase === "pushing" ? 0.55 : 1,
-          transition: "opacity 2600ms cubic-bezier(0.22,1,0.36,1)",
-        }}
-      />
+      {/* SOUND toggle */}
+      <button
+        onClick={toggleSound}
+        className="absolute bottom-6 left-6 mono text-[0.6rem] tracking-[0.28em] text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 px-3 py-1.5 bg-background/40 backdrop-blur-sm transition-colors"
+      >
+        {muted ? "SOUND ON" : "SOUND OFF"}
+      </button>
 
-      {/* Scanline sweep during boot */}
-      {phase === "pushing" && (
-        <div
-          className="absolute inset-x-0 h-[2px] pointer-events-none"
-          style={{
-            top: 0,
-            background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.85), transparent)",
-            boxShadow: "0 0 24px hsl(var(--primary) / 0.6)",
-            animation: "intro-scan 2600ms cubic-bezier(0.22,1,0.36,1) forwards",
-          }}
-        />
-      )}
-
-      {/* Standby card */}
-      {phase === "standby" && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-8 px-6 text-center">
-          <div className="flex flex-col items-center gap-4 anim-fade-up">
-            <div className="relative w-14 h-14">
-              <div className="absolute inset-0 border border-primary/70 rotate-45" />
-              <div className="absolute inset-2 bg-primary/30" />
-              <div className="absolute inset-0 border border-primary/40 rotate-45 animate-ping" />
-            </div>
-            <div className="mono text-[0.72rem] tracking-[0.42em] text-primary/90">NEXUS</div>
-            <div className="mono text-[0.65rem] tracking-[0.32em] text-foreground/80">
-              {BRAND.company.toUpperCase()}
-            </div>
-          </div>
-
-          <button
-            onClick={enter}
-            className="group relative mt-4 px-8 py-4 border border-primary/60 bg-primary/[0.06] hover:bg-primary/15 hover:border-primary transition-colors mono text-[0.85rem] tracking-[0.36em] text-primary shadow-[0_0_40px_rgba(70,150,255,0.25)] anim-fade-up"
-            style={{ animationDelay: "180ms" }}
-          >
-            <span className="absolute -inset-px border border-primary/30 group-hover:border-primary/70 pointer-events-none" />
-            ENTER NEXUS
-          </button>
-
-          <div
-            className="mono text-[0.6rem] tracking-[0.32em] text-muted-foreground anim-fade-up"
-            style={{ animationDelay: "320ms" }}
-          >
-            SHELL STANDBY — CLICK TO INITIALIZE
-          </div>
-
-          <button
-            onClick={skip}
-            className="absolute bottom-6 right-6 mono text-[0.6rem] tracking-[0.28em] text-muted-foreground hover:text-primary/80 border border-border/60 hover:border-primary/40 px-3 py-1.5 bg-background/40 backdrop-blur-sm transition-colors"
-          >
-            SKIP →
-          </button>
-        </div>
-      )}
-
-      {/* HUD boot lines during push-in */}
-      {phase === "pushing" && (
-        <>
-          <div className="absolute top-6 left-6 space-y-1.5">
-            {bootLines.map((l) => (
-              <div
-                key={l}
-                className="mono text-[0.62rem] tracking-[0.24em] text-primary/85 anim-fade-up"
-                style={{ textShadow: "0 0 12px hsl(var(--primary) / 0.5)" }}
-              >
-                &gt; {l}
-              </div>
-            ))}
-          </div>
-          <button
-            onClick={skip}
-            className="pointer-events-auto absolute bottom-6 right-6 mono text-[0.6rem] tracking-[0.28em] text-muted-foreground hover:text-primary/80 border border-border/60 hover:border-primary/40 px-3 py-1.5 bg-background/40 backdrop-blur-sm transition-colors"
-          >
-            SKIP →
-          </button>
-        </>
-      )}
+      {/* SKIP */}
+      <button
+        onClick={finish}
+        className="absolute bottom-6 right-6 mono text-[0.6rem] tracking-[0.28em] text-muted-foreground hover:text-primary/80 border border-border/60 hover:border-primary/40 px-3 py-1.5 bg-background/40 backdrop-blur-sm transition-colors"
+      >
+        SKIP →
+      </button>
     </div>
   );
 };

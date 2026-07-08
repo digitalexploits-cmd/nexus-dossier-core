@@ -7,9 +7,19 @@ import { Contact } from "@/components/nexus/Contact";
 import { TopBar, BottomBar } from "@/components/nexus/Chrome";
 import { IntroOverlay } from "@/components/nexus/IntroOverlay";
 import { BayTransition, type TransitionKind } from "@/components/nexus/BayTransition";
+import { VideoTransition } from "@/components/nexus/VideoTransition";
 import { Button } from "@/components/ui/button";
 import { BAYS, type BayId } from "@/data/content";
 import { audio, prefersReducedMotion } from "@/lib/audio";
+
+// Add a file to /public/media/ and flip the entry from null to its path
+// to give a bay a cinematic video transition. Null → CSS wipe fallback.
+const TRANSITION_VIDEOS: Record<BayId, string | null> = {
+  mission: "/media/transition-mission.mp4",
+  technical: null,
+  capability: null,
+  operations: null,
+};
 
 type View = "home" | BayId;
 
@@ -36,6 +46,7 @@ const Index = () => {
     try { return sessionStorage.getItem("nexus:intro") === "done"; } catch { return false; }
   });
   const [transition, setTransition] = useState<{ label: string; kind: TransitionKind } | null>(null);
+  const [videoTransition, setVideoTransition] = useState<{ src: string; next: View } | null>(null);
   const pendingRef = useRef<View | null>(null);
 
   useEffect(() => {
@@ -77,6 +88,11 @@ const Index = () => {
   const goBay = useCallback((id: BayId) => {
     if (view === id) return;
     audio.blip(880);
+    const videoSrc = TRANSITION_VIDEOS[id];
+    if (videoSrc && !prefersReducedMotion()) {
+      setVideoTransition({ src: videoSrc, next: id });
+      return;
+    }
     runTransition(bayLabel(id), "advance", id);
   }, [view, runTransition]);
 
@@ -192,6 +208,17 @@ const Index = () => {
           label={transition.label}
           kind={transition.kind}
           onDone={() => setTransition(null)}
+        />
+      )}
+
+      {videoTransition && (
+        <VideoTransition
+          src={videoTransition.src}
+          onDone={() => {
+            const next = videoTransition.next;
+            setVideoTransition(null);
+            commitView(next);
+          }}
         />
       )}
 
