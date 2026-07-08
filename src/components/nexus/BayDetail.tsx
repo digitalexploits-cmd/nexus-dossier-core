@@ -317,15 +317,15 @@ export const BayDetail = ({
         >
           {/* Intro re-affirm */}
           <section className="container pt-16 pb-8">
-            <Glass className="p-6 md:p-8">
-              <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">
+            <Glass tokens={tokens} className="p-6 md:p-8">
+              <div className="mono text-[0.6rem] tracking-[0.28em] uppercase mb-2" style={{ color: tokens.accent }}>
                 01 / OVERVIEW
               </div>
               <p className="text-[#eef6ff] leading-relaxed">{intro}</p>
               {disclaimer && (
                 <>
                   <div className="rule my-5" />
-                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">
+                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase mb-2" style={{ color: tokens.accent }}>
                     DISCLAIMER
                   </div>
                   <p className="text-[#c8d4e2] leading-relaxed text-sm">{disclaimer}</p>
@@ -336,14 +336,14 @@ export const BayDetail = ({
 
           {/* Module blocks */}
           <section className="container py-10">
-            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">
+            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase mb-3" style={{ color: tokens.accent }}>
               02 / MODULES
             </div>
             <div className="grid md:grid-cols-2 gap-3">
               {blocks.map((b, i) => (
-                <Glass key={b.title} className="p-5">
+                <Glass key={b.title} tokens={tokens} className="p-5">
                   <div className="flex items-center justify-between">
-                    <div className="mono text-[0.6rem] tracking-[0.28em] text-[#4db7ff]">
+                    <div className="mono text-[0.6rem] tracking-[0.28em]" style={{ color: tokens.accent }}>
                       MOD-{String(i + 1).padStart(2, "0")}
                     </div>
                     {b.status && (
@@ -362,10 +362,10 @@ export const BayDetail = ({
           {/* Optional custom sections */}
           {sections?.map((s) => (
             <section key={s.index} className="container py-10">
-              <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">
+              <div className="mono text-[0.6rem] tracking-[0.28em] uppercase mb-3" style={{ color: tokens.accent }}>
                 {s.index} / {s.eyebrow.toUpperCase()}
               </div>
-              <Glass className="p-6">
+              <Glass tokens={tokens} className="p-6">
                 {s.title && (
                   <h3 className="text-xl font-semibold text-[#eef6ff] mb-2">{s.title}</h3>
                 )}
@@ -376,7 +376,10 @@ export const BayDetail = ({
                   <ul className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
                     {s.items.map((it) => (
                       <li key={it} className="flex items-start gap-2 text-sm text-[#c8d4e2]">
-                        <span className="status-dot status-research mt-1.5 shrink-0" />
+                        <span
+                          className="mt-1.5 shrink-0 w-1.5 h-1.5 rounded-full"
+                          style={{ background: tokens.accent, boxShadow: `0 0 8px ${tokens.accent}` }}
+                        />
                         <span>{it}</span>
                       </li>
                     ))}
@@ -391,10 +394,10 @@ export const BayDetail = ({
 
           {/* Engage strip */}
           <section className="container py-16">
-            <Glass className="p-8 md:p-10 overflow-hidden">
+            <Glass tokens={tokens} className="p-8 md:p-10 overflow-hidden">
               <div className="grid md:grid-cols-[1fr_auto] gap-6 items-end">
                 <div className="space-y-2">
-                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff]">
+                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase" style={{ color: tokens.accent }}>
                     05 / ENGAGE
                   </div>
                   <h3 className="text-2xl md:text-3xl font-semibold tracking-tight text-[#eef6ff]">
