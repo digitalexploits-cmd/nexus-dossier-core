@@ -29,10 +29,9 @@ const ZONES: Zone[] = [
 
 const LOCK_THRESHOLD = 0.035;
 const STEP = 0.08;
-const WORLD_VW = 260;      // panorama width in vw
-const TRAVEL_VW = WORLD_VW - 100; // 160vw
 
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+
 
 export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   const reduced = prefersReducedMotion();
@@ -118,6 +117,27 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
     window.setTimeout(() => setSnapping(false), 350);
   }, [dismissHint]);
 
+  // Measured travel
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const worldRef = useRef<HTMLDivElement | null>(null);
+  const [viewW, setViewW] = useState(0);
+  const [worldW, setWorldW] = useState(0);
+  const travelPx = Math.max(0, worldW - viewW);
+
+  const measure = useCallback(() => {
+    if (sectionRef.current) setViewW(sectionRef.current.clientWidth);
+    if (worldRef.current) setWorldW(worldRef.current.getBoundingClientRect().width);
+  }, []);
+
+  useEffect(() => {
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (sectionRef.current) ro.observe(sectionRef.current);
+    if (worldRef.current) ro.observe(worldRef.current);
+    window.addEventListener("resize", measure);
+    return () => { ro.disconnect(); window.removeEventListener("resize", measure); };
+  }, [measure]);
+
   // Drag
   const dragStartRef = useRef<{ x: number; heading: number } | null>(null);
   const onPointerDown = useCallback((e: React.PointerEvent) => {
@@ -130,12 +150,11 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   }, [dismissHint]);
   const onPointerMove = useCallback((e: React.PointerEvent) => {
     if (!dragStartRef.current) return;
-    const travelPx = 1.6 * window.innerWidth; // 160vw
     if (travelPx <= 0) return;
     const dx = e.clientX - dragStartRef.current.x;
     const dh = -(dx / travelPx);
     setHeading(clamp(dragStartRef.current.heading + dh));
-  }, []);
+  }, [travelPx]);
   const endDrag = useCallback(() => {
     dragStartRef.current = null;
     setDragging(false);
@@ -163,7 +182,10 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
     return () => window.clearTimeout(t);
   }, []);
 
-  const worldTransform = `translate3d(calc(${-heading} * ${TRAVEL_VW}vw), ${pitch * 18}px, 0)`;
+  const translateX = travelPx > 0
+    ? -heading * travelPx
+    : (viewW - worldW) / 2;
+  const worldTransform = `translate3d(${translateX}px, ${pitch * 18}px, 0)`;
   const worldTransition = snapping
     ? "transform 600ms cubic-bezier(0.22,1,0.36,1)"
     : dragging
@@ -172,6 +194,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
   return (
     <section
+      ref={sectionRef}
       className="relative h-screen w-full overflow-hidden bg-[#05070a] select-none"
       onMouseMove={onMouseMove}
       onPointerDown={onPointerDown}
@@ -182,9 +205,9 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
     >
       {/* WORLD */}
       <div
-        className="absolute top-0 left-0 h-full"
+        ref={worldRef}
+        className="absolute top-0 left-0 h-full w-auto"
         style={{
-          width: `${WORLD_VW}vw`,
           transform: worldTransform,
           transition: worldTransition,
           willChange: "transform",
@@ -193,14 +216,16 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         <img
           src={rotundaAsset.url}
           alt="Nexus rotunda panorama"
-          className="block h-full w-full object-cover"
+          className="block h-full w-auto max-w-none"
           style={{ filter: "brightness(1.08) contrast(1.06) saturate(1.10)" }}
           draggable={false}
+          onLoad={measure}
         />
 
-        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_14%_38%,rgba(110,200,255,0.28)_0%,transparent_45%)]" />
-        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_86%_88%,rgba(255,180,100,0.24)_0%,transparent_52%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.30)_0%,transparent_65%)]" />
+        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_14%_38%,rgba(110,200,255,0.18)_0%,transparent_45%)]" />
+        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_86%_88%,rgba(255,180,100,0.16)_0%,transparent_52%)]" />
+
+        <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.18)_0%,transparent_65%)]" />
 
         {/* Synthetic Vault doorway */}
         <div
@@ -259,9 +284,10 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
       </div>
 
       {/* CAMERA-FIXED OVERLAYS */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_58%,rgba(5,7,10,0.95)_100%)]" />
-      <div className="absolute inset-x-0 top-0 h-24 pointer-events-none bg-gradient-to-b from-background/80 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/95 to-transparent" />
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_72%,rgba(5,7,10,0.55)_100%)]" />
+      <div className="absolute inset-x-0 top-0 h-20 pointer-events-none bg-gradient-to-b from-background/50 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-32 pointer-events-none bg-gradient-to-t from-background/60 to-transparent" />
+
 
       {/* Reticle */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
