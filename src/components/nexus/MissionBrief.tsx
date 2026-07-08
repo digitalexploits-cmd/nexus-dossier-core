@@ -14,6 +14,7 @@ import {
   TECHNICAL_FOCUS,
 } from "@/data/content";
 import { DocumentShelf } from "./DocumentShelf";
+import { OfficialCertificationsGallery } from "./OfficialCertificationsGallery";
 
 interface Props {
   onOpenVault: () => void;
