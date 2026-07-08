@@ -15,6 +15,8 @@ import {
 } from "@/data/content";
 import { DocumentShelf } from "./DocumentShelf";
 import { OfficialCertificationsGallery } from "./OfficialCertificationsGallery";
+import llcCert from "@/assets/ai-base3-llc-certificate.jpg.asset.json";
+import whiteHouseLetter from "@/assets/white-house-letter.jpg.asset.json";
 
 interface Props {
   onOpenVault: () => void;
@@ -97,38 +99,48 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
 
         {/* Wall-display overlay — compact briefing card, expands on demand */}
         <div className="relative container h-screen flex items-center justify-end pt-24 pb-16">
-          <CompactCard
-            className={`w-full md:w-[38%] lg:w-[34%] p-5 md:p-6 anim-fade-up ${expanded ? "md:w-[62%] lg:w-[58%]" : ""}`}
-          >
-            <div className="flex items-start justify-between mb-3">
-              <div>
-                <div className="mono text-[0.65rem] tracking-[0.28em] uppercase text-[#4db7ff]">NEXUS</div>
-                <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#8fa3b8] mt-0.5">
-                  MISSION BRIEF / FOUNDER DOSSIER
+          {!expanded ? (
+            // Collapsed: ~1/3 of original size, transparent — reads like an HUD label on the wall.
+            <div className="anim-fade-up w-[62%] md:w-[22%] lg:w-[18%] p-3 rounded-sm border border-[hsl(var(--interactive)/0.45)] bg-transparent backdrop-blur-[2px] shadow-[0_0_24px_hsl(var(--interactive)/0.18)]">
+              <div className="flex items-start justify-between mb-2">
+                <div>
+                  <div className="mono text-[0.55rem] tracking-[0.28em] uppercase text-[hsl(var(--interactive))]">NEXUS</div>
+                  <div className="mono text-[0.5rem] tracking-[0.28em] uppercase text-[#8fa3b8] mt-0.5">
+                    MISSION BRIEF
+                  </div>
                 </div>
+                <div className="mono text-[0.45rem] tracking-[0.24em] text-[#8fa3b8]">///-HC-0</div>
               </div>
-              <div className="mono text-[0.55rem] tracking-[0.24em] text-[#8fa3b8]">///-HC-0</div>
-            </div>
-
-            {!expanded ? (
-              <div className="space-y-4">
-                <h1 className="text-xl md:text-2xl font-semibold tracking-tight leading-tight text-[#eef6ff]">
+              <div className="space-y-2">
+                <h1 className="text-[0.85rem] md:text-[0.9rem] font-semibold tracking-tight leading-tight text-[#eef6ff]">
                   Divide the wave.<br/>Preserve the machine.
                 </h1>
-                <div className="mono text-[0.6rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
-                  {BRAND.founder} — FOUNDER · {BRAND.company}
+                <div className="mono text-[0.5rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
+                  {BRAND.founder}
                 </div>
                 <Button
                   onClick={() => {
                     setExpanded(true);
                     setTimeout(() => dossierRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
                   }}
-                  className="mono tracking-widest text-[0.65rem] h-9 w-full"
+                  className="mono tracking-widest text-[0.55rem] h-7 w-full px-2"
                 >
                   OPEN DOSSIER →
                 </Button>
               </div>
-            ) : (
+            </div>
+          ) : (
+            <CompactCard className="w-full md:w-[62%] lg:w-[58%] p-5 md:p-6 anim-fade-up">
+              <div className="flex items-start justify-between mb-3">
+                <div>
+                  <div className="mono text-[0.65rem] tracking-[0.28em] uppercase text-[#4db7ff]">NEXUS</div>
+                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#8fa3b8] mt-0.5">
+                    MISSION BRIEF / FOUNDER DOSSIER
+                  </div>
+                </div>
+                <div className="mono text-[0.55rem] tracking-[0.24em] text-[#8fa3b8]">///-HC-0</div>
+              </div>
+
               <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
                 <div className="grid md:grid-cols-2 gap-4">
                   {/* Mission cell */}
@@ -181,10 +193,11 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
                   </Button>
                 </div>
               </div>
-            )}
-          </CompactCard>
+            </CompactCard>
+          )}
         </div>
       </section>
+
 
       {/* ============ DOSSIER DETAIL (hidden until opened) ============ */}
       {expanded && (
@@ -212,6 +225,60 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
               </Glass>
             </div>
           </section>
+
+          {/* Featured official documents — LLC certificate + White House correspondence */}
+          <section className="container py-10">
+            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[hsl(var(--interactive))] mb-3">
+              02B / OFFICIAL RECORD · FEATURED
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              {[
+                {
+                  src: llcCert.url,
+                  title: "State of Missouri — Certificate of Organization",
+                  meta: "AI Base³ LLC · LC014726944 · Effective April 21, 2026",
+                  alt: "State of Missouri Certificate of Organization for AI Base³ LLC",
+                },
+                {
+                  src: whiteHouseLetter.url,
+                  title: "The White House — Correspondence",
+                  meta: "Washington · June 13, 2025 · Addressed to Mr. McGee",
+                  alt: "Letter from The White House addressed to Mr. McGee, dated June 13, 2025",
+                },
+              ].map((doc) => (
+                <a
+                  key={doc.title}
+                  href={doc.src}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-no-interactive
+                  className="group relative block rounded-sm border border-[rgba(130,205,255,0.42)] bg-[rgba(11,18,32,0.85)] overflow-hidden transition-all duration-300 hover:border-[hsl(var(--interactive))] hover:shadow-[0_0_0_1px_hsl(var(--interactive)/0.55),0_20px_50px_-20px_hsl(var(--interactive)/0.35)]"
+                  aria-label={`Open ${doc.title}`}
+                >
+                  <div className="relative w-full bg-[#050810] flex items-center justify-center p-4 md:p-6">
+                    <img
+                      src={doc.src}
+                      alt={doc.alt}
+                      loading="lazy"
+                      decoding="async"
+                      className="max-h-[520px] w-auto object-contain transition-transform duration-500 group-hover:scale-[1.02]"
+                    />
+                  </div>
+                  <div className="p-4 border-t border-[rgba(130,205,255,0.28)]">
+                    <div className="text-sm text-[#eef6ff] leading-snug">{doc.title}</div>
+                    <div className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8] mt-1">
+                      {doc.meta}
+                    </div>
+                    <div className="mono text-[0.55rem] tracking-[0.24em] uppercase mt-2 text-[#8fa3b8] group-hover:text-[hsl(var(--interactive))]">
+                      OPEN FULL SIZE →
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+
+
 
           {/* Core strengths — compact dossier chips, not big cards */}
           <section className="container py-10">
