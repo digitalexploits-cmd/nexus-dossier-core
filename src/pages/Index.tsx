@@ -10,16 +10,22 @@ import { VideoTransition } from "@/components/nexus/VideoTransition";
 import { Button } from "@/components/ui/button";
 import { BAYS, type BayId } from "@/data/content";
 import { audio, prefersReducedMotion } from "@/lib/audio";
+import transitionMission from "../../public/media/transition-mission.mp4.asset.json";
+import transitionTechnical from "../../public/media/transition-technical.mp4.asset.json";
+import transitionOperations from "../../public/media/transition-operations.mp4.asset.json";
+import transitionVault from "../../public/media/transition-vault.mp4.asset.json";
 
-// Bay-specific transition videos preserved as-is. Content-driven motion:
-// each is a domain-tailored asset (dossier intake / waveform convergence /
-// architecture reveal / control-grid activation). Missing → CSS wipe.
+// Bay-specific transition videos — cinematic push-in from Rotunda into each
+// destination environment. Vault has its own transition too (played when the
+// vault overlay opens). Missing → CSS wipe fallback.
 const TRANSITION_VIDEOS: Record<BayId, string | null> = {
-  mission:    "/media/transition-mission.mp4",
-  technical:  "/media/transition-technical.mp4",
+  mission:    transitionMission.url,
+  technical:  transitionTechnical.url,
   capability: "/media/transition-capability.mp4",
-  operations: "/media/transition-operations.mp4",
+  operations: transitionOperations.url,
 };
+
+const VAULT_TRANSITION_URL = transitionVault.url;
 
 // Hero image per bay — the stable landing state after transition.
 const HERO_IMAGES: Record<BayId, string> = {
@@ -142,7 +148,13 @@ const Index = () => {
     runTransition(bayLabel(id), "advance", id);
   }, [view, runTransition, commitView]);
 
-  const openVault = useCallback(() => { audio.blip(740); setVaultOpen(true); }, []);
+  const openVault = useCallback(() => {
+    audio.blip(740);
+    if (prefersReducedMotion()) { setVaultOpen(true); return; }
+    // Play the cinematic vault push-in first, then reveal the vault overlay.
+    setVideoTransition({ src: VAULT_TRANSITION_URL, next: view });
+    setTimeout(() => setVaultOpen(true), 900);
+  }, [view]);
   const goContact = useCallback(() => {
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
