@@ -127,6 +127,7 @@ const Index = () => {
         {view === "mission" && <MissionBrief onOpenVault={openVault} onContact={goContact} />}
         {view === "technical" && (
           <BayPlaceholder
+            bayId="technical"
             code="BAY 02"
             title="Technical Brief"
             subtitle="Research Lab"
@@ -145,6 +146,7 @@ const Index = () => {
         )}
         {view === "capability" && (
           <BayPlaceholder
+            bayId="capability"
             code="BAY 03"
             title="Capability Brief"
             subtitle="Capability Gallery"
@@ -162,6 +164,7 @@ const Index = () => {
         )}
         {view === "operations" && (
           <BayPlaceholder
+            bayId="operations"
             code="BAY 04"
             title="Operations Center"
             subtitle="Command & Control"
