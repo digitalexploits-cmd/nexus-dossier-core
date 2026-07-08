@@ -13,6 +13,7 @@ import {
   RESUME_URL,
   TECHNICAL_FOCUS,
 } from "@/data/content";
+import { DocumentShelf } from "./DocumentShelf";
 
 interface Props {
   onOpenVault: () => void;
