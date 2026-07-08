@@ -223,11 +223,12 @@ export const BayDetail = ({
           ) : (
             <div
               key="expanded"
-              className="anim-swap-in w-full md:w-[62%] lg:w-[58%] p-5 md:p-6 rounded-sm border border-[rgba(130,205,255,0.48)] bg-[rgba(34,58,92,0.85)] backdrop-blur-md shadow-[0_20px_60px_-20px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.14)]"
+              className="anim-swap-in w-full md:w-[62%] lg:w-[58%] p-5 md:p-6 rounded-sm border backdrop-blur-md shadow-[0_20px_60px_-20px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.14)]"
+              style={{ borderColor: tokens.glassBorder, background: tokens.glassBg }}
             >
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <div className="mono text-[0.65rem] tracking-[0.28em] uppercase text-[#4db7ff]">NEXUS</div>
+                  <div className="mono text-[0.65rem] tracking-[0.28em] uppercase" style={{ color: tokens.accent }}>NEXUS</div>
                   <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#8fa3b8] mt-0.5">
                     {code} / {title.toUpperCase()}
                   </div>
@@ -238,8 +239,14 @@ export const BayDetail = ({
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
-                <div className="border border-[rgba(130,205,255,0.38)] bg-[linear-gradient(180deg,rgba(36,62,98,0.78),rgba(22,40,66,0.86))] p-4">
-                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">
+                <div
+                  className="border p-4"
+                  style={{
+                    borderColor: tokens.glassBorder,
+                    background: `linear-gradient(180deg, ${tokens.glassBg}, rgba(10,16,26,0.9))`,
+                  }}
+                >
+                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase mb-2" style={{ color: tokens.accent }}>
                     THESIS
                   </div>
                   <h1 className="text-2xl font-semibold tracking-tight leading-tight text-[#eef6ff]">
@@ -248,8 +255,14 @@ export const BayDetail = ({
                   <p className="text-sm text-[#c8d4e2] mt-3 leading-relaxed">{intro}</p>
                 </div>
 
-                <div className="border border-[rgba(130,205,255,0.38)] bg-[linear-gradient(180deg,rgba(36,62,98,0.78),rgba(22,40,66,0.86))] p-4">
-                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">
+                <div
+                  className="border p-4"
+                  style={{
+                    borderColor: tokens.glassBorder,
+                    background: `linear-gradient(180deg, ${tokens.glassBg}, rgba(10,16,26,0.9))`,
+                  }}
+                >
+                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase mb-2" style={{ color: tokens.accent }}>
                     POSTURE LABELS
                   </div>
                   <div className="flex flex-wrap gap-1.5">
@@ -257,7 +270,8 @@ export const BayDetail = ({
                       <Badge
                         key={l}
                         variant="outline"
-                        className="mono text-[0.55rem] tracking-[0.24em] border-[rgba(80,160,255,0.45)] text-[#4db7ff]"
+                        className="mono text-[0.55rem] tracking-[0.24em]"
+                        style={{ borderColor: `${tokens.accent}80`, color: tokens.accentHi }}
                       >
                         {l.toUpperCase()}
                       </Badge>
