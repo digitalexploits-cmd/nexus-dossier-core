@@ -41,7 +41,7 @@ export const BAYS: Array<{
     index: "01",
     code: "BAY 01",
     title: "Mission Brief",
-    subtitle: "Founder Office",
+    subtitle: "The Founder / Boss",
     status: "LIVE",
     statusClass: "status-live",
     blurb: "Executive dossier, founder record, credentials.",
