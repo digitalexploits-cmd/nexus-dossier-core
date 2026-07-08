@@ -387,7 +387,41 @@ export const BayShell = ({
   );
 };
 
-// ------------------------------ Asset card ------------------------------
+// ------------------------------ Lighting slider ------------------------------
+
+interface LightingSliderProps {
+  label: string;
+  value: number;
+  accent: string;
+  onChange: (v: number) => void;
+}
+
+const LightingSlider = ({ label, value, accent, onChange }: LightingSliderProps) => (
+  <div>
+    <div className="flex items-center justify-between mb-1.5">
+      <span className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#c8d4e2]">{label}</span>
+      <span className="mono text-[0.6rem] tracking-[0.2em] text-[#8fa3b8]">
+        {value.toString().padStart(3, "0")}
+      </span>
+    </div>
+    <input
+      type="range"
+      min={0}
+      max={100}
+      value={value}
+      onChange={(e) => onChange(Number(e.target.value))}
+      aria-label={`${label} lighting level`}
+      className="w-full h-1 appearance-none rounded-full cursor-pointer outline-none"
+      style={{
+        background: `linear-gradient(90deg, ${accent} 0%, ${accent} ${value}%, rgba(130,205,255,0.18) ${value}%, rgba(130,205,255,0.18) 100%)`,
+        // WebKit thumb styling via inline is limited; rely on generic ::-webkit-slider-thumb defaults
+        accentColor: accent,
+      }}
+    />
+  </div>
+);
+
+
 
 const kindGlyph: Record<Asset["kind"], string> = {
   pdf: "▤", image: "◫", video: "▷", audio: "♪", html: "◈", doc: "≡", text: "≡", markdown: "≡", link: "↗",
