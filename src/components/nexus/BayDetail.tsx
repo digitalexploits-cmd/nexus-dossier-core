@@ -19,6 +19,58 @@ export interface BayDetailSection {
   items?: string[];
 }
 
+export type BayTheme = "lab" | "gallery" | "command";
+
+interface ThemeTokens {
+  /** Eyebrow / MOD label / heading accent color. */
+  accent: string;
+  /** Slightly brighter variant for interactive-adjacent bits. */
+  accentHi: string;
+  /** Warm/tinted radial overlay CSS. */
+  overlayWarm: string;
+  /** Cool/rim radial overlay CSS. */
+  overlayCool: string;
+  /** Ambient badge text shown in the HUD strip. */
+  ambient: string;
+  /** Glass panel border color. */
+  glassBorder: string;
+  /** Glass panel background. */
+  glassBg: string;
+}
+
+const THEMES: Record<BayTheme, ThemeTokens> = {
+  // Research Lab — cool cyan/teal, schematic and clinical.
+  lab: {
+    accent: "#5fe1d6",
+    accentHi: "#8ff5ea",
+    overlayWarm: "radial-gradient(ellipse at 20% 30%, rgba(95,225,214,0.16) 0%, transparent 55%)",
+    overlayCool: "radial-gradient(ellipse at 82% 82%, rgba(90,150,220,0.26) 0%, transparent 52%)",
+    ambient: "CALIBRATED",
+    glassBorder: "rgba(120,215,205,0.42)",
+    glassBg: "rgba(22,52,58,0.78)",
+  },
+  // Capability Gallery — warm gold/amber, curated showroom.
+  gallery: {
+    accent: "#e8b96b",
+    accentHi: "#f6d68d",
+    overlayWarm: "radial-gradient(ellipse at 22% 55%, rgba(255,190,110,0.28) 0%, transparent 50%)",
+    overlayCool: "radial-gradient(ellipse at 82% 82%, rgba(160,120,80,0.22) 0%, transparent 55%)",
+    ambient: "ON DISPLAY",
+    glassBorder: "rgba(232,185,107,0.40)",
+    glassBg: "rgba(50,38,24,0.80)",
+  },
+  // Command & Control — amber/red tactical HUD, live and monitored.
+  command: {
+    accent: "#ff8f5c",
+    accentHi: "#ffb896",
+    overlayWarm: "radial-gradient(ellipse at 18% 60%, rgba(255,120,70,0.24) 0%, transparent 48%)",
+    overlayCool: "radial-gradient(ellipse at 82% 82%, rgba(120,180,255,0.22) 0%, transparent 52%)",
+    ambient: "MONITORED · LIVE",
+    glassBorder: "rgba(255,143,92,0.38)",
+    glassBg: "rgba(46,26,20,0.80)",
+  },
+};
+
 interface Props {
   bayId: BayId;
   code: string;           // "BAY 02"
@@ -31,14 +83,28 @@ interface Props {
   sections?: BayDetailSection[];
   disclaimer?: string;
   heroImage?: string;
+  theme?: BayTheme;
   onOpenVault: () => void;
   onContact: () => void;
 }
 
-// Reusable dark-glass panel — matches Mission Brief look
-const Glass = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+// Themed dark-glass panel — atmosphere matches the bay.
+const Glass = ({
+  children,
+  className = "",
+  tokens,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  tokens: ThemeTokens;
+}) => (
   <div
-    className={`relative rounded-sm border border-[rgba(130,205,255,0.42)] bg-[rgba(30,55,88,0.78)] backdrop-blur-md shadow-[0_30px_80px_-30px_rgba(0,0,0,0.60),inset_0_1px_0_rgba(255,255,255,0.12),0_0_56px_rgba(90,180,255,0.22)] ${className}`}
+    className={`relative rounded-sm border backdrop-blur-md shadow-[0_30px_80px_-30px_rgba(0,0,0,0.60),inset_0_1px_0_rgba(255,255,255,0.10)] ${className}`}
+    style={{
+      borderColor: tokens.glassBorder,
+      background: tokens.glassBg,
+      boxShadow: `0 30px 80px -30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1), 0 0 56px ${tokens.accent}22`,
+    }}
   >
     {children}
   </div>
