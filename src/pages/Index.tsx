@@ -1,12 +1,15 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Rotunda } from "@/components/nexus/Rotunda";
 import { MissionBrief } from "@/components/nexus/MissionBrief";
 import { BayPlaceholder } from "@/components/nexus/BayPlaceholder";
 import { EvidenceVault } from "@/components/nexus/EvidenceVault";
 import { Contact } from "@/components/nexus/Contact";
 import { TopBar, BottomBar } from "@/components/nexus/Chrome";
+import { IntroOverlay } from "@/components/nexus/IntroOverlay";
+import { BayTransition, type TransitionKind } from "@/components/nexus/BayTransition";
 import { Button } from "@/components/ui/button";
-import type { BayId } from "@/data/content";
+import { BAYS, type BayId } from "@/data/content";
+import { audio, prefersReducedMotion } from "@/lib/audio";
 
 type View = "home" | BayId;
 
@@ -24,9 +27,16 @@ const hashToView = (h: string): View => {
   return "home";
 };
 
+const bayLabel = (id: BayId) => BAYS.find((b) => b.id === id)?.title ?? id.toUpperCase();
+
 const Index = () => {
   const [view, setView] = useState<View>(() => hashToView(window.location.hash));
   const [vaultOpen, setVaultOpen] = useState(false);
+  const [introDone, setIntroDone] = useState(() => {
+    try { return sessionStorage.getItem("nexus:intro") === "done"; } catch { return false; }
+  });
+  const [transition, setTransition] = useState<{ label: string; kind: TransitionKind } | null>(null);
+  const pendingRef = useRef<View | null>(null);
 
   useEffect(() => {
     const onHash = () => {
@@ -39,14 +49,48 @@ const Index = () => {
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
-  const goHome = useCallback(() => { window.location.hash = ""; setView("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }, []);
-  const goBay = useCallback((id: BayId) => { window.location.hash = VIEW_HASH[id]; setView(id); }, []);
-  const openVault = useCallback(() => setVaultOpen(true), []);
+  const commitView = useCallback((next: View) => {
+    window.location.hash = VIEW_HASH[next];
+    setView(next);
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, []);
+
+  const runTransition = useCallback((label: string, kind: TransitionKind, next: View) => {
+    if (prefersReducedMotion()) { commitView(next); return; }
+    pendingRef.current = next;
+    setTransition({ label, kind });
+    // Swap views mid-transition so the reveal lands on the new view
+    setTimeout(() => {
+      if (pendingRef.current !== null) {
+        commitView(pendingRef.current);
+        pendingRef.current = null;
+      }
+    }, 600);
+  }, [commitView]);
+
+  const goHome = useCallback(() => {
+    if (view === "home") return;
+    audio.blip(520);
+    runTransition("ROTUNDA", "retreat", "home");
+  }, [view, runTransition]);
+
+  const goBay = useCallback((id: BayId) => {
+    if (view === id) return;
+    audio.blip(880);
+    runTransition(bayLabel(id), "advance", id);
+  }, [view, runTransition]);
+
+  const openVault = useCallback(() => { audio.blip(740); setVaultOpen(true); }, []);
   const goContact = useCallback(() => {
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
   const viewLabel = useMemo(() => (view === "home" ? "ROTUNDA" : view.toUpperCase()), [view]);
+
+  const handleIntroComplete = useCallback(() => {
+    try { sessionStorage.setItem("nexus:intro", "done"); } catch { /* ignore */ }
+    setIntroDone(true);
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -139,6 +183,16 @@ const Index = () => {
 
       <BottomBar />
       <EvidenceVault open={vaultOpen} onOpenChange={setVaultOpen} />
+
+      {transition && (
+        <BayTransition
+          label={transition.label}
+          kind={transition.kind}
+          onDone={() => setTransition(null)}
+        />
+      )}
+
+      {!introDone && <IntroOverlay onComplete={handleIntroComplete} />}
     </div>
   );
 };
