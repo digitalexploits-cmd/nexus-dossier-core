@@ -29,10 +29,9 @@ const ZONES: Zone[] = [
 
 const LOCK_THRESHOLD = 0.035;
 const STEP = 0.08;
-const WORLD_VW = 260;      // panorama width in vw
-const TRAVEL_VW = WORLD_VW - 100; // 160vw
 
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+
 
 export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   const reduced = prefersReducedMotion();
