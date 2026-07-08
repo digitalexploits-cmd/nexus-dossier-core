@@ -188,7 +188,6 @@ const missionBrief: BayContent = {
       label: "Credentials",
       icon: "certificate",
       blurb: `${OFFICIAL_CERTIFICATIONS.length} verified certificates on file — Google, Google Cloud, Anthropic, OpenAI, and more.`,
-      action: "open-credentials-gallery",
     },
     {
       id: "portfolio",
