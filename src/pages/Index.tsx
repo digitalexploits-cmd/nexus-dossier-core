@@ -176,7 +176,10 @@ const Index = () => {
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
-  const viewLabel = useMemo(() => (view === "home" ? "ROTUNDA" : view.toUpperCase()), [view]);
+  const viewLabel = useMemo(
+    () => (view === "home" ? "ROTUNDA" : bayLabel(view as BayId).toUpperCase()),
+    [view],
+  );
 
   const handleIntroComplete = useCallback(() => {
     try { sessionStorage.setItem("nexus:intro", "done"); } catch { /* ignore */ }
