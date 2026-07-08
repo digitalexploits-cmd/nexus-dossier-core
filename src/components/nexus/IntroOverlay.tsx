@@ -6,15 +6,15 @@ interface Props {
 }
 
 const INTRO_SRC = "/media/intro-load.mp4";
-const HARD_TIMEOUT_MS = 8000;
-const STALL_TIMEOUT_MS = 3500;
+const HARD_TIMEOUT_MS = 14000;
+const STALL_TIMEOUT_MS = 4500;
 
 /**
  * Cold-open intro. Robust guards:
  *  - autoplay muted; if blocked/errored/stalled → skip
- *  - hard 8s timeout
+ *  - hard 14s timeout (source is ~12s)
  *  - ESC + SKIP always work
- * Never traps the visitor.
+ * Never traps the visitor. Fade never blocks on audio unlock.
  */
 export const IntroOverlay = ({ onComplete }: Props) => {
   const reducedRef = useRef(prefersReducedMotion());
@@ -24,17 +24,16 @@ export const IntroOverlay = ({ onComplete }: Props) => {
   const [muted, setMuted] = useState(true);
   const finishedRef = useRef(false);
 
-  const finish = useCallback(async () => {
+  const finish = useCallback(() => {
     if (finishedRef.current) return;
     finishedRef.current = true;
-    try { await audio.start(); } catch { /* ignore */ }
-    // Mount underlying view beneath the still-opaque overlay first
-    // to prevent a white flash.
-    onComplete();
-    requestAnimationFrame(() => {
-      setFading(true);
-      setTimeout(() => { setDone(true); }, 400);
-    });
+    // Fire-and-forget — never block the reveal on audio unlock.
+    audio.start().catch(() => { /* ignore */ });
+    setFading(true);
+    window.setTimeout(() => {
+      onComplete();
+      setDone(true);
+    }, 420);
   }, [onComplete]);
 
   // Reduced motion → skip immediately
