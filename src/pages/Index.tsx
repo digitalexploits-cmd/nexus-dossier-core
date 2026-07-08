@@ -250,7 +250,7 @@ const Index = () => {
 
       {videoTransition && (
         <VideoTransition
-          src={videoTransition.src}
+          sources={videoTransition.sources}
           onDone={() => setVideoTransition(null)}
         />
       )}
