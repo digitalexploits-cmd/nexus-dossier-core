@@ -218,7 +218,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   return (
     <section
       ref={sectionRef}
-      className="fixed inset-0 w-[100dvw] h-[100dvh] overflow-hidden bg-[#05070a] select-none"
+      className="relative w-full h-[100dvh] overflow-hidden bg-[#05070a] select-none"
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={endDrag}
