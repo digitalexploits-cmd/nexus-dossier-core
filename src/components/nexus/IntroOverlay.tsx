@@ -69,7 +69,6 @@ export const IntroOverlay = ({ onComplete }: Props) => {
       className={`fixed inset-0 z-[100] bg-[#04060a] overflow-hidden ${
         phase === "pushing" ? "pointer-events-none" : ""
       }`}
-      style={{ animation: phase === "done" ? "intro-fade-out 350ms ease-out forwards" : undefined }}
     >
       {/* Rotunda camera layer */}
       <img
