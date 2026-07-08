@@ -21,9 +21,15 @@ export const IntroOverlay = ({ onComplete }: Props) => {
 
   const finish = useCallback(async () => {
     if (fading || done) return;
-    setFading(true);
     try { await audio.start(); } catch { /* ignore */ }
-    setTimeout(() => { setDone(true); onComplete(); }, 400);
+    // Mount the underlying view FIRST so it paints beneath the still-opaque
+    // black overlay — prevents a white flash between video end and rotunda.
+    onComplete();
+    // Next frame: swap video for pure black backdrop, then fade the overlay.
+    requestAnimationFrame(() => {
+      setFading(true);
+      setTimeout(() => { setDone(true); }, 450);
+    });
   }, [fading, done, onComplete]);
 
   // Reduced motion: skip immediately
