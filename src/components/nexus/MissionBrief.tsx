@@ -193,10 +193,11 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
                   </Button>
                 </div>
               </div>
-            )}
-          </CompactCard>
+            </CompactCard>
+          )}
         </div>
       </section>
+
 
       {/* ============ DOSSIER DETAIL (hidden until opened) ============ */}
       {expanded && (
