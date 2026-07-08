@@ -164,62 +164,66 @@ const Index = () => {
 
       <main className={view !== "home" ? "pt-10" : ""}>
         {view === "home" && <Rotunda onSelect={goBay} onOpenVault={openVault} />}
-        {view === "mission" && <MissionBrief onOpenVault={openVault} onContact={goContact} />}
-        {view === "technical" && (
-          <BayPlaceholder
-            bayId="technical"
-            code="BAY 02"
-            title="Technical Brief"
-            subtitle="Research Lab"
-            intro="SINE~WaiV State Inspector is being developed as a research-stage, physics-informed motor-current inspection system. This section will organize signal-path diagrams, validation graphics, research notes, and technical evidence."
-            labels={["Research Stage", "Prototype", "Validation Needed"]}
-            disclaimer="No field validation is claimed. No digital twin claim is made. All artifacts here are labeled by evidence status."
-            blocks={[
-              { title: "Signal-Path Notes", body: "Motor current i(t) reasoning, sampling considerations, and structured inspection framing.", status: "RESEARCH" },
-              { title: "FFT / Frequency-Domain Sketches", body: "Illustrative frequency-domain reasoning artifacts. Not validation output.", status: "HYPOTHESIS" },
-              { title: "Artifact-Aware Framing", body: "How measurement artifacts are separated from candidate machine-state signals.", status: "RESEARCH" },
-              { title: "Validation Path", body: "Planned progression from bench observation to structured validation runs.", status: "VALIDATION NEEDED" },
-            ]}
-            onOpenVault={openVault}
-            onContact={goContact}
-          />
-        )}
-        {view === "capability" && (
-          <BayPlaceholder
-            bayId="capability"
-            code="BAY 03"
-            title="Capability Brief"
-            subtitle="Capability Gallery"
-            intro="Capability framing across industrial reliability, maintenance decision support, pilot candidate scoping, and commercialization pathway."
-            labels={["Reliability", "Pilot Candidate", "Commercial Candidate"]}
-            blocks={[
-              { title: "Industrial Reliability", body: "How signal-derived evidence integrates into reliability decision cycles.", status: "COMMERCIAL CANDIDATE" },
-              { title: "Maintenance Decision Support", body: "Structured evidence at the point of maintenance judgment, without overclaiming.", status: "PROTOTYPE" },
-              { title: "Pilot Candidate Framing", body: "Framing document for prospective pilot engagements and their success criteria.", status: "VALIDATION NEEDED" },
-              { title: "Customer Problem Cards", body: "Discrete problem statements the platform is designed to address.", status: "RESEARCH" },
-            ]}
-            onOpenVault={openVault}
-            onContact={goContact}
-          />
-        )}
-        {view === "operations" && (
-          <BayPlaceholder
-            bayId="operations"
-            heroImage="/media/operations-landing.jpg"
-            code="BAY 04"
-            title="Operations Center"
-            subtitle="Command & Control"
-            intro="Command surface for Nexus itself: project status, evidence vault access, document routing, deployment state, and contact path."
-            labels={["Online", "Monitored", "Evidence Routed"]}
-            blocks={[
-              { title: "Project Status", body: "Current program state across founder, technical, and commercial tracks.", status: "ONLINE" },
-              { title: "Evidence Vault Access", body: "Open the vault to browse evidence objects with claim boundaries and audience labels.", status: "ONLINE" },
-              { title: "Document Access", body: "Resume, credentials, and briefing documents route through the founder office.", status: "ONLINE" },
-              { title: "Deployment Status", body: "Nexus operating shell is live. Static deployment. No user data collected.", status: "LIVE" },
-            ]}
-            onOpenVault={openVault}
-            onContact={goContact}
-          />
+        {view !== "home" && (
+          <div key={view} className="anim-bay-enter">
+            {view === "mission" && <MissionBrief onOpenVault={openVault} onContact={goContact} />}
+            {view === "technical" && (
+              <BayPlaceholder
+                bayId="technical"
+                code="BAY 02"
+                title="Technical Brief"
+                subtitle="Research Lab"
+                intro="SINE~WaiV State Inspector is being developed as a research-stage, physics-informed motor-current inspection system. This section will organize signal-path diagrams, validation graphics, research notes, and technical evidence."
+                labels={["Research Stage", "Prototype", "Validation Needed"]}
+                disclaimer="No field validation is claimed. No digital twin claim is made. All artifacts here are labeled by evidence status."
+                blocks={[
+                  { title: "Signal-Path Notes", body: "Motor current i(t) reasoning, sampling considerations, and structured inspection framing.", status: "RESEARCH" },
+                  { title: "FFT / Frequency-Domain Sketches", body: "Illustrative frequency-domain reasoning artifacts. Not validation output.", status: "HYPOTHESIS" },
+                  { title: "Artifact-Aware Framing", body: "How measurement artifacts are separated from candidate machine-state signals.", status: "RESEARCH" },
+                  { title: "Validation Path", body: "Planned progression from bench observation to structured validation runs.", status: "VALIDATION NEEDED" },
+                ]}
+                onOpenVault={openVault}
+                onContact={goContact}
+              />
+            )}
+            {view === "capability" && (
+              <BayPlaceholder
+                bayId="capability"
+                code="BAY 03"
+                title="Capability Brief"
+                subtitle="Capability Gallery"
+                intro="Capability framing across industrial reliability, maintenance decision support, pilot candidate scoping, and commercialization pathway."
+                labels={["Reliability", "Pilot Candidate", "Commercial Candidate"]}
+                blocks={[
+                  { title: "Industrial Reliability", body: "How signal-derived evidence integrates into reliability decision cycles.", status: "COMMERCIAL CANDIDATE" },
+                  { title: "Maintenance Decision Support", body: "Structured evidence at the point of maintenance judgment, without overclaiming.", status: "PROTOTYPE" },
+                  { title: "Pilot Candidate Framing", body: "Framing document for prospective pilot engagements and their success criteria.", status: "VALIDATION NEEDED" },
+                  { title: "Customer Problem Cards", body: "Discrete problem statements the platform is designed to address.", status: "RESEARCH" },
+                ]}
+                onOpenVault={openVault}
+                onContact={goContact}
+              />
+            )}
+            {view === "operations" && (
+              <BayPlaceholder
+                bayId="operations"
+                heroImage="/media/operations-landing.jpg"
+                code="BAY 04"
+                title="Operations Center"
+                subtitle="Command & Control"
+                intro="Command surface for Nexus itself: project status, evidence vault access, document routing, deployment state, and contact path."
+                labels={["Online", "Monitored", "Evidence Routed"]}
+                blocks={[
+                  { title: "Project Status", body: "Current program state across founder, technical, and commercial tracks.", status: "ONLINE" },
+                  { title: "Evidence Vault Access", body: "Open the vault to browse evidence objects with claim boundaries and audience labels.", status: "ONLINE" },
+                  { title: "Document Access", body: "Resume, credentials, and briefing documents route through the founder office.", status: "ONLINE" },
+                  { title: "Deployment Status", body: "Nexus operating shell is live. Static deployment. No user data collected.", status: "LIVE" },
+                ]}
+                onOpenVault={openVault}
+                onContact={goContact}
+              />
+            )}
+          </div>
         )}
 
         <Contact />
