@@ -99,38 +99,48 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
 
         {/* Wall-display overlay — compact briefing card, expands on demand */}
         <div className="relative container h-screen flex items-center justify-end pt-24 pb-16">
-          <CompactCard
-            className={`w-full md:w-[38%] lg:w-[34%] p-5 md:p-6 anim-fade-up ${expanded ? "md:w-[62%] lg:w-[58%]" : ""}`}
-          >
-            <div className="flex items-start justify-between mb-3">
-              <div>
-                <div className="mono text-[0.65rem] tracking-[0.28em] uppercase text-[#4db7ff]">NEXUS</div>
-                <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#8fa3b8] mt-0.5">
-                  MISSION BRIEF / FOUNDER DOSSIER
+          {!expanded ? (
+            // Collapsed: ~1/3 of original size, transparent — reads like an HUD label on the wall.
+            <div className="anim-fade-up w-[62%] md:w-[22%] lg:w-[18%] p-3 rounded-sm border border-[hsl(var(--interactive)/0.45)] bg-transparent backdrop-blur-[2px] shadow-[0_0_24px_hsl(var(--interactive)/0.18)]">
+              <div className="flex items-start justify-between mb-2">
+                <div>
+                  <div className="mono text-[0.55rem] tracking-[0.28em] uppercase text-[hsl(var(--interactive))]">NEXUS</div>
+                  <div className="mono text-[0.5rem] tracking-[0.28em] uppercase text-[#8fa3b8] mt-0.5">
+                    MISSION BRIEF
+                  </div>
                 </div>
+                <div className="mono text-[0.45rem] tracking-[0.24em] text-[#8fa3b8]">///-HC-0</div>
               </div>
-              <div className="mono text-[0.55rem] tracking-[0.24em] text-[#8fa3b8]">///-HC-0</div>
-            </div>
-
-            {!expanded ? (
-              <div className="space-y-4">
-                <h1 className="text-xl md:text-2xl font-semibold tracking-tight leading-tight text-[#eef6ff]">
+              <div className="space-y-2">
+                <h1 className="text-[0.85rem] md:text-[0.9rem] font-semibold tracking-tight leading-tight text-[#eef6ff]">
                   Divide the wave.<br/>Preserve the machine.
                 </h1>
-                <div className="mono text-[0.6rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
-                  {BRAND.founder} — FOUNDER · {BRAND.company}
+                <div className="mono text-[0.5rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
+                  {BRAND.founder}
                 </div>
                 <Button
                   onClick={() => {
                     setExpanded(true);
                     setTimeout(() => dossierRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
                   }}
-                  className="mono tracking-widest text-[0.65rem] h-9 w-full"
+                  className="mono tracking-widest text-[0.55rem] h-7 w-full px-2"
                 >
                   OPEN DOSSIER →
                 </Button>
               </div>
-            ) : (
+            </div>
+          ) : (
+            <CompactCard className="w-full md:w-[62%] lg:w-[58%] p-5 md:p-6 anim-fade-up">
+              <div className="flex items-start justify-between mb-3">
+                <div>
+                  <div className="mono text-[0.65rem] tracking-[0.28em] uppercase text-[#4db7ff]">NEXUS</div>
+                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#8fa3b8] mt-0.5">
+                    MISSION BRIEF / FOUNDER DOSSIER
+                  </div>
+                </div>
+                <div className="mono text-[0.55rem] tracking-[0.24em] text-[#8fa3b8]">///-HC-0</div>
+              </div>
+
               <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
                 <div className="grid md:grid-cols-2 gap-4">
                   {/* Mission cell */}
