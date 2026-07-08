@@ -1,0 +1,344 @@
+import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { DocumentShelf } from "./DocumentShelf";
+import type { BayId } from "@/data/content";
+
+export interface BayDetailBlock {
+  title: string;
+  body: string;
+  status?: string;
+}
+
+export interface BayDetailSection {
+  /** Numeric or short label — e.g. "02" or "02A" */
+  index: string;
+  eyebrow: string;
+  title?: string;
+  body?: string;
+  items?: string[];
+}
+
+interface Props {
+  bayId: BayId;
+  code: string;           // "BAY 02"
+  title: string;          // "Technical Brief"
+  subtitle: string;       // "Research Lab"
+  tagline: [string, string]; // two-line HUD tagline
+  intro: string;
+  labels: string[];
+  blocks: BayDetailBlock[];
+  sections?: BayDetailSection[];
+  disclaimer?: string;
+  heroImage?: string;
+  onOpenVault: () => void;
+  onContact: () => void;
+}
+
+// Reusable dark-glass panel — matches Mission Brief look
+const Glass = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+  <div
+    className={`relative rounded-sm border border-[rgba(130,205,255,0.42)] bg-[rgba(30,55,88,0.78)] backdrop-blur-md shadow-[0_30px_80px_-30px_rgba(0,0,0,0.60),inset_0_1px_0_rgba(255,255,255,0.12),0_0_56px_rgba(90,180,255,0.22)] ${className}`}
+  >
+    {children}
+  </div>
+);
+
+export const BayDetail = ({
+  bayId,
+  code,
+  title,
+  subtitle,
+  tagline,
+  intro,
+  labels,
+  blocks,
+  sections,
+  disclaimer,
+  heroImage,
+  onOpenVault,
+  onContact,
+}: Props) => {
+  const [bgLoaded, setBgLoaded] = useState(!heroImage);
+  const [expanded, setExpanded] = useState(false);
+  const dossierRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!heroImage) { setBgLoaded(true); return; }
+    const img = new Image();
+    img.decoding = "async";
+    img.src = heroImage;
+    const done = () => setBgLoaded(true);
+    if (img.complete && img.naturalWidth > 0) done();
+    else { img.onload = done; img.onerror = done; }
+  }, [heroImage]);
+
+  return (
+    <div className="relative">
+      {/* ============ IMMERSIVE STAGE ============ */}
+      <section className="relative min-h-screen w-full overflow-hidden bg-[#05070a]">
+        {/* Fallback dark radial gradient — always painted */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_55%_45%,#111d2e_0%,#080c14_70%)]" />
+        {heroImage && (
+          <img
+            src={heroImage}
+            alt={`${title} — immersive environment`}
+            className={`absolute inset-0 w-full h-full object-cover brightness-[1.20] contrast-[1.04] saturate-[1.10] transition-opacity duration-700 ease-out ${bgLoaded ? "opacity-100" : "opacity-0"}`}
+            draggable={false}
+            loading="eager"
+            decoding="async"
+            onLoad={() => setBgLoaded(true)}
+            onError={() => setBgLoaded(true)}
+          />
+        )}
+
+        {/* Legibility + accent lighting */}
+        <div className="absolute inset-x-0 top-0 h-[55%] pointer-events-none bg-[linear-gradient(180deg,rgba(4,8,16,0.55)_0%,rgba(4,8,16,0.28)_60%,transparent_100%)]" />
+        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_18%_60%,rgba(255,195,130,0.22)_0%,transparent_48%)]" />
+        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_82%_82%,rgba(110,190,255,0.24)_0%,transparent_52%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/40 to-transparent" />
+
+        {/* HUD */}
+        <div className="absolute inset-x-0 top-14 z-20">
+          <div className="container flex items-center justify-between mono text-[0.68rem] tracking-[0.28em] uppercase text-[#8fa3b8]">
+            <div className="flex items-center gap-3">
+              <span className="text-[#4db7ff]">NEXUS</span>
+              <span className="text-[#8fa3b8]">/</span>
+              <span>{code} · {title.toUpperCase()} · {subtitle.toUpperCase()}</span>
+            </div>
+            <div className="hidden md:flex items-center gap-2">
+              <span className="status-dot status-live" />
+              <span>ON RECORD</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Collapsed / expanded HUD card */}
+        <div className="relative container h-screen flex items-end justify-end pt-24 pb-16">
+          {!expanded ? (
+            <div
+              key="collapsed"
+              className="anim-swap-in bay-hover-glow w-[62%] md:w-[22%] lg:w-[18%] p-3 rounded-sm border border-[hsl(var(--interactive)/0.45)] bg-transparent backdrop-blur-[2px] shadow-[0_0_24px_hsl(var(--interactive)/0.18)]"
+            >
+              <div className="flex items-start justify-between mb-2">
+                <div>
+                  <div className="mono text-[0.55rem] tracking-[0.28em] uppercase text-[hsl(var(--interactive))]">
+                    NEXUS
+                  </div>
+                  <div className="mono text-[0.5rem] tracking-[0.28em] uppercase text-[#8fa3b8] mt-0.5">
+                    {title.toUpperCase()}
+                  </div>
+                </div>
+                <div className="mono text-[0.45rem] tracking-[0.24em] text-[#8fa3b8]">
+                  ///-{code.replace(/\s+/g, "")}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <h1 className="text-[0.85rem] md:text-[0.9rem] font-semibold tracking-tight leading-tight text-[#eef6ff]">
+                  {tagline[0]}<br />{tagline[1]}
+                </h1>
+                <div className="mono text-[0.5rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
+                  {subtitle}
+                </div>
+                <Button
+                  onClick={() => {
+                    setExpanded(true);
+                    setTimeout(() => dossierRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+                  }}
+                  className="bay-hover-glow mono tracking-widest text-[0.55rem] h-7 w-full px-2"
+                >
+                  OPEN DOSSIER →
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div
+              key="expanded"
+              className="anim-swap-in w-full md:w-[62%] lg:w-[58%] p-5 md:p-6 rounded-sm border border-[rgba(130,205,255,0.48)] bg-[rgba(34,58,92,0.85)] backdrop-blur-md shadow-[0_20px_60px_-20px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.14)]"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div>
+                  <div className="mono text-[0.65rem] tracking-[0.28em] uppercase text-[#4db7ff]">NEXUS</div>
+                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#8fa3b8] mt-0.5">
+                    {code} / {title.toUpperCase()}
+                  </div>
+                </div>
+                <div className="mono text-[0.55rem] tracking-[0.24em] text-[#8fa3b8]">
+                  ///-{code.replace(/\s+/g, "")}
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="border border-[rgba(130,205,255,0.38)] bg-[linear-gradient(180deg,rgba(36,62,98,0.78),rgba(22,40,66,0.86))] p-4">
+                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">
+                    THESIS
+                  </div>
+                  <h1 className="text-2xl font-semibold tracking-tight leading-tight text-[#eef6ff]">
+                    {tagline[0]}<br />{tagline[1]}
+                  </h1>
+                  <p className="text-sm text-[#c8d4e2] mt-3 leading-relaxed">{intro}</p>
+                </div>
+
+                <div className="border border-[rgba(130,205,255,0.38)] bg-[linear-gradient(180deg,rgba(36,62,98,0.78),rgba(22,40,66,0.86))] p-4">
+                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">
+                    POSTURE LABELS
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {labels.map((l) => (
+                      <Badge
+                        key={l}
+                        variant="outline"
+                        className="mono text-[0.55rem] tracking-[0.24em] border-[rgba(80,160,255,0.45)] text-[#4db7ff]"
+                      >
+                        {l.toUpperCase()}
+                      </Badge>
+                    ))}
+                  </div>
+                  {disclaimer && (
+                    <div className="mt-4 border-l-2 border-status-warn/70 pl-3 text-xs text-[#8fa3b8] leading-relaxed">
+                      {disclaimer}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Button onClick={onOpenVault} className="mono tracking-widest text-[0.65rem] h-9">
+                  OPEN EVIDENCE VAULT
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={onContact}
+                  className="mono tracking-widest text-[0.65rem] h-9"
+                >
+                  REQUEST BRIEFING
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => setExpanded(false)}
+                  className="mono tracking-widest text-[0.65rem] h-9"
+                >
+                  ← COLLAPSE
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ============ DOSSIER DETAIL ============ */}
+      {expanded && (
+        <div
+          ref={dossierRef}
+          className="relative bg-background animate-in fade-in slide-in-from-bottom-4 duration-700"
+        >
+          {/* Intro re-affirm */}
+          <section className="container pt-16 pb-8">
+            <Glass className="p-6 md:p-8">
+              <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">
+                01 / OVERVIEW
+              </div>
+              <p className="text-[#eef6ff] leading-relaxed">{intro}</p>
+              {disclaimer && (
+                <>
+                  <div className="rule my-5" />
+                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">
+                    DISCLAIMER
+                  </div>
+                  <p className="text-[#c8d4e2] leading-relaxed text-sm">{disclaimer}</p>
+                </>
+              )}
+            </Glass>
+          </section>
+
+          {/* Module blocks */}
+          <section className="container py-10">
+            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">
+              02 / MODULES
+            </div>
+            <div className="grid md:grid-cols-2 gap-3">
+              {blocks.map((b, i) => (
+                <Glass key={b.title} className="p-5">
+                  <div className="flex items-center justify-between">
+                    <div className="mono text-[0.6rem] tracking-[0.28em] text-[#4db7ff]">
+                      MOD-{String(i + 1).padStart(2, "0")}
+                    </div>
+                    {b.status && (
+                      <span className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8] flex items-center gap-1.5">
+                        <span className="status-dot status-warn" /> {b.status}
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="text-lg font-semibold mt-2 text-[#eef6ff]">{b.title}</h3>
+                  <p className="text-sm text-[#c8d4e2] mt-2 leading-relaxed">{b.body}</p>
+                </Glass>
+              ))}
+            </div>
+          </section>
+
+          {/* Optional custom sections */}
+          {sections?.map((s) => (
+            <section key={s.index} className="container py-10">
+              <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">
+                {s.index} / {s.eyebrow.toUpperCase()}
+              </div>
+              <Glass className="p-6">
+                {s.title && (
+                  <h3 className="text-xl font-semibold text-[#eef6ff] mb-2">{s.title}</h3>
+                )}
+                {s.body && (
+                  <p className="text-sm text-[#c8d4e2] leading-relaxed">{s.body}</p>
+                )}
+                {s.items && (
+                  <ul className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
+                    {s.items.map((it) => (
+                      <li key={it} className="flex items-start gap-2 text-sm text-[#c8d4e2]">
+                        <span className="status-dot status-research mt-1.5 shrink-0" />
+                        <span>{it}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </Glass>
+            </section>
+          ))}
+
+          {/* Files on record */}
+          <DocumentShelf bay={bayId} eyebrow="04 / FILES ON RECORD" title="Bay Files" />
+
+          {/* Engage strip */}
+          <section className="container py-16">
+            <Glass className="p-8 md:p-10 overflow-hidden">
+              <div className="grid md:grid-cols-[1fr_auto] gap-6 items-end">
+                <div className="space-y-2">
+                  <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff]">
+                    05 / ENGAGE
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-semibold tracking-tight text-[#eef6ff]">
+                    Bring the machine into the room.
+                  </h3>
+                  <p className="text-[#8fa3b8] max-w-xl text-sm">
+                    Briefings scheduled directly through the founder. Every artifact shared is
+                    labeled by claim boundary and evidence status.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Button onClick={onContact} className="mono tracking-widest text-[0.65rem] h-9">
+                    REQUEST BRIEFING
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={onOpenVault}
+                    className="mono tracking-widest text-[0.65rem] h-9"
+                  >
+                    EVIDENCE VAULT
+                  </Button>
+                </div>
+              </div>
+            </Glass>
+          </section>
+        </div>
+      )}
+    </div>
+  );
+};
