@@ -218,13 +218,10 @@ const Index = () => {
       {videoTransition && (
         <VideoTransition
           src={videoTransition.src}
-          onDone={() => {
-            const next = videoTransition.next;
-            setVideoTransition(null);
-            commitView(next);
-          }}
+          onDone={() => setVideoTransition(null)}
         />
       )}
+
 
       {!introDone && <IntroOverlay onComplete={handleIntroComplete} />}
     </div>
