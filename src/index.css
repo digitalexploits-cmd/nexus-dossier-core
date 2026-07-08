@@ -47,7 +47,13 @@
 
     --border: 218 15% 20%;
     --input: 218 15% 18%;
-    --ring: 205 90% 62%;
+    --ring: 130 100% 54%;
+
+    /* Unified interactive signal — neon green.
+       Every clickable / selectable element should read in this hue so
+       affordance is unmistakable across the whole app. */
+    --interactive: 130 100% 54%;
+    --interactive-foreground: 140 60% 6%;
 
     --radius: 0.25rem;
 
