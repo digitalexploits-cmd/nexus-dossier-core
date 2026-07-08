@@ -15,6 +15,8 @@ import {
 } from "@/data/content";
 import { DocumentShelf } from "./DocumentShelf";
 import { OfficialCertificationsGallery } from "./OfficialCertificationsGallery";
+import llcCert from "@/assets/ai-base3-llc-certificate.jpg.asset.json";
+import whiteHouseLetter from "@/assets/white-house-letter.jpg.asset.json";
 
 interface Props {
   onOpenVault: () => void;
