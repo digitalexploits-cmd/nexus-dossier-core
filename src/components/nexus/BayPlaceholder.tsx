@@ -70,6 +70,9 @@ export const BayPlaceholder = ({
       ))}
     </section>
 
+    {bayId && <DocumentShelf bay={bayId} />}
+
+
     <section className="container mt-12">
       <SectionHeader eyebrow="BAY STATE" title="Coming online" note="This bay is in a polished placeholder state. Content will populate as evidence is prepared." />
       <div className="mt-6 flex flex-wrap gap-3">
