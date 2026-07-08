@@ -42,6 +42,8 @@ interface Props {
   ambient?: string;
   /** Accent color (CSS color) for this bay's chrome accents. Default cyan. */
   accent?: string;
+  /** Show the premium accent + ambient lighting console on the hero. */
+  lightingControls?: boolean;
   onOpenVault: () => void;
   onContact: () => void;
 }
@@ -54,6 +56,7 @@ export const BayShell = ({
   tagline,
   ambient = "ON RECORD",
   accent = DEFAULT_ACCENT,
+  lightingControls = false,
   onOpenVault,
   onContact,
 }: Props) => {
@@ -65,6 +68,29 @@ export const BayShell = ({
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
   const [viewingAsset, setViewingAsset] = useState<Asset | null>(null);
   const [certsOpen, setCertsOpen] = useState(false);
+
+  // Lighting console — accent rim glow (0–100) and ambient exposure (0–100).
+  // Persisted per-bay so the room "remembers" how the user lit it.
+  const lightingKey = `nexus:lighting:${bayId}`;
+  const [accentLevel, setAccentLevel] = useState<number>(() => {
+    try { const v = localStorage.getItem(`${lightingKey}:accent`); return v ? Number(v) : 55; } catch { return 55; }
+  });
+  const [ambientLevel, setAmbientLevel] = useState<number>(() => {
+    try { const v = localStorage.getItem(`${lightingKey}:ambient`); return v ? Number(v) : 60; } catch { return 60; }
+  });
+  const [lightingOpen, setLightingOpen] = useState(false);
+
+  // Persist changes
+  const persist = useCallback((k: "accent" | "ambient", v: number) => {
+    try { localStorage.setItem(`${lightingKey}:${k}`, String(v)); } catch { /* ignore */ }
+  }, [lightingKey]);
+
+  // Derived visual values.
+  // Ambient maps 0..100 → brightness 0.55..1.55 (dim room ↔ full exposure).
+  const ambientBrightness = 0.55 + (ambientLevel / 100) * 1.0;
+  // Accent maps 0..100 → gradient alpha strength.
+  const accentA = (v: number) => Math.round((accentLevel / 100) * v).toString(16).padStart(2, "0");
+
 
   const activeCategory = useMemo(
     () => content.categories.find((c) => c.id === activeCategoryId) ?? null,
