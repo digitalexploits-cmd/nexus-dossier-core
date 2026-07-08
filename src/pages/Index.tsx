@@ -16,7 +16,7 @@ import { audio, prefersReducedMotion } from "@/lib/audio";
 // to give a bay a cinematic video transition. Null → CSS wipe fallback.
 const TRANSITION_VIDEOS: Record<BayId, string | null> = {
   mission: "/media/transition-mission.mp4",
-  technical: null,
+  technical: "/media/transition-technical.mp4",
   capability: null,
   operations: null,
 };
