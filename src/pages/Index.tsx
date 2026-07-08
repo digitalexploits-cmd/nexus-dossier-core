@@ -90,11 +90,15 @@ const Index = () => {
     audio.blip(880);
     const videoSrc = TRANSITION_VIDEOS[id];
     if (videoSrc && !prefersReducedMotion()) {
+      // Commit the target view immediately so it's already rendered behind
+      // the fullscreen video overlay. Clearing the overlay on end reveals it.
+      commitView(id);
       setVideoTransition({ src: videoSrc, next: id });
       return;
     }
     runTransition(bayLabel(id), "advance", id);
-  }, [view, runTransition]);
+  }, [view, runTransition, commitView]);
+
 
   const openVault = useCallback(() => { audio.blip(740); setVaultOpen(true); }, []);
   const goContact = useCallback(() => {
