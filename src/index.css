@@ -198,15 +198,49 @@
     0% { transform: scale(1.14); filter: blur(6px) brightness(0.5); }
     100% { transform: scale(1); filter: blur(0) brightness(1); }
   }
+  @keyframes bay-enter {
+    0%   { opacity: 0; transform: translateY(14px) scale(0.985); filter: blur(6px); }
+    60%  { opacity: 1; filter: blur(0); }
+    100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  }
+  @keyframes swap-in {
+    0%   { opacity: 0; transform: translateY(8px) scale(0.97); filter: blur(4px); }
+    100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  }
 
   .anim-drift { animation: drift 8s ease-in-out infinite; }
   .anim-fade-up { animation: fade-up var(--tx-med) both; }
   .anim-flicker { animation: flicker 6s infinite; }
+  .anim-bay-enter { animation: bay-enter 620ms cubic-bezier(0.22,1,0.36,1) both; }
+  .anim-swap-in  { animation: swap-in 460ms cubic-bezier(0.22,1,0.36,1) both; }
   .rim-sweep { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
   .rim-sweep::before {
     content: ""; position: absolute; inset: 0;
     background: var(--gradient-rim);
     animation: rim-sweep 5s ease-in-out infinite;
+  }
+
+  /* Interactive hover glow for bay entry points (chips, markers, doorways). */
+  .bay-hover-glow {
+    transition: box-shadow 260ms ease-out, border-color 260ms ease-out,
+                color 260ms ease-out, text-shadow 260ms ease-out,
+                transform 260ms ease-out, background-color 260ms ease-out;
+  }
+  .bay-hover-glow:hover,
+  .bay-hover-glow:focus-visible {
+    border-color: hsl(var(--interactive) / 0.9);
+    color: hsl(var(--interactive));
+    text-shadow: 0 0 14px hsl(var(--interactive) / 0.55);
+    box-shadow:
+      0 0 0 1px hsl(var(--interactive) / 0.55),
+      0 0 26px hsl(var(--interactive) / 0.45),
+      0 0 60px hsl(var(--interactive) / 0.25);
+    transform: translateY(-1px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .anim-bay-enter, .anim-swap-in { animation: none !important; }
+    .bay-hover-glow { transition: none !important; }
+    .bay-hover-glow:hover { transform: none !important; }
   }
 }
 

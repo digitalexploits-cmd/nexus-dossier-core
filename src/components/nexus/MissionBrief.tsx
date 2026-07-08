@@ -101,7 +101,7 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
         <div className="relative container h-screen flex items-end justify-end pt-24 pb-16">
           {!expanded ? (
             // Collapsed: ~1/3 of original size, transparent — reads like an HUD label on the wall.
-            <div className="anim-fade-up w-[62%] md:w-[22%] lg:w-[18%] p-3 rounded-sm border border-[hsl(var(--interactive)/0.45)] bg-transparent backdrop-blur-[2px] shadow-[0_0_24px_hsl(var(--interactive)/0.18)]">
+            <div key="collapsed" className="anim-swap-in bay-hover-glow w-[62%] md:w-[22%] lg:w-[18%] p-3 rounded-sm border border-[hsl(var(--interactive)/0.45)] bg-transparent backdrop-blur-[2px] shadow-[0_0_24px_hsl(var(--interactive)/0.18)]">
               <div className="flex items-start justify-between mb-2">
                 <div>
                   <div className="mono text-[0.55rem] tracking-[0.28em] uppercase text-[hsl(var(--interactive))]">NEXUS</div>
@@ -123,14 +123,14 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
                     setExpanded(true);
                     setTimeout(() => dossierRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
                   }}
-                  className="mono tracking-widest text-[0.55rem] h-7 w-full px-2"
+                  className="bay-hover-glow mono tracking-widest text-[0.55rem] h-7 w-full px-2"
                 >
                   OPEN DOSSIER →
                 </Button>
               </div>
             </div>
           ) : (
-            <CompactCard className="w-full md:w-[62%] lg:w-[58%] p-5 md:p-6 anim-fade-up">
+            <CompactCard key="expanded" className="w-full md:w-[62%] lg:w-[58%] p-5 md:p-6 anim-swap-in">
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <div className="mono text-[0.65rem] tracking-[0.28em] uppercase text-[#4db7ff]">NEXUS</div>
