@@ -148,7 +148,13 @@ const Index = () => {
     runTransition(bayLabel(id), "advance", id);
   }, [view, runTransition, commitView]);
 
-  const openVault = useCallback(() => { audio.blip(740); setVaultOpen(true); }, []);
+  const openVault = useCallback(() => {
+    audio.blip(740);
+    if (prefersReducedMotion()) { setVaultOpen(true); return; }
+    // Play the cinematic vault push-in first, then reveal the vault overlay.
+    setVideoTransition({ src: VAULT_TRANSITION_URL, next: view });
+    setTimeout(() => setVaultOpen(true), 900);
+  }, [view]);
   const goContact = useCallback(() => {
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
