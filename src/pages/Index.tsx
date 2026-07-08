@@ -40,6 +40,8 @@ const hashToView = (h: string): View => {
 const bayLabel = (id: BayId) => BAYS.find((b) => b.id === id)?.title ?? id.toUpperCase();
 
 const Index = () => {
+  // Hash is the single source of truth for `view`. Any state change goes
+  // through commitView() → writes hash → hashchange listener syncs React state.
   const [view, setView] = useState<View>(() => hashToView(window.location.hash));
   const [vaultOpen, setVaultOpen] = useState(false);
   const [introDone, setIntroDone] = useState(() => {
@@ -49,20 +51,37 @@ const Index = () => {
   const [videoTransition, setVideoTransition] = useState<{ src: string; next: View } | null>(null);
   const pendingRef = useRef<View | null>(null);
 
+  const syncFromHash = useCallback(() => {
+    const h = window.location.hash;
+    if (h === "#vault") { setVaultOpen(true); return; }
+    const next = hashToView(h);
+    setView((prev) => (prev === next ? prev : next));
+  }, []);
+
   useEffect(() => {
     const onHash = () => {
-      if (window.location.hash === "#vault") { setVaultOpen(true); return; }
-      setView(hashToView(window.location.hash));
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      syncFromHash();
+      window.scrollTo({ top: 0, behavior: "auto" });
     };
     window.addEventListener("hashchange", onHash);
     if (window.location.hash === "#vault") setVaultOpen(true);
     return () => window.removeEventListener("hashchange", onHash);
-  }, []);
+  }, [syncFromHash]);
 
   const commitView = useCallback((next: View) => {
-    window.location.hash = VIEW_HASH[next];
+    const targetHash = VIEW_HASH[next];
+    // Update React state first so the destination is rendered even before
+    // the hashchange event fires. hashchange will noop-sync afterward.
     setView(next);
+    if (window.location.hash !== targetHash) {
+      // Empty hash for home — avoid a literal "#" trailing char.
+      if (targetHash === "") {
+        const url = window.location.pathname + window.location.search;
+        window.history.pushState(null, "", url);
+      } else {
+        window.location.hash = targetHash;
+      }
+    }
     window.scrollTo({ top: 0, behavior: "auto" });
   }, []);
 
@@ -90,8 +109,9 @@ const Index = () => {
     audio.blip(880);
     const videoSrc = TRANSITION_VIDEOS[id];
     if (videoSrc && !prefersReducedMotion()) {
-      // Commit the target view immediately so it's already rendered behind
-      // the fullscreen video overlay. Clearing the overlay on end reveals it.
+      // Commit the destination view immediately — the video overlay is
+      // cosmetic. When it finishes (or errors/stalls/times out), unmounting
+      // it reveals the already-rendered destination.
       commitView(id);
       setVideoTransition({ src: videoSrc, next: id });
       return;
