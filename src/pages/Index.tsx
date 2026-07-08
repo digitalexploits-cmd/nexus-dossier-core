@@ -170,18 +170,19 @@ const Index = () => {
             {view === "technical" && (
               <BayDetail
                 bayId="technical"
+                theme="lab"
                 code="BAY 02"
                 title="Technical Brief"
                 subtitle="Research Lab"
                 tagline={["Inspect the signal.", "Preserve the machine."]}
-                intro="SINE~WaiV State Inspector is being developed as a research-stage, physics-informed motor-current inspection system. This bay organizes signal-path diagrams, validation graphics, research notes, and technical evidence."
+                intro="SINE~WaiV State Inspector is a research-stage, physics-informed motor-current inspection system. This bay organizes signal-path diagrams, frequency-domain reasoning, artifact-aware framing, and the validation path from bench to structured runs."
                 labels={["Research Stage", "Prototype", "Validation Needed"]}
-                disclaimer="No field validation is claimed. No digital twin claim is made. All artifacts are labeled by evidence status."
+                disclaimer="No field validation is claimed. No digital twin claim is made. Every artifact is labeled by evidence status."
                 blocks={[
-                  { title: "Signal-Path Notes", body: "Motor current i(t) reasoning, sampling considerations, and structured inspection framing.", status: "RESEARCH" },
-                  { title: "FFT / Frequency-Domain Sketches", body: "Illustrative frequency-domain reasoning artifacts. Not validation output.", status: "HYPOTHESIS" },
-                  { title: "Artifact-Aware Framing", body: "How measurement artifacts are separated from candidate machine-state signals.", status: "RESEARCH" },
-                  { title: "Validation Path", body: "Planned progression from bench observation to structured validation runs.", status: "VALIDATION NEEDED" },
+                  { title: "Signal-Path Notes",             body: "Motor current i(t) reasoning, sampling considerations, and structured inspection framing.",       status: "RESEARCH" },
+                  { title: "FFT / Frequency-Domain",        body: "Illustrative frequency-domain reasoning artifacts. Not validation output.",                        status: "HYPOTHESIS" },
+                  { title: "Artifact-Aware Framing",        body: "How measurement artifacts are separated from candidate machine-state signals.",                    status: "RESEARCH" },
+                  { title: "Validation Path",               body: "Planned progression from bench observation to structured validation runs.",                        status: "VALIDATION NEEDED" },
                 ]}
                 sections={[
                   {
@@ -196,6 +197,18 @@ const Index = () => {
                       "Structured inspection framing",
                     ],
                   },
+                  {
+                    index: "03B",
+                    eyebrow: "Evidence Ladder",
+                    title: "From hypothesis to validated claim",
+                    body: "Each artifact sits on an explicit rung. Nothing is promoted between rungs without the evidence that rung requires.",
+                    items: [
+                      "L0 · Hypothesis — reasoning only",
+                      "L1 · Research — structured investigation",
+                      "L2 · Prototype — bench observation",
+                      "L3 · Validation — repeatable structured runs",
+                    ],
+                  },
                 ]}
                 onOpenVault={openVault}
                 onContact={goContact}
@@ -204,28 +217,42 @@ const Index = () => {
             {view === "capability" && (
               <BayDetail
                 bayId="capability"
+                theme="gallery"
                 code="BAY 03"
                 title="Capability Brief"
                 subtitle="Capability Gallery"
                 tagline={["Frame the capability.", "Not the hype."]}
-                intro="Capability framing across industrial reliability, maintenance decision support, pilot candidate scoping, and commercialization pathway."
+                intro="A curated gallery of the platform's capabilities — expressed per audience, scoped to the decisions each audience is trying to make. Reliability, maintenance, pilot, and commercialization framing all live here."
                 labels={["Reliability", "Pilot Candidate", "Commercial Candidate"]}
                 blocks={[
-                  { title: "Industrial Reliability", body: "How signal-derived evidence integrates into reliability decision cycles.", status: "COMMERCIAL CANDIDATE" },
-                  { title: "Maintenance Decision Support", body: "Structured evidence at the point of maintenance judgment, without overclaiming.", status: "PROTOTYPE" },
-                  { title: "Pilot Candidate Framing", body: "Framing document for prospective pilot engagements and their success criteria.", status: "VALIDATION NEEDED" },
-                  { title: "Customer Problem Cards", body: "Discrete problem statements the platform is designed to address.", status: "RESEARCH" },
+                  { title: "Industrial Reliability",         body: "How signal-derived evidence integrates into reliability decision cycles.",                        status: "COMMERCIAL CANDIDATE" },
+                  { title: "Maintenance Decision Support",   body: "Structured evidence at the point of maintenance judgment, without overclaiming.",                 status: "PROTOTYPE" },
+                  { title: "Pilot Candidate Framing",        body: "Framing document for prospective pilot engagements and their success criteria.",                  status: "VALIDATION NEEDED" },
+                  { title: "Customer Problem Cards",         body: "Discrete problem statements the platform is designed to address.",                                status: "RESEARCH" },
                 ]}
                 sections={[
                   {
                     index: "03",
                     eyebrow: "Target Audiences",
-                    body: "Capability is expressed differently per audience. Every conversation is scoped to the decision the audience is trying to make.",
+                    title: "Who each capability is for",
+                    body: "Capability is expressed differently per audience. Every conversation is scoped to the decision that audience is trying to make.",
                     items: [
                       "Reliability engineering leads",
                       "Maintenance decision owners",
                       "Pilot sponsors + operations",
                       "Commercial + partnership scouts",
+                    ],
+                  },
+                  {
+                    index: "03B",
+                    eyebrow: "Commercial Posture",
+                    title: "What we're ready to offer today",
+                    body: "The gallery labels each capability by commercial readiness so partners know exactly which conversation they're entering.",
+                    items: [
+                      "Framing briefs — available now",
+                      "Structured pilots — candidate scoping",
+                      "Reference workflows — under construction",
+                      "Long-term partnerships — by conversation",
                     ],
                   },
                 ]}
@@ -236,29 +263,43 @@ const Index = () => {
             {view === "operations" && (
               <BayDetail
                 bayId="operations"
+                theme="command"
                 heroImage="/media/operations-landing.jpg"
                 code="BAY 04"
                 title="Operations Center"
                 subtitle="Command & Control"
                 tagline={["Command the shell.", "Route the evidence."]}
-                intro="Command surface for Nexus itself: project status, evidence vault access, document routing, deployment state, and contact path."
+                intro="Command surface for Nexus itself. Live project status, evidence routing, document access, deployment posture, and the direct-to-founder contact channel — all in one console."
                 labels={["Online", "Monitored", "Evidence Routed"]}
                 blocks={[
-                  { title: "Project Status", body: "Current program state across founder, technical, and commercial tracks.", status: "ONLINE" },
-                  { title: "Evidence Vault Access", body: "Open the vault to browse evidence objects with claim boundaries and audience labels.", status: "ONLINE" },
-                  { title: "Document Access", body: "Resume, credentials, and briefing documents route through the founder office.", status: "ONLINE" },
-                  { title: "Deployment Status", body: "Nexus operating shell is live. Static deployment. No user data collected.", status: "LIVE" },
+                  { title: "Project Status",         body: "Current program state across founder, technical, and commercial tracks.",                         status: "ONLINE" },
+                  { title: "Evidence Vault Access",  body: "Open the vault to browse evidence objects with claim boundaries and audience labels.",           status: "ONLINE" },
+                  { title: "Document Access",        body: "Resume, credentials, and briefing documents route through the founder office.",                   status: "ONLINE" },
+                  { title: "Deployment Status",      body: "Nexus operating shell is live. Static deployment. No user data collected.",                        status: "LIVE" },
                 ]}
                 sections={[
                   {
                     index: "03",
                     eyebrow: "Operating Posture",
-                    body: "Nexus runs as a static operating shell. Deterministic, auditable, and cheap to serve.",
+                    title: "How the shell runs",
+                    body: "Nexus runs as a static operating shell. Deterministic, auditable, and cheap to serve — with an explicit stance on tracking and data collection.",
                     items: [
                       "Static deployment · no server state",
                       "No visitor tracking or analytics beacons",
                       "Evidence routed through claim-boundaried cards",
                       "Direct-to-founder contact channel",
+                    ],
+                  },
+                  {
+                    index: "03B",
+                    eyebrow: "Control Surface",
+                    title: "What you can do from here",
+                    body: "Every action a visitor might want is one click from this bay — open the vault, request a briefing, download the resume, or return to the rotunda.",
+                    items: [
+                      "Open Evidence Vault — full cards gallery",
+                      "Request Briefing — direct founder channel",
+                      "Return to Rotunda — anywhere, one click",
+                      "Deep-link any bay via URL hash",
                     ],
                   },
                 ]}
