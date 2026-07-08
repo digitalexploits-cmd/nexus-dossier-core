@@ -14,6 +14,7 @@ import {
   TECHNICAL_FOCUS,
 } from "@/data/content";
 import { DocumentShelf } from "./DocumentShelf";
+import { OfficialCertificationsGallery } from "./OfficialCertificationsGallery";
 
 interface Props {
   onOpenVault: () => void;
@@ -300,7 +301,9 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
               );
             })}
           </section>
+          <OfficialCertificationsGallery />
           <DocumentShelf bay="mission" eyebrow="06 / FILES ON RECORD" title="Dossier Files" />
+
 
 
           {/* Engage strip */}
