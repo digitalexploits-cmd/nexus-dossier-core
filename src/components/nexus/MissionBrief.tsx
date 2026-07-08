@@ -226,10 +226,46 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
             </div>
           </section>
 
+
+
+
+          {/* Core strengths — compact dossier chips, not big cards */}
+          <section className="container py-10">
+            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">03 / CORE STRENGTHS</div>
+            <Glass className="p-5">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+                {CORE_STRENGTHS.map((s, i) => (
+                  <div key={s} className="border border-[rgba(130,205,255,0.38)] bg-[linear-gradient(180deg,rgba(36,62,98,0.74),rgba(22,40,66,0.84))] px-3 py-2">
+                    <div className="mono text-[0.55rem] tracking-[0.28em] text-[#4db7ff]">S{String(i + 1).padStart(2, "0")}</div>
+                    <div className="text-xs text-[#c8d4e2] mt-1">{s}</div>
+                  </div>
+                ))}
+              </div>
+            </Glass>
+          </section>
+
+          {/* Current work */}
+          <section className="container py-10">
+            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">04 / ACTIVE PROGRAMS</div>
+            <div className="grid md:grid-cols-3 gap-3">
+              {CURRENT_WORK.map((w, i) => (
+                <Glass key={w.org} className="p-5">
+                  <div className="mono text-[0.6rem] tracking-[0.24em] text-[#4db7ff]">PROG-{i + 1}</div>
+                  <div className="text-base font-semibold mt-1 text-[#eef6ff]">{w.org}</div>
+                  <div className="text-xs text-[#8fa3b8]">{w.role}</div>
+                  <div className="rule my-3" />
+                  <p className="text-sm text-[#c8d4e2]">{w.detail}</p>
+                </Glass>
+              ))}
+            </div>
+          </section>
+
+          <OfficialCertificationsGallery />
+
           {/* Featured official documents — LLC certificate + White House correspondence */}
           <section className="container py-10">
             <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[hsl(var(--interactive))] mb-3">
-              02B / OFFICIAL RECORD · FEATURED
+              05C / OFFICIAL RECORD · FEATURED
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               {[
@@ -278,40 +314,6 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
             </div>
           </section>
 
-
-
-          {/* Core strengths — compact dossier chips, not big cards */}
-          <section className="container py-10">
-            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">03 / CORE STRENGTHS</div>
-            <Glass className="p-5">
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
-                {CORE_STRENGTHS.map((s, i) => (
-                  <div key={s} className="border border-[rgba(130,205,255,0.38)] bg-[linear-gradient(180deg,rgba(36,62,98,0.74),rgba(22,40,66,0.84))] px-3 py-2">
-                    <div className="mono text-[0.55rem] tracking-[0.28em] text-[#4db7ff]">S{String(i + 1).padStart(2, "0")}</div>
-                    <div className="text-xs text-[#c8d4e2] mt-1">{s}</div>
-                  </div>
-                ))}
-              </div>
-            </Glass>
-          </section>
-
-          {/* Current work */}
-          <section className="container py-10">
-            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">04 / ACTIVE PROGRAMS</div>
-            <div className="grid md:grid-cols-3 gap-3">
-              {CURRENT_WORK.map((w, i) => (
-                <Glass key={w.org} className="p-5">
-                  <div className="mono text-[0.6rem] tracking-[0.24em] text-[#4db7ff]">PROG-{i + 1}</div>
-                  <div className="text-base font-semibold mt-1 text-[#eef6ff]">{w.org}</div>
-                  <div className="text-xs text-[#8fa3b8]">{w.role}</div>
-                  <div className="rule my-3" />
-                  <p className="text-sm text-[#c8d4e2]">{w.detail}</p>
-                </Glass>
-              ))}
-            </div>
-          </section>
-
-          <OfficialCertificationsGallery />
 
           <CredentialsDialog open={certsOpen} onOpenChange={setCertsOpen} />
           <DocumentShelf
