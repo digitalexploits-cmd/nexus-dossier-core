@@ -300,6 +300,8 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
               );
             })}
           </section>
+          <DocumentShelf bay="mission" eyebrow="06 / FILES ON RECORD" title="Dossier Files" />
+
 
           {/* Engage strip */}
           <section className="container py-16">
