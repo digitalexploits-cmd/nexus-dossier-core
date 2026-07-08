@@ -28,7 +28,8 @@ const ZONES: Zone[] = [
 ];
 
 const LOCK_THRESHOLD = 0.035;
-const STEP = 0.08;
+const STEP_H = 0.08;
+const STEP_V = 0.15;
 
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 
@@ -39,7 +40,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   // ---------- Reduced-motion fallback ----------
   if (reduced) {
     return (
-      <section className="relative h-screen w-full overflow-hidden bg-[#05070a]">
+      <section className="relative h-[100dvh] w-full overflow-hidden bg-[#05070a]">
         <img src={rotundaAsset.url} alt="Nexus rotunda" className="absolute inset-0 w-full h-full object-cover opacity-70" draggable={false} />
         <div className="absolute inset-0 bg-background/60" />
         <div className="relative z-10 h-full flex flex-col items-center justify-center gap-4 container">
@@ -66,14 +67,17 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   }
 
   // ---------- First-person camera ----------
-  const [heading, setHeading] = useState(0.30);
-  const [pitch, setPitch] = useState(0);
+  const [heading, setHeading] = useState(0.30);   // horizontal 0..1
+  const [headingV, setHeadingV] = useState(0.58); // vertical 0..1, slightly below middle
   const [dragging, setDragging] = useState(false);
   const [snapping, setSnapping] = useState(false);
   const [hintVisible, setHintVisible] = useState(true);
+  const [vaultPanelOpen, setVaultPanelOpen] = useState(false);
   const interactedRef = useRef(false);
   const headingRef = useRef(heading);
+  const headingVRef = useRef(headingV);
   headingRef.current = heading;
+  headingVRef.current = headingV;
 
   const lockedZone = useMemo(() => {
     let best: { z: Zone; d: number } | null = null;
@@ -110,23 +114,40 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
     window.setTimeout(() => setSnapping(false), 650);
   }, [dismissHint]);
 
-  const step = useCallback((delta: number) => {
+  const stepH = useCallback((delta: number) => {
     dismissHint();
     setSnapping(true);
     setHeading((h) => clamp(h + delta));
     window.setTimeout(() => setSnapping(false), 350);
   }, [dismissHint]);
 
-  // Measured travel
+  const stepV = useCallback((delta: number) => {
+    dismissHint();
+    setSnapping(true);
+    setHeadingV((v) => clamp(v + delta));
+    window.setTimeout(() => setSnapping(false), 350);
+  }, [dismissHint]);
+
+  // Measured travel (both axes)
   const sectionRef = useRef<HTMLElement | null>(null);
   const worldRef = useRef<HTMLDivElement | null>(null);
   const [viewW, setViewW] = useState(0);
+  const [viewH, setViewH] = useState(0);
   const [worldW, setWorldW] = useState(0);
-  const travelPx = Math.max(0, worldW - viewW);
+  const [worldH, setWorldH] = useState(0);
+  const travelX = Math.max(0, worldW - viewW);
+  const travelY = Math.max(0, worldH - viewH);
 
   const measure = useCallback(() => {
-    if (sectionRef.current) setViewW(sectionRef.current.clientWidth);
-    if (worldRef.current) setWorldW(worldRef.current.getBoundingClientRect().width);
+    if (sectionRef.current) {
+      setViewW(sectionRef.current.clientWidth);
+      setViewH(sectionRef.current.clientHeight);
+    }
+    if (worldRef.current) {
+      const r = worldRef.current.getBoundingClientRect();
+      setWorldW(r.width);
+      setWorldH(r.height);
+    }
   }, []);
 
   useEffect(() => {
@@ -138,54 +159,56 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
     return () => { ro.disconnect(); window.removeEventListener("resize", measure); };
   }, [measure]);
 
-  // Drag
-  const dragStartRef = useRef<{ x: number; heading: number } | null>(null);
+  // Drag: horizontal + vertical
+  const dragStartRef = useRef<{ x: number; y: number; heading: number; headingV: number } | null>(null);
   const onPointerDown = useCallback((e: React.PointerEvent) => {
     if (e.button !== 0 && e.pointerType === "mouse") return;
     (e.target as Element).setPointerCapture?.(e.pointerId);
-    dragStartRef.current = { x: e.clientX, heading: headingRef.current };
+    dragStartRef.current = {
+      x: e.clientX, y: e.clientY,
+      heading: headingRef.current, headingV: headingVRef.current,
+    };
     setDragging(true);
     setSnapping(false);
     dismissHint();
   }, [dismissHint]);
   const onPointerMove = useCallback((e: React.PointerEvent) => {
     if (!dragStartRef.current) return;
-    if (travelPx <= 0) return;
-    const dx = e.clientX - dragStartRef.current.x;
-    const dh = -(dx / travelPx);
-    setHeading(clamp(dragStartRef.current.heading + dh));
-  }, [travelPx]);
+    if (travelX > 0) {
+      const dx = e.clientX - dragStartRef.current.x;
+      setHeading(clamp(dragStartRef.current.heading + -(dx / travelX)));
+    }
+    if (travelY > 0) {
+      const dy = e.clientY - dragStartRef.current.y;
+      setHeadingV(clamp(dragStartRef.current.headingV + -(dy / travelY)));
+    }
+  }, [travelX, travelY]);
   const endDrag = useCallback(() => {
     dragStartRef.current = null;
     setDragging(false);
   }, []);
 
-  // subtle vertical parallax
-  const onMouseMove = useCallback((e: React.MouseEvent) => {
-    const ny = (e.clientY / window.innerHeight) * 2 - 1;
-    setPitch(clamp(ny, -1, 1) * 0.5);
-  }, []);
-
   // Keyboard
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") { e.preventDefault(); step(-STEP); }
-      else if (e.key === "ArrowRight") { e.preventDefault(); step(STEP); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); stepH(-STEP_H); }
+      else if (e.key === "ArrowRight") { e.preventDefault(); stepH(STEP_H); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); stepV(-STEP_V); }
+      else if (e.key === "ArrowDown") { e.preventDefault(); stepV(STEP_V); }
       else if ((e.key === "Enter" || e.key === " ") && lockedZone) { e.preventDefault(); enterZone(lockedZone); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [lockedZone, enterZone, step]);
+  }, [lockedZone, enterZone, stepH, stepV]);
 
   useEffect(() => {
     const t = window.setTimeout(() => setHintVisible(false), 4000);
     return () => window.clearTimeout(t);
   }, []);
 
-  const translateX = travelPx > 0
-    ? -heading * travelPx
-    : (viewW - worldW) / 2;
-  const worldTransform = `translate3d(${translateX}px, ${pitch * 18}px, 0)`;
+  const translateX = travelX > 0 ? -heading * travelX : (viewW - worldW) / 2;
+  const translateY = travelY > 0 ? -headingV * travelY : (viewH - worldH) / 2;
+  const worldTransform = `translate3d(${translateX}px, ${translateY}px, 0)`;
   const worldTransition = snapping
     ? "transform 600ms cubic-bezier(0.22,1,0.36,1)"
     : dragging
@@ -195,29 +218,30 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   return (
     <section
       ref={sectionRef}
-      className="relative h-screen w-full overflow-hidden bg-[#05070a] select-none"
-      onMouseMove={onMouseMove}
+      className="relative w-full h-[100dvh] overflow-hidden bg-[#05070a] select-none"
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={endDrag}
       onPointerCancel={endDrag}
       style={{ cursor: dragging ? "grabbing" : "grab", touchAction: "none" }}
     >
-      {/* WORLD */}
+      {/* WORLD — image scaled so height ≈ 135vh, width preserves aspect. */}
       <div
         ref={worldRef}
-        className="absolute top-0 left-0 h-full w-auto"
+        className="absolute top-0 left-0"
         style={{
           transform: worldTransform,
           transition: worldTransition,
           willChange: "transform",
+          height: "135dvh",
+          width: "auto",
         }}
       >
         <img
           src={rotundaAsset.url}
           alt="Nexus rotunda panorama"
-          className="block h-full w-auto max-w-none"
-          style={{ filter: "brightness(1.08) contrast(1.06) saturate(1.10)" }}
+          className="block max-w-none"
+          style={{ height: "135dvh", width: "auto", filter: "brightness(1.08) contrast(1.06) saturate(1.10)" }}
           draggable={false}
           onLoad={measure}
         />
@@ -300,15 +324,15 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         </div>
       </div>
 
-      {/* Top HUD */}
-      <div className="absolute inset-x-0 top-12 z-20 anim-fade-up">
+      {/* Top HUD (below fixed TopBar) */}
+      <div className="absolute inset-x-0 top-14 z-20 anim-fade-up pointer-events-none">
         <div className="container flex items-center justify-between text-[0.68rem] mono tracking-[0.28em] uppercase text-foreground/80">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 bg-background/40 backdrop-blur-sm px-3 py-1.5 border border-border/40 pointer-events-auto">
             <span className="text-primary">NEXUS</span>
             <span className="text-muted-foreground">|</span>
             <span>{BRAND.company}</span>
           </div>
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-3 bg-background/40 backdrop-blur-sm px-3 py-1.5 border border-border/40 pointer-events-auto">
             <span className="status-dot status-live" />
             <span>SHELL ONLINE</span>
             <span className="text-muted-foreground">·</span>
@@ -320,15 +344,25 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
       {/* Look buttons */}
       <button
-        onClick={() => step(-STEP)}
+        onClick={() => stepH(-STEP_H)}
         aria-label="Look left"
         className="absolute left-3 top-1/2 -translate-y-1/2 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-10 h-16 flex items-center justify-center text-lg"
       >◄</button>
       <button
-        onClick={() => step(STEP)}
+        onClick={() => stepH(STEP_H)}
         aria-label="Look right"
         className="absolute right-3 top-1/2 -translate-y-1/2 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-10 h-16 flex items-center justify-center text-lg"
       >►</button>
+      <button
+        onClick={() => stepV(-STEP_V)}
+        aria-label="Look up"
+        className="absolute left-1/2 -translate-x-1/2 top-20 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-8 flex items-center justify-center"
+      >▲</button>
+      <button
+        onClick={() => stepV(STEP_V)}
+        aria-label="Look down"
+        className="absolute left-1/2 -translate-x-1/2 bottom-44 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-8 flex items-center justify-center"
+      >▼</button>
 
       {/* Lock-on ENTER prompt */}
       {lockedZone && (
@@ -375,14 +409,36 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         </div>
       </div>
 
-      {/* Vault quick-open */}
-      <div className="absolute right-4 top-24 z-20 anim-fade-up" style={{ animationDelay: "300ms" }}>
-        <button
-          onClick={onOpenVault}
-          className="mono text-[0.65rem] tracking-[0.28em] uppercase text-primary/80 hover:text-primary border border-primary/30 hover:border-primary/70 px-3 py-1.5 transition-colors bg-background/40 backdrop-blur-sm"
-        >
-          OPEN EVIDENCE VAULT →
-        </button>
+      {/* Vault HUD panel (compact / collapsible) */}
+      <div className="absolute right-3 top-28 z-20 anim-fade-up" style={{ animationDelay: "300ms" }}>
+        {vaultPanelOpen ? (
+          <div className="w-64 border border-primary/40 bg-background/70 backdrop-blur-md p-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="mono text-[0.6rem] tracking-[0.28em] text-primary">EVIDENCE VAULT</div>
+              <button
+                onClick={() => setVaultPanelOpen(false)}
+                aria-label="Collapse vault panel"
+                className="mono text-[0.6rem] text-muted-foreground hover:text-primary px-1"
+              >×</button>
+            </div>
+            <div className="text-[0.65rem] text-muted-foreground leading-relaxed">
+              Secured archive of evidence artifacts with claim boundaries and audience labels.
+            </div>
+            <button
+              onClick={onOpenVault}
+              className="w-full mono text-[0.6rem] tracking-[0.28em] uppercase text-primary border border-primary/50 hover:border-primary/80 bg-primary/10 hover:bg-primary/20 px-3 py-1.5 transition-colors"
+            >
+              OPEN VAULT →
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setVaultPanelOpen(true)}
+            className="mono text-[0.6rem] tracking-[0.28em] uppercase text-primary/80 hover:text-primary border border-primary/30 hover:border-primary/70 px-3 py-1.5 transition-colors bg-background/50 backdrop-blur-sm"
+          >
+            ◆ VAULT
+          </button>
+        )}
       </div>
 
       {/* Hint */}
@@ -395,8 +451,8 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
             <div className="mono text-primary text-[0.65rem] tracking-[0.32em] mb-3">▲ FIRST-PERSON NAVIGATION ▲</div>
             <div className="text-foreground/90 text-sm mb-2">Drag to look around.</div>
             <div className="text-muted-foreground text-xs">
-              Pan left and right to explore the four bays and the evidence vault.
-              Use arrow keys or the compass below. Press <span className="mono text-primary">ENTER</span> when a zone locks on.
+              Drag or use the arrow keys to look horizontally and vertically across the rotunda.
+              Explore the four bays and the evidence vault. Press <span className="mono text-primary">ENTER</span> when a zone locks on.
             </div>
             <button
               onClick={() => { interactedRef.current = true; setHintVisible(false); }}
