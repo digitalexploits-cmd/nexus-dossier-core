@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { EVIDENCE, EVIDENCE_STATUSES, type EvidenceStatus } from "@/data/content";
+import { downloadEvidenceCard } from "@/lib/downloads";
 
 interface Props {
   open: boolean;
@@ -240,16 +241,28 @@ export const EvidenceVault = ({ open, onOpenChange, onReturnToRotunda }: Props) 
                       <span className="text-[hsl(var(--interactive))]">◆</span>{" "}
                       AUDIENCE · {e.audience}
                     </div>
-                    <Button
-                      asChild
-                      size="sm"
-                      variant="outline"
-                      className="mono text-[0.6rem] tracking-widest h-7"
-                    >
-                      <a href={e.href ?? "#contact"} onClick={() => onOpenChange(false)}>
-                        {e.cta.toUpperCase()} →
-                      </a>
-                    </Button>
+                    <div className="flex items-center gap-1.5">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => downloadEvidenceCard(e)}
+                        className="mono text-[0.6rem] tracking-widest h-7 px-2"
+                        aria-label={`Download ${e.title} as PDF`}
+                        title="Download PDF with embedded metadata"
+                      >
+                        ↓ PDF
+                      </Button>
+                      <Button
+                        asChild
+                        size="sm"
+                        variant="outline"
+                        className="mono text-[0.6rem] tracking-widest h-7"
+                      >
+                        <a href={e.href ?? "#contact"} onClick={() => onOpenChange(false)}>
+                          {e.cta.toUpperCase()} →
+                        </a>
+                      </Button>
+                    </div>
                   </div>
 
                   {/* Card index chip */}

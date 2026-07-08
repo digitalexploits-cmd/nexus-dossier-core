@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { OFFICIAL_CERTIFICATIONS, driveViewUrl, type OfficialCertification } from "@/data/officialCertifications";
+import { downloadCertificate } from "@/lib/downloads";
 
 // Full-width image gallery of the official certification badges/certificates.
 // Images are page-1 renders of the source PDFs; clicking opens the original in Drive.
@@ -41,8 +42,29 @@ export const OfficialCertificationsGallery = () => {
                 {c.issuer}
               </div>
               <div className="text-sm text-[#eef6ff] mt-1 leading-snug">{c.title}</div>
-              <div className="mt-2 mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8] group-hover:text-[hsl(var(--interactive))]">
-                VIEW CERTIFICATE →
+              <div className="mt-2 flex items-center justify-between gap-2">
+                <span className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8] group-hover:text-[hsl(var(--interactive))]">
+                  VIEW →
+                </span>
+                <span
+                  role="button"
+                  tabIndex={0}
+                  onClick={(ev) => {
+                    ev.stopPropagation();
+                    downloadCertificate(c);
+                  }}
+                  onKeyDown={(ev) => {
+                    if (ev.key === "Enter" || ev.key === " ") {
+                      ev.preventDefault();
+                      ev.stopPropagation();
+                      downloadCertificate(c);
+                    }
+                  }}
+                  className="interactive mono text-[0.55rem] tracking-[0.24em] uppercase px-2 py-1 border border-[rgba(130,205,255,0.42)] text-[#c8d4e2] hover:border-[hsl(var(--interactive))] hover:text-[hsl(var(--interactive))] transition-colors cursor-pointer"
+                  aria-label={`Download PDF of ${c.title}`}
+                >
+                  ↓ PDF
+                </span>
               </div>
             </div>
           </button>
@@ -99,14 +121,24 @@ export const OfficialCertificationsGallery = () => {
                     </div>
                   )}
                 </div>
-                <a
-                  href={driveViewUrl(active.driveId)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="interactive shrink-0 inline-flex items-center gap-2 mono text-[0.65rem] tracking-[0.2em] uppercase px-4 py-2.5 border border-[hsl(var(--interactive))] text-[hsl(var(--interactive))] hover:bg-[hsl(var(--interactive))] hover:text-[#03130a] transition-colors"
-                >
-                  OPEN IN GOOGLE DRIVE →
-                </a>
+                <div className="shrink-0 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => downloadCertificate(active)}
+                    className="interactive inline-flex items-center gap-2 mono text-[0.65rem] tracking-[0.2em] uppercase px-4 py-2.5 border border-[hsl(var(--interactive))] text-[hsl(var(--interactive))] hover:bg-[hsl(var(--interactive))] hover:text-[#03130a] transition-colors"
+                    aria-label={`Download PDF of ${active.title}`}
+                  >
+                    ↓ DOWNLOAD PDF
+                  </button>
+                  <a
+                    href={driveViewUrl(active.driveId)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="interactive inline-flex items-center gap-2 mono text-[0.65rem] tracking-[0.2em] uppercase px-4 py-2.5 border border-[rgba(130,205,255,0.42)] text-[#c8d4e2] hover:border-[hsl(var(--interactive))] hover:text-[hsl(var(--interactive))] transition-colors"
+                  >
+                    OPEN IN GOOGLE DRIVE →
+                  </a>
+                </div>
               </div>
             </div>
           </div>
