@@ -122,9 +122,11 @@ export const BayDetail = ({
   sections,
   disclaimer,
   heroImage,
+  theme = "lab",
   onOpenVault,
   onContact,
 }: Props) => {
+  const tokens = THEMES[theme];
   const [bgLoaded, setBgLoaded] = useState(!heroImage);
   const [expanded, setExpanded] = useState(false);
   const dossierRef = useRef<HTMLDivElement>(null);
