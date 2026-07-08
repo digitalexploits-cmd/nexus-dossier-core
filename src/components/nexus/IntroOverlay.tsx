@@ -6,15 +6,16 @@ interface Props {
 }
 
 const INTRO_SRC = "/media/intro-load.mp4";
-const HARD_TIMEOUT_MS = 14000;
-const STALL_TIMEOUT_MS = 4500;
+const HARD_TIMEOUT_MS = 8000;
+const STALL_TIMEOUT_MS = 3500;
 
 /**
  * Cold-open intro. Robust guards:
  *  - autoplay muted; if blocked/errored/stalled → skip
- *  - hard 14s timeout (source is ~12s)
+ *  - hard 8s timeout
  *  - ESC + SKIP always work
- * Never traps the visitor. Fade never blocks on audio unlock.
+ * Never traps the visitor. Reveal never depends on audio startup —
+ * audio.start() runs as a best-effort side effect after onComplete().
  */
 export const IntroOverlay = ({ onComplete }: Props) => {
   const reducedRef = useRef(prefersReducedMotion());
@@ -27,14 +28,23 @@ export const IntroOverlay = ({ onComplete }: Props) => {
   const finish = useCallback(() => {
     if (finishedRef.current) return;
     finishedRef.current = true;
-    // Fire-and-forget — never block the reveal on audio unlock.
-    audio.start().catch(() => { /* ignore */ });
-    setFading(true);
-    window.setTimeout(() => {
-      onComplete();
-      setDone(true);
-    }, 420);
+    // Reveal the app FIRST. Mount underlying view beneath the still-opaque
+    // overlay, then fade. This prevents a white flash and, critically,
+    // means audio startup can never block or delay the reveal.
+    try { onComplete(); } catch { /* ignore */ }
+    requestAnimationFrame(() => {
+      setFading(true);
+      window.setTimeout(() => { setDone(true); }, 400);
+    });
+    // Best-effort audio unlock. Fully non-blocking; any sync or async
+    // failure is swallowed and cannot trap the visitor.
+    try {
+      void Promise.resolve()
+        .then(() => audio.start())
+        .catch(() => { /* ignore */ });
+    } catch { /* ignore */ }
   }, [onComplete]);
+
 
   // Reduced motion → skip immediately
   useEffect(() => {
