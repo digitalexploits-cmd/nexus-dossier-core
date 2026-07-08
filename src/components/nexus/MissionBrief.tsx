@@ -291,13 +291,13 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
                   className="group relative block rounded-sm border border-[rgba(130,205,255,0.42)] bg-[rgba(11,18,32,0.85)] overflow-hidden transition-all duration-300 hover:border-[hsl(var(--interactive))] hover:shadow-[0_0_0_1px_hsl(var(--interactive)/0.55),0_20px_50px_-20px_hsl(var(--interactive)/0.35)]"
                   aria-label={`Open ${doc.title}`}
                 >
-                  <div className="relative w-full bg-[#050810] flex items-center justify-center p-4 md:p-6">
+                  <div className="relative w-full bg-[#050810] flex items-center justify-center p-2 md:p-3">
                     <img
                       src={doc.src}
                       alt={doc.alt}
                       loading="lazy"
                       decoding="async"
-                      className="max-h-[520px] w-auto object-contain transition-transform duration-500 group-hover:scale-[1.02]"
+                      className="max-h-[260px] w-auto object-contain transition-transform duration-500 group-hover:scale-[1.02]"
                     />
                   </div>
                   <div className="p-4 border-t border-[rgba(130,205,255,0.28)]">
