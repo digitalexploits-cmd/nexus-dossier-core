@@ -18,12 +18,13 @@ interface Props {
   labels: string[];
   blocks: PanelBlock[];
   disclaimer?: string;
+  bayId?: BayId;
   onOpenVault: () => void;
   onContact: () => void;
 }
 
 export const BayPlaceholder = ({
-  code, title, subtitle, intro, labels, blocks, disclaimer, onOpenVault, onContact,
+  code, title, subtitle, intro, labels, blocks, disclaimer, bayId, onOpenVault, onContact,
 }: Props) => (
   <div className="pt-16 pb-24">
     <section className="container">
