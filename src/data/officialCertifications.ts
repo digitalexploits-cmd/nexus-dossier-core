@@ -6,6 +6,7 @@ export interface OfficialCertification {
   title: string;     // display title
   issuer: string;    // issuing organization
   driveId: string;   // Google Drive file ID (source PDF)
+  date?: string;     // completion / issue date (optional)
 }
 
 const drive = (id: string) => `https://drive.google.com/file/d/${id}/view`;
