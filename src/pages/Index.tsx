@@ -230,7 +230,11 @@ const Index = () => {
       </main>
 
       <BottomBar />
-      <EvidenceVault open={vaultOpen} onOpenChange={setVaultOpen} />
+      <EvidenceVault
+        open={vaultOpen}
+        onOpenChange={setVaultOpen}
+        onReturnToRotunda={goHome}
+      />
 
       {transition && (
         <BayTransition
