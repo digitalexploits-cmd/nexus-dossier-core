@@ -17,7 +17,6 @@ export const TopBar = ({ view }: { view: string }) => (
           <span className="status-dot status-live" /> SHELL ONLINE
         </div>
         <div className="tick">VIEW / {view}</div>
-        <MuteToggle />
       </div>
     </div>
   </header>
