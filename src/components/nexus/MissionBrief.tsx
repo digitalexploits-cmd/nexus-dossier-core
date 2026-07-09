@@ -112,9 +112,6 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
                 <div className="mono text-[0.45rem] tracking-[0.24em] text-[#8fa3b8]">///-HC-0</div>
               </div>
               <div className="space-y-2">
-                <h1 className="text-[0.85rem] md:text-[0.9rem] font-semibold tracking-tight leading-tight text-[#eef6ff]">
-                  Divide the wave.<br/>Preserve the machine.
-                </h1>
                 <div className="mono text-[0.5rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
                   {BRAND.founder}
                 </div>
@@ -146,9 +143,6 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
                   {/* Mission cell */}
                   <div className="border border-[rgba(130,205,255,0.38)] bg-[linear-gradient(180deg,rgba(36,62,98,0.78),rgba(22,40,66,0.86))] p-4">
                     <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-2">OUR MISSION</div>
-                    <h1 className="text-2xl font-semibold tracking-tight leading-tight text-[#eef6ff]">
-                      Divide the wave.<br/>Preserve the machine.
-                    </h1>
                     <p className="text-sm text-[#c8d4e2] mt-3 leading-relaxed">
                       Deliver physics-first, evidence-labeled inspection to industrial reliability teams
                       — without overclaim.
