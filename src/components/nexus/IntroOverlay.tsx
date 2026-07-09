@@ -88,15 +88,6 @@ export const IntroOverlay = ({ onComplete }: Props) => {
     };
   }, [finish]);
 
-  const toggleSound = useCallback(async () => {
-    const v = videoRef.current;
-    if (!v) return;
-    const next = !muted;
-    v.muted = !next;
-    setMuted(!next);
-    if (next) { try { await v.play(); } catch { /* ignore */ } }
-  }, [muted]);
-
   if (done) return null;
 
   return (
