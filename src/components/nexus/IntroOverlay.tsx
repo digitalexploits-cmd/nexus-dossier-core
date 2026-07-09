@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { audio, prefersReducedMotion } from "@/lib/audio";
+import { prefersReducedMotion } from "@/lib/audio";
 
 interface Props {
   onComplete: () => void;
