@@ -18,7 +18,7 @@ export const BRAND = {
   platform: "Nexus",
   founder: "Anthony \u201CTony\u201D McGee",
   tech: "SINE~WaiV State Inspector",
-  line: "We divide the wave without losing the machine.",
+  line: "",
   contactEmail: "briefing@aibase3.solutions",
 };
 
@@ -78,7 +78,7 @@ export const BAYS: Array<{
   },
 ];
 
-export const FOUNDER_BIO = `Anthony \u201CTony\u201D McGee is the founder of AI Base\u00B3 Solutions LLC and the creator of Nexus, the operating shell for organizing the company\u2019s technical, commercial, and founder evidence. His work centers on SINE~WaiV State Inspector, a research-stage, physics-informed motor-current inspection system being developed to turn machine signal behavior into structured diagnostic evidence. Tony\u2019s background is rooted in industrial systems, electrical troubleshooting, machine behavior, maintenance reality, and high-pressure problem solving. AI Base\u00B3 is being built around one principle: divide the wave without losing the machine.`;
+export const FOUNDER_BIO = `Anthony \u201CTony\u201D McGee is the founder of AI Base\u00B3 Solutions LLC and the creator of Nexus, the operating shell for organizing the company\u2019s technical, commercial, and founder evidence. His work centers on SINE~WaiV State Inspector, a research-stage, physics-informed motor-current inspection system being developed to turn machine signal behavior into structured diagnostic evidence. Tony\u2019s background is rooted in industrial systems, electrical troubleshooting, machine behavior, maintenance reality, and high-pressure problem solving.`;
 
 export const FOUNDER_SUMMARY = {
   title: "Founder / Industrial Systems Problem Solver / SINE~WaiV Creator",
