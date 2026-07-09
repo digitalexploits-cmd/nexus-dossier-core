@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { DocViewer } from "./DocViewer";
 import { documentsForBay, type BayId, type DocItem } from "@/data/content";
-import { audio } from "@/lib/audio";
 
 interface Props {
   bay: BayId;
@@ -26,7 +25,6 @@ export const DocumentShelf = ({ bay, eyebrow = "FILES ON RECORD", title = "Docum
   if (items.length === 0) return null;
 
   const open = (d: DocItem) => {
-    audio.blip(740);
     setActive(d);
   };
 

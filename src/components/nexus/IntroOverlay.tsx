@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { audio, prefersReducedMotion } from "@/lib/audio";
+import { prefersReducedMotion } from "@/lib/audio";
 
 interface Props {
   onComplete: () => void;
@@ -14,35 +14,23 @@ const STALL_TIMEOUT_MS = 3500;
  *  - autoplay muted; if blocked/errored/stalled → skip
  *  - hard 8s timeout
  *  - ESC + SKIP always work
- * Never traps the visitor. Reveal never depends on audio startup —
- * audio.start() runs as a best-effort side effect after onComplete().
+ * Never traps the visitor.
  */
 export const IntroOverlay = ({ onComplete }: Props) => {
   const reducedRef = useRef(prefersReducedMotion());
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [fading, setFading] = useState(false);
   const [done, setDone] = useState(false);
-  const [muted, setMuted] = useState(true);
   const finishedRef = useRef(false);
 
   const finish = useCallback(() => {
     if (finishedRef.current) return;
     finishedRef.current = true;
-    // Reveal the app FIRST. Mount underlying view beneath the still-opaque
-    // overlay, then fade. This prevents a white flash and, critically,
-    // means audio startup can never block or delay the reveal.
     try { onComplete(); } catch { /* ignore */ }
     requestAnimationFrame(() => {
       setFading(true);
       window.setTimeout(() => { setDone(true); }, 400);
     });
-    // Best-effort audio unlock. Fully non-blocking; any sync or async
-    // failure is swallowed and cannot trap the visitor.
-    try {
-      void Promise.resolve()
-        .then(() => audio.start())
-        .catch(() => { /* ignore */ });
-    } catch { /* ignore */ }
   }, [onComplete]);
 
 
@@ -100,15 +88,6 @@ export const IntroOverlay = ({ onComplete }: Props) => {
     };
   }, [finish]);
 
-  const toggleSound = useCallback(async () => {
-    const v = videoRef.current;
-    if (!v) return;
-    const next = !muted;
-    v.muted = !next;
-    setMuted(!next);
-    if (next) { try { await v.play(); } catch { /* ignore */ } }
-  }, [muted]);
-
   if (done) return null;
 
   return (
@@ -131,13 +110,6 @@ export const IntroOverlay = ({ onComplete }: Props) => {
       />
 
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_60%,rgba(2,4,8,0.85)_100%)]" />
-
-      <button
-        onClick={toggleSound}
-        className="absolute bottom-6 left-6 mono text-[0.6rem] tracking-[0.28em] text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 px-3 py-1.5 bg-background/40 backdrop-blur-sm transition-colors"
-      >
-        {muted ? "SOUND ON" : "SOUND OFF"}
-      </button>
 
       <button
         onClick={finish}

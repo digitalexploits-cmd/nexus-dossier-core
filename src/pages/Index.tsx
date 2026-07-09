@@ -9,7 +9,7 @@ import { BayTransition, type TransitionKind } from "@/components/nexus/BayTransi
 import { VideoTransition } from "@/components/nexus/VideoTransition";
 import { Button } from "@/components/ui/button";
 import { BAYS, type BayId } from "@/data/content";
-import { audio, prefersReducedMotion } from "@/lib/audio";
+import { prefersReducedMotion } from "@/lib/audio";
 import transitionMission from "../../public/media/transition-mission.mp4.asset.json";
 import transitionTechnical from "../../public/media/transition-technical.mp4.asset.json";
 import transitionOperations from "../../public/media/transition-operations.mp4.asset.json";
@@ -144,13 +144,11 @@ const Index = () => {
 
   const goHome = useCallback(() => {
     if (view === "home") return;
-    audio.blip(520);
     runTransition("ROTUNDA", "retreat", "home");
   }, [view, runTransition]);
 
   const goBay = useCallback((id: BayId) => {
     if (view === id) return;
-    audio.blip(880);
     if (prefersReducedMotion()) {
       runTransition(bayLabel(id), "advance", id);
       return;
@@ -165,7 +163,6 @@ const Index = () => {
   }, [view, runTransition, commitView]);
 
   const openVault = useCallback(() => {
-    audio.blip(740);
     if (prefersReducedMotion()) { setVaultOpen(true); return; }
     // Rotunda → vault door, then interior reveal. Overlay opens right as the
     // second clip lands so the vault UI feels like the settled destination.

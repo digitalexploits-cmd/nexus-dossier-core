@@ -1,23 +1,4 @@
 import { BRAND } from "@/data/content";
-import { useMuted } from "@/lib/audio";
-
-const MuteToggle = () => {
-  const [muted, setMuted] = useMuted();
-  return (
-    <button
-      onClick={() => setMuted(!muted)}
-      aria-label={muted ? "Unmute ambient audio" : "Mute ambient audio"}
-      title={muted ? "Ambient audio muted" : "Ambient audio on"}
-      className={`mono text-[0.6rem] tracking-[0.24em] uppercase px-2 py-1 border transition-colors ${
-        muted
-          ? "border-border/60 text-muted-foreground hover:text-primary/80"
-          : "border-primary/50 text-primary bg-primary/10 hover:bg-primary/15"
-      }`}
-    >
-      {muted ? "AUDIO OFF" : "AUDIO ON"}
-    </button>
-  );
-};
 
 export const TopBar = ({ view }: { view: string }) => (
   <header className="fixed top-0 inset-x-0 z-40 border-b border-border/60 bg-background/70 backdrop-blur-md">
@@ -36,7 +17,6 @@ export const TopBar = ({ view }: { view: string }) => (
           <span className="status-dot status-live" /> SHELL ONLINE
         </div>
         <div className="tick">VIEW / {view}</div>
-        <MuteToggle />
       </div>
     </div>
   </header>

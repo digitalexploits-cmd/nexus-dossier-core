@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import rotundaAsset from "@/assets/nexus-rotunda.jpg.asset.json";
+
 import { BRAND, type BayId } from "@/data/content";
-import { audio, prefersReducedMotion } from "@/lib/audio";
+import { prefersReducedMotion } from "@/lib/audio";
 
 interface Props {
   onSelect: (id: BayId) => void;
@@ -41,7 +41,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   if (reduced) {
     return (
       <section className="relative h-[100dvh] w-full overflow-hidden bg-[#05070a]">
-        <img src={rotundaAsset.url} alt="Nexus rotunda" className="absolute inset-0 w-full h-full object-cover opacity-70" draggable={false} />
+        <img src="/nexus-rotunda-new.jpg" alt="Nexus rotunda" className="absolute inset-0 w-full h-full object-cover opacity-70" draggable={false} />
         <div className="absolute inset-0 bg-background/60" />
         <div className="relative z-10 h-full flex flex-col items-center justify-center gap-4 container">
           <h1 className="mono text-primary text-lg tracking-[0.32em]">NEXUS ROTUNDA</h1>
@@ -90,7 +90,6 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
   const prevLockRef = useRef<ZoneId | null>(null);
   useEffect(() => {
-    if (lockedZone && lockedZone.id !== prevLockRef.current) audio.blip(720);
     prevLockRef.current = lockedZone?.id ?? null;
   }, [lockedZone]);
 
@@ -102,7 +101,6 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   }, []);
 
   const enterZone = useCallback((z: Zone) => {
-    audio.blip(920);
     if (z.id === "vault") onOpenVault();
     else onSelect(z.id as BayId);
   }, [onOpenVault, onSelect]);
@@ -238,7 +236,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         }}
       >
         <img
-          src={rotundaAsset.url}
+          src="/nexus-rotunda-new.jpg"
           alt="Nexus rotunda panorama"
           className="block max-w-none"
           style={{ height: "135dvh", width: "auto", filter: "brightness(1.08) contrast(1.06) saturate(1.10)" }}
