@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import rotundaAsset from "@/assets/nexus-rotunda.jpg.asset.json";
 import { BRAND, type BayId } from "@/data/content";
-import { audio, prefersReducedMotion } from "@/lib/audio";
+import { prefersReducedMotion } from "@/lib/audio";
 
 interface Props {
   onSelect: (id: BayId) => void;
@@ -90,7 +90,6 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
   const prevLockRef = useRef<ZoneId | null>(null);
   useEffect(() => {
-    if (lockedZone && lockedZone.id !== prevLockRef.current) audio.blip(720);
     prevLockRef.current = lockedZone?.id ?? null;
   }, [lockedZone]);
 
@@ -102,7 +101,6 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   }, []);
 
   const enterZone = useCallback((z: Zone) => {
-    audio.blip(920);
     if (z.id === "vault") onOpenVault();
     else onSelect(z.id as BayId);
   }, [onOpenVault, onSelect]);
