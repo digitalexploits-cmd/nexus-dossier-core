@@ -112,13 +112,6 @@ export const IntroOverlay = ({ onComplete }: Props) => {
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_60%,rgba(2,4,8,0.85)_100%)]" />
 
       <button
-        onClick={toggleSound}
-        className="absolute bottom-6 left-6 mono text-[0.6rem] tracking-[0.28em] text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 px-3 py-1.5 bg-background/40 backdrop-blur-sm transition-colors"
-      >
-        {muted ? "SOUND ON" : "SOUND OFF"}
-      </button>
-
-      <button
         onClick={finish}
         className="absolute bottom-6 right-6 mono text-[0.6rem] tracking-[0.28em] text-muted-foreground hover:text-primary/80 border border-border/60 hover:border-primary/40 px-3 py-1.5 bg-background/40 backdrop-blur-sm transition-colors"
       >
