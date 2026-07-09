@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import rotundaAsset from "@/assets/nexus-rotunda.jpg.asset.json";
+
 import { BRAND, type BayId } from "@/data/content";
 import { prefersReducedMotion } from "@/lib/audio";
 
