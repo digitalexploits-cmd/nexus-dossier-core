@@ -174,21 +174,6 @@ export const BayShell = ({
           </div>
         </div>
 
-        {/* Bottom-left tagline — quiet, no dead controls */}
-        <div className="relative container h-screen flex items-end pb-24 md:pb-28">
-          <div className="max-w-xl">
-            <div className="mono text-[0.55rem] tracking-[0.32em] uppercase mb-2" style={{ color: accent }}>
-              {bayCode}
-            </div>
-            <h1 className="text-2xl md:text-4xl font-semibold tracking-tight leading-tight text-[#eef6ff]"
-                style={{ textShadow: "0 2px 24px rgba(0,0,0,0.6)" }}>
-              {tagline[0]}<br />{tagline[1]}
-            </h1>
-            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#c8d4e2] mt-3">
-              {bayMeta.subtitle}
-            </div>
-          </div>
-        </div>
 
         {/* Down-arrow affordance — anchor scroll to category rail */}
         <button
