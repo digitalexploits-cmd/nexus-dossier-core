@@ -21,27 +21,16 @@ export const IntroOverlay = ({ onComplete }: Props) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [fading, setFading] = useState(false);
   const [done, setDone] = useState(false);
-  const [muted, setMuted] = useState(true);
   const finishedRef = useRef(false);
 
   const finish = useCallback(() => {
     if (finishedRef.current) return;
     finishedRef.current = true;
-    // Reveal the app FIRST. Mount underlying view beneath the still-opaque
-    // overlay, then fade. This prevents a white flash and, critically,
-    // means audio startup can never block or delay the reveal.
     try { onComplete(); } catch { /* ignore */ }
     requestAnimationFrame(() => {
       setFading(true);
       window.setTimeout(() => { setDone(true); }, 400);
     });
-    // Best-effort audio unlock. Fully non-blocking; any sync or async
-    // failure is swallowed and cannot trap the visitor.
-    try {
-      void Promise.resolve()
-        .then(() => audio.start())
-        .catch(() => { /* ignore */ });
-    } catch { /* ignore */ }
   }, [onComplete]);
 
 
