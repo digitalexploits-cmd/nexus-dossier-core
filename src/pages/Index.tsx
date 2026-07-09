@@ -66,7 +66,7 @@ const BAY_AMBIENT: Record<BayId, string> = {
 
 const BAY_TAGLINE: Record<BayId, [string, string]> = {
   mission:    ["", ""],
-  technical:  ["Inspect the signal.", "Preserve the machine."],
+  technical:  ["Inspect the signal.", ""],
   capability: ["Frame the capability.", "Not the hype."],
   operations: ["Command the shell.", "Route the evidence."],
 };
