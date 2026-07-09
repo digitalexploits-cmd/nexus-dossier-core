@@ -236,7 +236,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         }}
       >
         <img
-          src={rotundaAsset.url}
+          src="/nexus-rotunda-new.jpg"
           alt="Nexus rotunda panorama"
           className="block max-w-none"
           style={{ height: "135dvh", width: "auto", filter: "brightness(1.08) contrast(1.06) saturate(1.10)" }}
