@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Rotunda } from "@/components/nexus/Rotunda";
 import { BayShell } from "@/components/nexus/BayShell";
 import { EvidenceVault } from "@/components/nexus/EvidenceVault";
@@ -6,40 +6,9 @@ import { Contact } from "@/components/nexus/Contact";
 import { TopBar, BottomBar } from "@/components/nexus/Chrome";
 import { IntroOverlay } from "@/components/nexus/IntroOverlay";
 import { BayTransition, type TransitionKind } from "@/components/nexus/BayTransition";
-import { VideoTransition } from "@/components/nexus/VideoTransition";
 import { Button } from "@/components/ui/button";
 import { BAYS, type BayId } from "@/data/content";
 import { prefersReducedMotion } from "@/lib/audio";
-import transitionMission from "../../public/media/transition-mission.mp4.asset.json";
-import transitionTechnical from "../../public/media/transition-technical.mp4.asset.json";
-import transitionOperations from "../../public/media/transition-operations.mp4.asset.json";
-import transitionVault from "../../public/media/transition-vault.mp4.asset.json";
-import cinematicMission from "../../public/media/cinematic-mission.mp4.asset.json";
-import cinematicTechnical from "../../public/media/cinematic-technical.mp4.asset.json";
-import cinematicCapability from "../../public/media/cinematic-capability.mp4.asset.json";
-import cinematicOperations from "../../public/media/cinematic-operations.mp4.asset.json";
-import cinematicVault from "../../public/media/cinematic-vault.mp4.asset.json";
-
-// Two-stage cinematic entry per bay:
-//   1) TRANSITION  — first-person walk from the Rotunda to the bay archway
-//   2) CINEMATIC   — the room comes alive (in-bay atmosphere)
-// After both play, the still hero image takes over.
-const TRANSITION_VIDEOS: Record<BayId, string> = {
-  mission:    transitionMission.url,
-  technical:  transitionTechnical.url,
-  capability: "/media/transition-capability.mp4",
-  operations: transitionOperations.url,
-};
-
-const CINEMATIC_VIDEOS: Record<BayId, string> = {
-  mission:    cinematicMission.url,
-  technical:  cinematicTechnical.url,
-  capability: cinematicCapability.url,
-  operations: cinematicOperations.url,
-};
-
-const VAULT_TRANSITION_URL = transitionVault.url;
-const VAULT_CINEMATIC_URL = cinematicVault.url;
 
 // Hero image per bay — the stable landing state after transition.
 const HERO_IMAGES: Record<BayId, string> = {
@@ -96,8 +65,6 @@ const Index = () => {
     try { return sessionStorage.getItem("nexus:intro") === "done"; } catch { return false; }
   });
   const [transition, setTransition] = useState<{ label: string; kind: TransitionKind } | null>(null);
-  const [videoTransition, setVideoTransition] = useState<{ sources: string[] } | null>(null);
-  const pendingRef = useRef<View | null>(null);
 
   const syncFromHash = useCallback(() => {
     const h = window.location.hash;
@@ -132,13 +99,10 @@ const Index = () => {
 
   const runTransition = useCallback((label: string, kind: TransitionKind, next: View) => {
     if (prefersReducedMotion()) { commitView(next); return; }
-    pendingRef.current = next;
     setTransition({ label, kind });
     setTimeout(() => {
-      if (pendingRef.current !== null) {
-        commitView(pendingRef.current);
-        pendingRef.current = null;
-      }
+      commitView(next);
+      setTransition(null);
     }, 600);
   }, [commitView]);
 
@@ -149,26 +113,13 @@ const Index = () => {
 
   const goBay = useCallback((id: BayId) => {
     if (view === id) return;
-    if (prefersReducedMotion()) {
-      runTransition(bayLabel(id), "advance", id);
-      return;
-    }
-    // Two-stage cinematic entry: Rotunda → bay archway, then in-bay reveal.
-    // Commit destination first so the hero image is already mounted when the
-    // cinematic finishes and the overlay lifts.
-    commitView(id);
-    setVideoTransition({
-      sources: [TRANSITION_VIDEOS[id], CINEMATIC_VIDEOS[id]],
-    });
-  }, [view, runTransition, commitView]);
+    runTransition(bayLabel(id), "advance", id);
+  }, [view, runTransition]);
 
   const openVault = useCallback(() => {
-    if (prefersReducedMotion()) { setVaultOpen(true); return; }
-    // Rotunda → vault door, then interior reveal. Overlay opens right as the
-    // second clip lands so the vault UI feels like the settled destination.
-    setVideoTransition({ sources: [VAULT_TRANSITION_URL, VAULT_CINEMATIC_URL] });
-    setTimeout(() => setVaultOpen(true), 4800);
-  }, [view]);
+    setVaultOpen(true);
+  }, []);
+
   const goContact = useCallback(() => {
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
@@ -245,13 +196,6 @@ const Index = () => {
           label={transition.label}
           kind={transition.kind}
           onDone={() => setTransition(null)}
-        />
-      )}
-
-      {videoTransition && (
-        <VideoTransition
-          sources={videoTransition.sources}
-          onDone={() => setVideoTransition(null)}
         />
       )}
 
