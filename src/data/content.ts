@@ -18,7 +18,7 @@ export const BRAND = {
   platform: "Nexus",
   founder: "Anthony \u201CTony\u201D McGee",
   tech: "SINE~WaiV State Inspector",
-  line: "We divide the wave without losing the machine.",
+  line: "",
   contactEmail: "briefing@aibase3.solutions",
 };
 
