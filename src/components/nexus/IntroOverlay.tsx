@@ -14,8 +14,7 @@ const STALL_TIMEOUT_MS = 3500;
  *  - autoplay muted; if blocked/errored/stalled → skip
  *  - hard 8s timeout
  *  - ESC + SKIP always work
- * Never traps the visitor. Reveal never depends on audio startup —
- * audio.start() runs as a best-effort side effect after onComplete().
+ * Never traps the visitor.
  */
 export const IntroOverlay = ({ onComplete }: Props) => {
   const reducedRef = useRef(prefersReducedMotion());
