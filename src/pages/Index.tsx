@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Rotunda } from "@/components/nexus/Rotunda";
 import { BayShell } from "@/components/nexus/BayShell";
 import { EvidenceVault } from "@/components/nexus/EvidenceVault";
@@ -6,19 +6,9 @@ import { Contact } from "@/components/nexus/Contact";
 import { TopBar, BottomBar } from "@/components/nexus/Chrome";
 import { IntroOverlay } from "@/components/nexus/IntroOverlay";
 import { BayTransition, type TransitionKind } from "@/components/nexus/BayTransition";
-import { VideoTransition } from "@/components/nexus/VideoTransition";
 import { Button } from "@/components/ui/button";
 import { BAYS, type BayId } from "@/data/content";
 import { prefersReducedMotion } from "@/lib/audio";
-import transitionMission from "../../public/media/transition-mission.mp4.asset.json";
-import transitionTechnical from "../../public/media/transition-technical.mp4.asset.json";
-import transitionOperations from "../../public/media/transition-operations.mp4.asset.json";
-import transitionVault from "../../public/media/transition-vault.mp4.asset.json";
-import cinematicMission from "../../public/media/cinematic-mission.mp4.asset.json";
-import cinematicTechnical from "../../public/media/cinematic-technical.mp4.asset.json";
-import cinematicCapability from "../../public/media/cinematic-capability.mp4.asset.json";
-import cinematicOperations from "../../public/media/cinematic-operations.mp4.asset.json";
-import cinematicVault from "../../public/media/cinematic-vault.mp4.asset.json";
 
 // Two-stage cinematic entry per bay:
 //   1) TRANSITION  — first-person walk from the Rotunda to the bay archway
