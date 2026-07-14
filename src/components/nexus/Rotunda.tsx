@@ -445,6 +445,41 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         )}
       </div>
 
+      {/* Viewing Console launcher (left-side mirror of Vault) */}
+      <div className="absolute left-3 top-28 z-20 anim-fade-up" style={{ animationDelay: "300ms" }}>
+        {mediaPanelOpen ? (
+          <div className="w-64 border border-primary/40 bg-background/70 backdrop-blur-md p-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="mono text-[0.6rem] tracking-[0.28em] text-primary">VIEWING CONSOLE</div>
+              <button
+                onClick={() => setMediaPanelOpen(false)}
+                aria-label="Collapse viewing console panel"
+                className="mono text-[0.6rem] text-muted-foreground hover:text-primary px-1"
+              >×</button>
+            </div>
+            <div className="text-[0.65rem] text-muted-foreground leading-relaxed">
+              Browse and open all installed documents, videos, audio, and images. Preview inline, open externally, or save to disk.
+            </div>
+            <button
+              onClick={() => setMediaConsoleOpen(true)}
+              className="w-full mono text-[0.6rem] tracking-[0.28em] uppercase text-primary border border-primary/50 hover:border-primary/80 bg-primary/10 hover:bg-primary/20 px-3 py-1.5 transition-colors"
+            >
+              OPEN CONSOLE →
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setMediaPanelOpen(true)}
+            className="mono text-[0.6rem] tracking-[0.28em] uppercase text-primary/80 hover:text-primary border border-primary/30 hover:border-primary/70 px-3 py-1.5 transition-colors bg-background/50 backdrop-blur-sm"
+          >
+            ◇ MEDIA
+          </button>
+        )}
+      </div>
+
+      <MediaConsole open={mediaConsoleOpen} onClose={() => setMediaConsoleOpen(false)} />
+
+
       {/* Hint */}
       {hintVisible && (
         <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
