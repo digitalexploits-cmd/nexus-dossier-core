@@ -67,8 +67,11 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   }
 
   // ---------- First-person camera ----------
-  const [heading, setHeading] = useState(0.30);   // horizontal 0..1
-  const [headingV, setHeadingV] = useState(0.58); // vertical 0..1, slightly below middle
+  // Start centered between the bays so nothing is auto-locked — visitors must
+  // actively look toward a bay before ENTER becomes available. Prevents
+  // "one click and I'm in a random bay" confusion after the intro.
+  const [heading, setHeading] = useState(0.48);   // horizontal 0..1
+  const [headingV, setHeadingV] = useState(0.55); // vertical 0..1, slightly below middle
   const [dragging, setDragging] = useState(false);
   const [snapping, setSnapping] = useState(false);
   const [hintVisible, setHintVisible] = useState(true);
@@ -239,7 +242,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           src="/nexus-rotunda-new.jpg"
           alt="Nexus rotunda panorama"
           className="block max-w-none"
-          style={{ height: "135dvh", width: "auto", filter: "brightness(1.08) contrast(1.06) saturate(1.10)" }}
+          style={{ height: "135dvh", width: "auto", filter: "brightness(1.45) contrast(1.05) saturate(1.10)" }}
           draggable={false}
           onLoad={measure}
         />
@@ -305,10 +308,10 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         })}
       </div>
 
-      {/* CAMERA-FIXED OVERLAYS */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_72%,rgba(5,7,10,0.55)_100%)]" />
-      <div className="absolute inset-x-0 top-0 h-20 pointer-events-none bg-gradient-to-b from-background/50 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-32 pointer-events-none bg-gradient-to-t from-background/60 to-transparent" />
+      {/* CAMERA-FIXED OVERLAYS — softened so the rotunda reads clearly */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_82%,rgba(5,7,10,0.30)_100%)]" />
+      <div className="absolute inset-x-0 top-0 h-20 pointer-events-none bg-gradient-to-b from-background/30 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-32 pointer-events-none bg-gradient-to-t from-background/40 to-transparent" />
 
 
       {/* Reticle */}
