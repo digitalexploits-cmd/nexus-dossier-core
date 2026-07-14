@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Base³ — ESA Engine v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0A0F1A;--navy-mid:#0D1525;--navy-card:#111827;--navy-b:#1E2D45;--cyan:#00D4FF;--cyan-dim:#00A8CC;--cyan-glow:rgba(0,212,255,0.15);--cyan-trace:rgba(0,212,255,0.06);--green:#00FF88;--green-dim:#00CC6A;--amber:#FFB020;--red:#FF3B5C;--white:#E8F4FF;--muted:#4A6480;--mono:'Share Tech Mono',monospace;--disp:'Barlow Condensed',sans-serif;--body:'Barlow',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--navy);color:var(--white);font-family:var(--body);font-size:14px;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.025) 2px,rgba(0,0,0,0.025) 4px);pointer-events:none;z-index:9999}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--navy)}::-webkit-scrollbar-thumb{background:var(--navy-b);border-radius:2px}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:1px solid var(--navy-b);background:rgba(10,15,26,0.97);position:sticky;top:0;z-index:200;backdrop-filter:blur(12px)}
+.logo-box{width:38px;height:38px;border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;margin-right:12px;flex-shrink:0}
+.logo-box span{font-family:var(--disp);font-weight:900;font-size:13px;color:var(--cyan);letter-spacing:1px}
+.logo-text{font-family:var(--disp);font-weight:900;font-size:20px;letter-spacing:0.08em;color:var(--cyan);text-transform:uppercase}
+.logo-text em{color:var(--white);font-style:normal}
+.logo-sub{font-family:var(--mono);font-size:8px;color:var(--muted);letter-spacing:4px;text-transform:uppercase;margin-top:1px}
+.hdr-right{font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;gap:20px;align-items:center}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite;display:inline-block;margin-right:6px}
+.main{display:grid;grid-template-columns:320px 1fr;min-height:calc(100vh - 61px)}
+.sidebar{background:var(--navy-mid);border-right:1px solid var(--navy-b);padding:20px 16px;display:flex;flex-direction:column;gap:16px;overflow-y:auto;max-height:calc(100vh - 61px);position:sticky;top:61px}
+.workspace{padding:20px 24px;display:flex;flex-direction:column;gap:16px;overflow-y:auto}
+.slabel{font-family:var(--disp);font-weight:700;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.slabel::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--navy-b),transparent)}
+.card{background:var(--navy-card);border:1px solid var(--navy-b);border-radius:4px;padding:14px 16px}
+.card-title{font-family:var(--disp);font-weight:700;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan-dim);margin-bottom:12px}
+.field{margin-bottom:10px}
+.field label{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:4px;text-transform:uppercase}
+.field input,.field select{width:100%;background:var(--navy);border:1px solid var(--navy-b);border-radius:2px;color:var(--white);font-family:var(--mono);font-size:12px;padding:7px 9px;outline:none;transition:border-color .2s}
+.field input:focus,.field select:focus{border-color:var(--cyan)}
+.field select option{background:var(--navy-card)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;border:none;border-radius:2px;padding:10px 20px;cursor:pointer;transition:all .15s;width:100%}
+.btn-primary{background:var(--cyan);color:var(--navy)}
+.btn-primary:hover{background:#00EEFF;box-shadow:0 0 20px rgba(0,212,255,.4)}
+.btn-secondary{background:transparent;color:var(--cyan);border:1px solid var(--navy-b)}
+.btn-secondary:hover{border-color:var(--cyan);background:var(--cyan-trace)}
+.btn-sm{padding:6px 14px;font-size:11px;width:auto}
+.asset-list{display:flex;flex-direction:column;gap:4px;max-height:220px;overflow-y:auto}
+.asset-btn{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1px solid var(--navy-b);border-left:3px solid transparent;border-radius:3px;background:transparent;color:var(--white);font-family:var(--mono);font-size:11px;cursor:pointer;transition:all .15s;text-align:left;width:100%}
+.asset-btn:hover{background:var(--cyan-trace)}
+.asset-btn.active{border-left-color:var(--cyan);background:rgba(0,212,255,.06);color:var(--cyan)}
+.atag{font-size:9px;padding:2px 6px;border-radius:2px;font-family:var(--mono)}
+.tag-ok{background:rgba(0,255,136,.1);color:var(--green);border:1px solid rgba(0,255,136,.2)}
+.tag-warn{background:rgba(255,176,32,.1);color:var(--amber);border:1px solid rgba(255,176,32,.2)}
+.tag-crit{background:rgba(255,59,92,.1);color:var(--red);border:1px solid rgba(255,59,92,.3)}
+.mcc-group{margin-bottom:8px}
+.mcc-hdr{font-family:var(--disp);font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:4px 6px;border-bottom:1px solid var(--navy-b);margin-bottom:4px;display:flex;justify-content:space-between}
+.drop-zone{border:1px dashed var(--navy-b);border-radius:4px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--cyan);background:var(--cyan-trace)}
+.drop-zone input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.drop-text{font-family:var(--mono);font-size:10px;color:var(--muted)}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--navy-b);margin-bottom:16px}
+.tab{font-family:var(--disp);font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:10px 18px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all .15s;margin-bottom:-1px;background:none;border-top:none;border-left:none;border-right:none}
+.tab:hover{color:var(--white)}
+.tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.tab-panel{display:none}
+.tab-panel.active{display:flex;flex-direction:column;gap:16px}
+.health-panel{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center;background:var(--navy-card);border:1px solid var(--navy-b);border-radius:4px;padding:18px}
+.arc-wrap{position:relative;width:120px;height:120px;flex-shrink:0}
+.arc-wrap svg{position:absolute;inset:0}
+.arc-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.arc-score{font-family:var(--disp);font-weight:900;font-size:34px;line-height:1;color:var(--white)}
+.arc-unit{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:2px}
+.health-meta{display:flex;flex-direction:column;gap:8px;flex:1}
+.h-stat{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--navy-b);padding-bottom:7px}
+.h-stat:last-child{border:none;padding:0}
+.h-label{font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.h-val{font-family:var(--mono);font-size:12px;color:var(--white)}
+.good{color:var(--green)}.warn{color:var(--amber)}.bad{color:var(--red)}
+.cw{background:var(--navy-card);border:1px solid var(--navy-b);border-radius:4px;overflow:hidden;position:relative}
+.ch{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid var(--navy-b);background:rgba(0,0,0,.2)}
+.ct{font-family:var(--mono);font-size:11px;color:var(--cyan);letter-spacing:.08em;text-transform:uppercase}
+.cm{font-family:var(--mono);font-size:10px;color:var(--muted)}
+canvas{display:block;width:100%}
+.cursor-tip{position:absolute;background:var(--navy-card);border:1px solid var(--navy-b);padding:5px 9px;border-radius:2px;font-family:var(--mono);font-size:10px;pointer-events:none;white-space:nowrap;z-index:10;display:none}
+.fault-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.fc{background:var(--navy-card);border:1px solid var(--navy-b);border-radius:4px;padding:12px;position:relative;overflow:hidden;transition:border-color .3s}
+.fc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--muted);transition:background .3s}
+.fc.fc-crit{border-color:var(--red)}.fc.fc-crit::before{background:var(--red);box-shadow:0 0 8px var(--red)}
+.fc.fc-warn{border-color:var(--amber)}.fc.fc-warn::before{background:var(--amber)}
+.fc.fc-ok{border-color:var(--green-dim)}.fc.fc-ok::before{background:var(--green)}
+.fc-name{font-family:var(--disp);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--white);margin-bottom:4px}
+.fc-freq{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:8px}
+.fc-bar-w{background:var(--navy);border-radius:2px;height:4px;overflow:hidden;margin-bottom:6px}
+.fc-bar{height:100%;border-radius:2px;background:var(--muted);transition:width .8s cubic-bezier(.4,0,.2,1)}
+.fc.fc-crit .fc-bar{background:var(--red);box-shadow:0 0 6px var(--red)}
+.fc.fc-warn .fc-bar{background:var(--amber)}
+.fc.fc-ok .fc-bar{background:var(--green)}
+.fc-score{font-family:var(--mono);font-size:18px;font-weight:bold;color:var(--muted);transition:color .3s}
+.fc.fc-crit .fc-score{color:var(--red);text-shadow:0 0 10px var(--red)}
+.fc.fc-warn .fc-score{color:var(--amber)}
+.fc.fc-ok .fc-score{color:var(--green)}
+.fc-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:2px}
+.freq-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px}
+.freq-table th{text-align:left;padding:6px 10px;color:var(--cyan-dim);border-bottom:1px solid var(--navy-b);font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+.freq-table td{padding:7px 10px;border-bottom:1px solid rgba(30,45,69,.5);color:var(--white)}
+.freq-table tr:last-child td{border:none}
+.freq-table tr:hover td{background:var(--cyan-trace)}
+.ftag{display:inline-block;padding:2px 6px;border-radius:2px;font-size:9px;letter-spacing:.08em;text-transform:uppercase}
+.ftag-f{background:rgba(255,59,92,.15);color:var(--red);border:1px solid rgba(255,59,92,.3)}
+.ftag-w{background:rgba(255,176,32,.15);color:var(--amber);border:1px solid rgba(255,176,32,.3)}
+.ftag-n{background:rgba(0,255,136,.1);color:var(--green);border:1px solid rgba(0,255,136,.2)}
+.alert-list{display:flex;flex-direction:column;gap:0}
+.alert-row{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--navy-b);font-family:var(--mono);font-size:11px;flex-wrap:wrap}
+.alert-empty{font-family:var(--mono);font-size:11px;color:var(--muted);padding:20px 0}
+.report-block{background:var(--navy-card);border:1px solid var(--navy-b);border-left:3px solid var(--cyan);border-radius:4px;padding:20px 24px}
+.report-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--navy-b)}
+.report-title{font-family:var(--disp);font-weight:900;font-size:18px;letter-spacing:.06em;color:var(--white)}
+.report-sub{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:4px}
+.report-badge{font-family:var(--disp);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:2px}
+.badge-crit{background:rgba(255,59,92,.15);color:var(--red);border:1px solid var(--red)}
+.badge-warn{background:rgba(255,176,32,.15);color:var(--amber);border:1px solid var(--amber)}
+.badge-ok{background:rgba(0,255,136,.1);color:var(--green);border:1px solid var(--green)}
+.rmeta{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.rmeta-cell{background:rgba(0,0,0,.2);border-radius:2px;padding:10px 12px}
+.rmeta-lbl{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.rmeta-val{font-family:var(--mono);font-size:14px;color:var(--white)}
+.rsec{margin-bottom:14px}
+.rsec-title{font-family:var(--disp);font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan-dim);margin-bottom:8px}
+.rbody{font-family:var(--body);font-size:13px;color:rgba(232,244,255,.85);line-height:1.7}
+.rfinding{display:flex;gap:10px;align-items:flex-start;padding:8px 12px;margin-bottom:6px;background:rgba(0,0,0,.2);border-radius:2px;border-left:2px solid var(--navy-b);font-family:var(--mono);font-size:11px}
+.ricon{flex-shrink:0;width:16px;text-align:center}
+.stats-bar{background:var(--navy-mid);border-top:1px solid var(--navy-b);display:flex;justify-content:space-around;padding:12px 24px;flex-wrap:wrap;gap:8px}
+.stat-cell{text-align:center}
+.stat-num{font-family:var(--disp);font-weight:900;font-size:22px;color:var(--cyan);letter-spacing:1px}
+.stat-lbl{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-top:2px}
+.rev-panel{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.rev-cell{background:var(--navy);border:1px solid var(--navy-b);border-radius:3px;padding:10px;text-align:center}
+.rev-num{font-family:var(--disp);font-weight:900;font-size:18px;color:var(--cyan)}
+.rev-lbl{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:2px}
+.loading-bar{height:2px;background:var(--navy-b);border-radius:1px;overflow:hidden;margin-top:8px}
+.loading-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--green));border-radius:1px;width:0%;transition:width .1s linear}
+.empty{text-align:center;padding:40px 20px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.empty-icon{font-size:32px;margin-bottom:12px;opacity:.4}
+@media(max-width:1100px){.main{grid-template-columns:280px 1fr}.fault-grid{grid-template-columns:repeat(2,1fr)}.rmeta{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){.main{grid-template-columns:1fr}.sidebar{position:static;max-height:none}.fault-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div style="display:flex;align-items:center">
+    <div class="logo-box"><span>AB³</span></div>
+    <div>
+      <div class="logo-text">AI Base<em>³</em> &nbsp;ESA Engine</div>
+      <div class="logo-sub">Electrical Signature Analysis Platform</div>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <span><span class="dot"></span>SYSTEM READY</span>
+    <span id="sys-time" style="font-size:10px"></span>
+    <span style="color:var(--cyan)">v3.0.0</span>
+  </div>
+</header>
+
+<div class="main">
+<aside class="sidebar">
+  <div>
+    <div class="slabel">MCC Fleet</div>
+    <div class="card" style="padding:10px">
+      <div class="card-title" style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+        <span>Asset Select</span>
+        <span id="fleet-badge" class="atag tag-ok">FLEET OK</span>
+      </div>
+      <div class="asset-list" id="asset-list"></div>
+    </div>
+  </div>
+  <div>
+    <div class="slabel">Motor Parameters</div>
+    <div class="card">
+      <div class="card-title">Configuration</div>
+      <div class="field"><label>Motor ID / Tag</label><input type="text" id="motor-id" value="P-PUMP-07"/></div>
+      <div class="frow">
+        <div class="field"><label>HP Rating</label><input type="number" id="motor-hp" value="75"/></div>
+        <div class="field"><label>Voltage (V)</label><input type="number" id="motor-v" value="480"/></div>
+      </div>
+      <div class="frow">
+        <div class="field"><label>Poles</label><select id="motor-poles"><option value="2">2</option><option value="4" selected>4</option><option value="6">6</option><option value="8">8</option></select></div>
+        <div class="field"><label>Rotor Bars</label><input type="number" id="rotor-bars" value="48"/></div>
+      </div>
+      <div class="frow">
+        <div class="field"><label>Supply Freq (Hz)</label><input type="number" id="supply-freq" value="60" step="0.1"/></div>
+        <div class="field"><label>Nameplate RPM</label><input type="number" id="nameplate-rpm" value="1775"/></div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="slabel">Bearing Geometry</div>
+    <div class="card">
+      <div class="card-title">Bearing Parameters</div>
+      <div class="field"><label>Bearing Model</label><select id="bearing-model" onchange="loadBearing(this.value)"><option value="6205">6205 (CWRU Dataset)</option><option value="6203">6203</option><option value="6207">6207</option><option value="custom">Custom</option></select></div>
+      <div class="frow">
+        <div class="field"><label>Rolling Elements</label><input type="number" id="nb" value="9" step="1"/></div>
+        <div class="field"><label>Contact Angle (°)</label><input type="number" id="angle" value="0" step="1"/></div>
+      </div>
+      <div class="frow">
+        <div class="field"><label>Ball Dia (mm)</label><input type="number" id="bd" value="7.94" step=".01"/></div>
+        <div class="field"><label>Pitch Dia (mm)</label><input type="number" id="pd" value="38.5" step=".1"/></div>
+      </div>
+      <div id="bearing-freqs" style="background:var(--navy);border:1px solid var(--navy-b);margin-top:8px;padding:10px;font-family:var(--mono);font-size:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px;border-radius:3px"></div>
+    </div>
+  </div>
+  <div>
+    <div class="slabel">Signal Input</div>
+    <div class="card">
+      <div class="card-title">Data Source</div>
+      <div class="frow">
+        <div class="field"><label>Sample Rate (Hz)</label><input type="number" id="sample-rate" value="12000"/></div>
+        <div class="field"><label>Signal Type</label><select id="sig-type"><option value="current">Motor Current (A)</option><option value="vibration">Vibration (g)</option><option value="voltage">Line Voltage</option></select></div>
+      </div>
+      <div class="drop-zone" id="drop-zone">
+        <div style="font-size:22px;margin-bottom:6px">📂</div>
+        <div class="drop-text">Drop CSV / binary data or click to browse</div>
+        <input type="file" id="file-input" accept=".csv,.txt,.dat,.bin" onchange="loadFile(event)"/>
+      </div>
+      <div style="text-align:center;margin:8px 0;font-family:var(--mono);font-size:10px;color:var(--muted)">— or inject scenario —</div>
+      <div class="field"><label>Fault Scenario</label><select id="fault-scenario"><option value="none">Clean Motor</option><option value="brb_mild">Broken Rotor Bar (Mild)</option><option value="brb_severe">Broken Rotor Bar (Severe)</option><option value="bearing_outer">Bearing Outer Race (BPFO)</option><option value="bearing_inner">Bearing Inner Race (BPFI)</option><option value="eccentricity">Air Gap Eccentricity</option><option value="unbalance">Mechanical Unbalance</option><option value="multifault">Multi-Fault (BRB + Bearing)</option></select></div>
+      <button class="btn btn-primary" onclick="runAnalysis()">⚡ RUN ESA ANALYSIS</button>
+      <div class="loading-bar"><div class="loading-fill" id="loading-fill"></div></div>
+    </div>
+  </div>
+  <div>
+    <div class="slabel">Brain Access Fee</div>
+    <div class="card">
+      <div class="card-title">Revenue Calculator</div>
+      <div class="frow">
+        <div class="field"><label>Monitored Points</label><input type="number" id="rev-points" value="24" min="1" oninput="updateRevenue()"/></div>
+        <div class="field"><label>Tier</label><select id="rev-tier" onchange="updateRevenue()"><option value="297">Tier 1 — $297/pt</option><option value="197">Tier 2 — $197/pt</option><option value="147">Enterprise — $147/pt</option></select></div>
+      </div>
+      <div class="rev-panel">
+        <div class="rev-cell"><div class="rev-num" id="rev-mrr">$7.1K</div><div class="rev-lbl">MRR</div></div>
+        <div class="rev-cell"><div class="rev-num" id="rev-arr">$85K</div><div class="rev-lbl">ARR</div></div>
+        <div class="rev-cell"><div class="rev-num" id="rev-pts">24</div><div class="rev-lbl">POINTS</div></div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main class="workspace">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('spectrum')">FFT Spectrum</button>
+    <button class="tab" onclick="switchTab('classifiers')">Fault Classifiers</button>
+    <button class="tab" onclick="switchTab('frequencies')">Frequency Map</button>
+    <button class="tab" onclick="switchTab('alerts')">Alert Log</button>
+    <button class="tab" onclick="switchTab('report')">Intelligence Report</button>
+  </div>
+
+  <div class="tab-panel active" id="tab-spectrum">
+    <div class="health-panel">
+      <div class="arc-wrap">
+        <svg viewBox="0 0 120 120" width="120" height="120">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#1E2D45" stroke-width="8"/>
+          <circle cx="60" cy="60" r="50" fill="none" id="arc-progress" stroke="#00D4FF" stroke-width="8" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="251.2" transform="rotate(-225 60 60)" style="transition:stroke-dashoffset 1s cubic-bezier(.4,0,.2,1),stroke .5s"/>
+        </svg>
+        <div class="arc-center"><div class="arc-score" id="health-score">—</div><div class="arc-unit">HEALTH</div></div>
+      </div>
+      <div class="health-meta">
+        <div class="h-stat"><span class="h-label">Motor ID</span><span class="h-val" id="stat-motor-id">—</span></div>
+        <div class="h-stat"><span class="h-label">Slip Frequency</span><span class="h-val" id="stat-slip">—</span></div>
+        <div class="h-stat"><span class="h-label">THD (Current)</span><span class="h-val" id="stat-thd">—</span></div>
+        <div class="h-stat"><span class="h-label">Dominant Fault</span><span class="h-val" id="stat-dominant">—</span></div>
+        <div class="h-stat"><span class="h-label">Recommended Action</span><span class="h-val" id="stat-action">—</span></div>
+        <div class="h-stat" style="border:none;padding:0"><span class="h-label">Health Trend (10 readings)</span><canvas id="trend-canvas" width="160" height="28" style="width:160px;height:28px"></canvas></div>
+      </div>
+    </div>
+    <div class="cw">
+      <div class="ch"><span class="ct">Current Spectrum — FFT Magnitude (dBc)</span><span class="cm" id="fft-meta">Awaiting signal…</span></div>
+      <canvas id="fft-canvas" height="220"></canvas>
+      <div class="cursor-tip" id="cursor-tip"></div>
+    </div>
+    <div class="cw">
+      <div class="ch"><span class="ct">Time Domain Waveform — Phase A</span><span class="cm" id="wave-meta">—</span></div>
+      <canvas id="wave-canvas" height="120"></canvas>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-classifiers">
+    <div class="fault-grid" id="fault-grid"></div>
+    <div class="cw">
+      <div class="ch"><span class="ct">Sideband Constellation — Fault Signature Map</span><span class="cm">60Hz erasure applied · sidebands ±n·f_fault</span></div>
+      <canvas id="constellation-canvas" height="220"></canvas>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-frequencies">
+    <div class="card">
+      <div class="card-title">Bearing Fault Frequency Map — MCSA Sideband Locations</div>
+      <p style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.6">Bearing faults appear as sidebands at f<sub>line</sub> ± n·f<sub>fault</sub>. Detection per IEEE 1068. Confidence ≥50% = active fault. 20–49% = monitor.</p>
+      <table class="freq-table"><thead><tr><th>Fault Type</th><th>Fault Freq</th><th>SB −1 (Hz)</th><th>SB +1 (Hz)</th><th>SB −2 (Hz)</th><th>SB +2 (Hz)</th><th>Magnitude</th><th>Thresh</th><th>Status</th></tr></thead>
+      <tbody id="freq-tbody"><tr><td colspan="9" style="text-align:center;color:var(--muted);font-size:11px;padding:20px">Run analysis to populate</td></tr></tbody></table>
+    </div>
+    <div class="card">
+      <div class="card-title">MCSA Physics Reference</div>
+      <table class="freq-table"><thead><tr><th>Fault</th><th>Electrical Domain Signature</th><th>Formula</th><th>Threshold (dBc)</th></tr></thead>
+      <tbody>
+        <tr><td>Broken Rotor Bar</td><td>Slip-freq sidebands on fundamental</td><td>f<sub>line</sub> ± 2ks·f<sub>line</sub></td><td>−46</td></tr>
+        <tr><td>Outer Race (BPFO)</td><td>BPFO sidebands on fundamental & harmonics</td><td>f<sub>line</sub> ± n·BPFO</td><td>−50</td></tr>
+        <tr><td>Inner Race (BPFI)</td><td>BPFI sidebands (speed-modulated)</td><td>f<sub>line</sub> ± n·(BPFI ± f<sub>r</sub>)</td><td>−50</td></tr>
+        <tr><td>Ball Spin (BSF)</td><td>BSF sidebands — low amplitude</td><td>f<sub>line</sub> ± n·BSF</td><td>−56</td></tr>
+        <tr><td>Eccentricity</td><td>Rotor eccentricity — pole-pass sidebands</td><td>f<sub>line</sub> ± f<sub>pp</sub></td><td>−46</td></tr>
+        <tr><td>Unbalance</td><td>1× running speed modulation</td><td>f<sub>line</sub> ± f<sub>r</sub></td><td>−48</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-alerts">
+    <div class="card">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Alert Log — Last 50 Events</span>
+        <button class="btn btn-secondary btn-sm" onclick="clearAlerts()">Clear Log</button>
+      </div>
+      <div class="alert-list" id="alert-list"><div class="alert-empty">No alerts. Run analysis on a fault scenario to generate alerts.</div></div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-report">
+    <div id="report-container"><div class="empty"><div class="empty-icon">📋</div><div>Run analysis to generate Motor Intelligence Report</div><div style="margin-top:8px;font-size:10px">Client-ready output — Brain Access Fee deliverable</div></div></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-secondary" id="copy-btn" onclick="copyReport()" style="display:none;max-width:240px">Copy Report</button>
+      <button class="btn btn-secondary" id="wo-btn" onclick="generateWorkOrder()" style="display:none;max-width:240px">Generate Work Order</button>
+    </div>
+    <div id="wo-container"></div>
+  </div>
+</main>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-cell"><div class="stat-num">27K+</div><div class="stat-lbl">FIELD HOURS</div></div>
+  <div class="stat-cell"><div class="stat-num">6</div><div class="stat-lbl">FAULT CLASSES</div></div>
+  <div class="stat-cell"><div class="stat-num" id="sb-health" style="color:var(--cyan)">—</div><div class="stat-lbl">MOTOR HEALTH</div></div>
+  <div class="stat-cell"><div class="stat-num" id="sb-faults" style="color:var(--green)">—</div><div class="stat-lbl">ACTIVE FAULTS</div></div>
+  <div class="stat-cell"><div class="stat-num" id="sb-mrr" style="color:var(--cyan)">$7.1K</div><div class="stat-lbl">CURR MRR</div></div>
+  <div class="stat-cell"><div class="stat-num" id="sb-fleet" style="color:var(--cyan)">8</div><div class="stat-lbl">FLEET ASSETS</div></div>
+</div>
+
+<script>
+'use strict';
+const S={signal:null,fftMag:null,fftFreqs:null,faults:{},health:100,analyzed:false,alerts:[],healthHistory:[],activeAsset:null,
+fleet:[
+  {id:'MCC-A-01',name:'Cooling Tower Fan #1',loc:'Mech Room A',hp:75,v:480,poles:4,rpm:1775,health:null,status:'ok'},
+  {id:'MCC-A-02',name:'Cooling Tower Fan #2',loc:'Mech Room A',hp:75,v:480,poles:4,rpm:1775,health:null,status:'ok'},
+  {id:'MCC-A-03',name:'Chilled Water Pump A',loc:'Pump Room B',hp:50,v:480,poles:4,rpm:1760,health:null,status:'ok'},
+  {id:'MCC-B-01',name:'Compressor Drive #1', loc:'Roof Unit 3',hp:125,v:480,poles:6,rpm:1180,health:null,status:'ok'},
+  {id:'MCC-B-02',name:'Conveyor Belt Main',  loc:'Prod Line 1',hp:30, v:208,poles:4,rpm:1750,health:null,status:'warn'},
+  {id:'MCC-B-03',name:'Exhaust Fan Array',   loc:'Roof South', hp:20, v:208,poles:4,rpm:1755,health:null,status:'ok'},
+  {id:'MCC-C-01',name:'Process Pump Alpha',  loc:'Chem Room',  hp:60, v:480,poles:4,rpm:1770,health:null,status:'crit'},
+  {id:'MCC-C-02',name:'Agitator Drive',      loc:'Tank Farm',  hp:15, v:208,poles:6,rpm:1170,health:null,status:'ok'},
+]};
+
+function renderFleet(){
+  const groups={'MCC-A Line':[0,1,2],'MCC-B Line':[3,4,5],'MCC-C Line':[6,7]};
+  const list=document.getElementById('asset-list');
+  list.innerHTML='';
+  Object.entries(groups).forEach(([name,idxs])=>{
+    const g=document.createElement('div');g.className='mcc-group';
+    const worst=idxs.map(i=>S.fleet[i].status).includes('crit')?'crit':idxs.map(i=>S.fleet[i].status).includes('warn')?'warn':'ok';
+    g.innerHTML=`<div class="mcc-hdr"><span>${name}</span><span class="atag tag-${worst}">${worst.toUpperCase()}</span></div>`;
+    idxs.forEach(i=>{
+      const a=S.fleet[i];
+      const btn=document.createElement('button');
+      btn.className='asset-btn'+(S.activeAsset===i?' active':'');
+      const tc=a.status==='crit'?'tag-crit':a.status==='warn'?'tag-warn':'tag-ok';
+      const tt=a.status==='crit'?'CRIT':a.status==='warn'?'WARN':'OK';
+      const h=a.health!==null?`${a.health}`:'-';
+      btn.innerHTML=`<div><div style="font-size:11px;font-weight:700">${a.id}</div><div style="font-size:9px;color:var(--muted);margin-top:2px">${a.name}</div></div><div style="text-align:right"><div class="atag ${tc}" style="margin-bottom:3px">${tt}</div><div style="font-size:9px;color:var(--muted)">${h}/100</div></div>`;
+      btn.onclick=()=>loadAsset(i);
+      g.appendChild(btn);
+    });
+    list.appendChild(g);
+  });
+  const hasCrit=S.fleet.some(a=>a.status==='crit'),hasWarn=S.fleet.some(a=>a.status==='warn');
+  const fb=document.getElementById('fleet-badge');
+  fb.className='atag '+(hasCrit?'tag-crit':hasWarn?'tag-warn':'tag-ok');
+  fb.textContent=hasCrit?'FAULT ACTIVE':hasWarn?'ADVISORY':'FLEET OK';
+  document.getElementById('sb-fleet').textContent=S.fleet.length;
+}
+
+function loadAsset(idx){
+  S.activeAsset=idx;const a=S.fleet[idx];
+  document.getElementById('motor-id').value=a.id;
+  document.getElementById('motor-hp').value=a.hp;
+  document.getElementById('motor-v').value=a.v;
+  document.getElementById('motor-poles').value=a.poles;
+  document.getElementById('nameplate-rpm').value=a.rpm;
+  document.getElementById('fault-scenario').value=a.status==='crit'?'bearing_outer':a.status==='warn'?'brb_mild':'none';
+  S.signal=null;updateBearingFreqs();renderFleet();runAnalysis();
+}
+
+const bearingDB={'6205':{nb:9,bd:7.94,pd:38.5,angle:0},'6203':{nb:8,bd:6.75,pd:28.5,angle:0},'6207':{nb:9,bd:9.53,pd:46.0,angle:0}};
+function loadBearing(m){const b=bearingDB[m];if(!b)return;document.getElementById('nb').value=b.nb;document.getElementById('bd').value=b.bd;document.getElementById('pd').value=b.pd;document.getElementById('angle').value=b.angle;updateBearingFreqs();}
+function calcBearing(){
+  const poles=parseInt(document.getElementById('motor-poles').value);
+  const rpm=parseFloat(document.getElementById('nameplate-rpm').value);
+  const fs=parseFloat(document.getElementById('supply-freq').value);
+  const nb=parseFloat(document.getElementById('nb').value);
+  const bd=parseFloat(document.getElementById('bd').value);
+  const pd=parseFloat(document.getElementById('pd').value);
+  const ang=parseFloat(document.getElementById('angle').value)*Math.PI/180;
+  const syncRPM=120*fs/poles,slip=(syncRPM-rpm)/syncRPM,fr=rpm/60,ratio=bd/pd*Math.cos(ang);
+  return{fr,slip,BPFO:(nb/2)*fr*(1-ratio),BPFI:(nb/2)*fr*(1+ratio),BSF:(pd/(2*bd))*fr*(1-ratio*ratio),FTF:(fr/2)*(1-ratio),fpp:slip*poles*fr,syncRPM,rpm};
+}
+function updateBearingFreqs(){
+  const b=calcBearing(),fmt=v=>v.toFixed(2)+' Hz';
+  document.getElementById('bearing-freqs').innerHTML=`<div style="color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.08em">BPFO</div><div style="color:var(--cyan)">${fmt(b.BPFO)}</div><div style="color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.08em">BPFI</div><div style="color:var(--cyan)">${fmt(b.BPFI)}</div><div style="color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.08em">BSF</div><div style="color:var(--white)">${fmt(b.BSF)}</div><div style="color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.08em">FTF</div><div style="color:var(--white)">${fmt(b.FTF)}</div><div style="color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.08em">f_shaft</div><div style="color:var(--white)">${fmt(b.fr)}</div><div style="color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.08em">Slip</div><div style="color:var(--amber)">${(b.slip*100).toFixed(2)}%</div>`;
+}
+
+function fft(re,im){
+  const n=re.length;if(n<=1)return;const half=n>>1;
+  const reE=new Float64Array(half),imE=new Float64Array(half),reO=new Float64Array(half),imO=new Float64Array(half);
+  for(let i=0;i<half;i++){reE[i]=re[i*2];imE[i]=im[i*2];reO[i]=re[i*2+1];imO[i]=im[i*2+1];}
+  fft(reE,imE);fft(reO,imO);
+  for(let k=0;k<half;k++){const th=-2*Math.PI*k/n,c=Math.cos(th),sn=Math.sin(th),tr=c*reO[k]-sn*imO[k],ti=sn*reO[k]+c*imO[k];re[k]=reE[k]+tr;im[k]=imE[k]+ti;re[k+half]=reE[k]-tr;im[k+half]=imE[k]-ti;}
+}
+function computeFFT(signal,sr){
+  let n=1;while(n<signal.length)n<<=1;n=Math.min(n,65536);
+  const re=new Float64Array(n),im=new Float64Array(n);
+  for(let i=0;i<n;i++){const w=0.5*(1-Math.cos(2*Math.PI*i/(n-1)));re[i]=(signal[i]||0)*w;}
+  fft(re,im);
+  const freqs=new Float64Array(n/2),mag=new Float64Array(n/2);
+  for(let i=0;i<n/2;i++){freqs[i]=i*sr/n;mag[i]=Math.sqrt(re[i]*re[i]+im[i]*im[i])/n;}
+  return{freqs,mag};
+}
+function magToDb(m,ref){return 20*Math.log10(Math.max(m,1e-12)/Math.max(ref,1e-12));}
+function getBinMag(freqs,mag,f,win){let mx=0;for(let i=0;i<freqs.length;i++){if(Math.abs(freqs[i]-f)<=win)mx=Math.max(mx,mag[i]);}return mx;}
+
+function generateSignal(scenario){
+  const fs=parseFloat(document.getElementById('sample-rate').value);
+  const f0=parseFloat(document.getElementById('supply-freq').value);
+  const N=65536,dt=1/fs,sig=new Float64Array(N),b=calcBearing();
+  for(let i=0;i<N;i++){
+    const t=i*dt;
+    let s=Math.sin(2*Math.PI*f0*t)+0.015*Math.sin(2*Math.PI*3*f0*t+.2)+0.008*Math.sin(2*Math.PI*5*f0*t+.5)+0.004*Math.sin(2*Math.PI*7*f0*t+.8)+0.002*(Math.random()*2-1);
+    const fs_brb=2*b.slip*f0;
+    if(scenario==='brb_mild'||scenario==='multifault'){s+=0.021*Math.sin(2*Math.PI*(f0-fs_brb)*t)+0.019*Math.sin(2*Math.PI*(f0+fs_brb)*t);}
+    if(scenario==='brb_severe'){s+=0.065*Math.sin(2*Math.PI*(f0-fs_brb)*t)+0.058*Math.sin(2*Math.PI*(f0+fs_brb)*t)+0.018*Math.sin(2*Math.PI*(f0-2*fs_brb)*t)+0.016*Math.sin(2*Math.PI*(f0+2*fs_brb)*t);}
+    if(scenario==='bearing_outer'||scenario==='multifault'){s+=0.012*Math.sin(2*Math.PI*(f0-b.BPFO)*t)+0.011*Math.sin(2*Math.PI*(f0+b.BPFO)*t)+0.006*Math.sin(2*Math.PI*(f0-2*b.BPFO)*t)+0.005*Math.sin(2*Math.PI*(f0+2*b.BPFO)*t);}
+    if(scenario==='bearing_inner'){s+=0.009*Math.sin(2*Math.PI*(f0-b.BPFI)*t)+0.008*Math.sin(2*Math.PI*(f0+b.BPFI)*t)+0.004*Math.sin(2*Math.PI*(f0-b.BPFI-b.fr)*t)+0.004*Math.sin(2*Math.PI*(f0+b.BPFI+b.fr)*t);}
+    if(scenario==='eccentricity'){s+=0.028*Math.sin(2*Math.PI*(f0-b.fpp)*t)+0.025*Math.sin(2*Math.PI*(f0+b.fpp)*t)+0.010*Math.sin(2*Math.PI*(3*f0-b.fpp)*t);}
+    if(scenario==='unbalance'){s+=0.016*Math.sin(2*Math.PI*(f0-b.fr)*t)+0.014*Math.sin(2*Math.PI*(f0+b.fr)*t);}
+    sig[i]=s;
+  }
+  return sig;
+}
+
+function classifyFaults(freqs,mag){
+  const f0=parseFloat(document.getElementById('supply-freq').value),b=calcBearing(),win=0.5;
+  const fundMag=getBinMag(freqs,mag,f0,1.0),toDb=m=>magToDb(m,fundMag);
+  const dbToConf=(db,thresh)=>Math.max(0,Math.min(100,(db-thresh)/(thresh*-0.5)*100));
+  const fs_brb=2*b.slip*f0;
+  const brbDb=Math.max(toDb(getBinMag(freqs,mag,f0-fs_brb,win)),toDb(getBinMag(freqs,mag,f0+fs_brb,win)));
+  const bpfoDb=Math.max(toDb(getBinMag(freqs,mag,f0-b.BPFO,win)),toDb(getBinMag(freqs,mag,f0+b.BPFO,win)));
+  const bpfiDb=Math.max(toDb(getBinMag(freqs,mag,f0-b.BPFI,win)),toDb(getBinMag(freqs,mag,f0+b.BPFI,win)));
+  const bsfDb=Math.max(toDb(getBinMag(freqs,mag,f0-b.BSF,win)),toDb(getBinMag(freqs,mag,f0+b.BSF,win)));
+  const eccDb=Math.max(toDb(getBinMag(freqs,mag,f0-b.fpp,win)),toDb(getBinMag(freqs,mag,f0+b.fpp,win)));
+  const unbDb=Math.max(toDb(getBinMag(freqs,mag,f0-b.fr,win)),toDb(getBinMag(freqs,mag,f0+b.fr,win)));
+  let harmP=0;[2,3,4,5,6,7].forEach(h=>{const hm=getBinMag(freqs,mag,h*f0,1.0);harmP+=hm*hm;});
+  const thd=Math.sqrt(harmP)/fundMag*100;
+  return{
+    brb: {name:'Broken Rotor Bar',    freq:fs_brb.toFixed(2)+'Hz slip-sb', db:brbDb,  conf:dbToConf(brbDb,-46),  thresh:-46},
+    bpfo:{name:'Bearing Outer Race',  freq:b.BPFO.toFixed(2)+'Hz BPFO',    db:bpfoDb, conf:dbToConf(bpfoDb,-50), thresh:-50},
+    bpfi:{name:'Bearing Inner Race',  freq:b.BPFI.toFixed(2)+'Hz BPFI',    db:bpfiDb, conf:dbToConf(bpfiDb,-50), thresh:-50},
+    bsf: {name:'Ball Spin Fault',     freq:b.BSF.toFixed(2)+'Hz BSF',      db:bsfDb,  conf:dbToConf(bsfDb,-56),  thresh:-56},
+    ecc: {name:'Air Gap Eccentricity',freq:b.fpp.toFixed(2)+'Hz f_pp',     db:eccDb,  conf:dbToConf(eccDb,-46),  thresh:-46},
+    unb: {name:'Mech Unbalance',      freq:b.fr.toFixed(2)+'Hz 1xf_r',     db:unbDb,  conf:dbToConf(unbDb,-48),  thresh:-48},
+    thd,fundMag,slip:b.slip,fr:b.fr,bearing:b
+  };
+}
+
+function calcHealth(faults){
+  const W={brb:.35,bpfo:.20,bpfi:.18,bsf:.08,ecc:.12,unb:.07};let pen=0;
+  ['brb','bpfo','bpfi','bsf','ecc','unb'].forEach(k=>{pen+=(faults[k].conf/100)*W[k]*100;});
+  pen+=Math.max(0,(faults.thd-3)*2);return Math.max(0,Math.round(100-pen));
+}
+
+function drawFFT(freqs,mag,faults){
+  const canvas=document.getElementById('fft-canvas'),ctx=canvas.getContext('2d');
+  const W=canvas.offsetWidth;canvas.width=W;canvas.height=220;
+  const H=220,pad={top:16,right:20,bottom:36,left:56},plotW=W-pad.left-pad.right,plotH=H-pad.top-pad.bottom;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0A0F1A';ctx.fillRect(0,0,W,H);
+  const f0=parseFloat(document.getElementById('supply-freq').value);
+  const maxFreq=Math.min(500,freqs[freqs.length-1]),fundMag=faults.fundMag;
+  const dbMin=-80,dbMax=6,fX=f=>pad.left+(f/maxFreq)*plotW,dY=db=>pad.top+plotH-(db-dbMin)/(dbMax-dbMin)*plotH;
+  ctx.strokeStyle='#1E2D45';ctx.lineWidth=.5;
+  for(let db=dbMin;db<=dbMax;db+=10){const y=dY(db);ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+plotW,y);ctx.stroke();ctx.fillStyle='#4A6480';ctx.font='9px Share Tech Mono';ctx.textAlign='right';ctx.fillText(db+'dB',pad.left-4,y+3);}
+  for(let f=0;f<=maxFreq;f+=50){const x=fX(f);ctx.beginPath();ctx.moveTo(x,pad.top);ctx.lineTo(x,pad.top+plotH);ctx.stroke();ctx.fillStyle='#4A6480';ctx.font='9px Share Tech Mono';ctx.textAlign='center';ctx.fillText(f+'Hz',x,H-8);}
+  [{db:-46,col:'rgba(255,59,92,.3)',lbl:'-46dBc BRB'},{db:-50,col:'rgba(255,176,32,.25)',lbl:'-50dBc BRG'},{db:-56,col:'rgba(204,68,255,.2)',lbl:'-56dBc BSF'}].forEach(t=>{
+    const y=dY(t.db);ctx.strokeStyle=t.col;ctx.lineWidth=.7;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+plotW,y);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=t.col;ctx.font='8px Share Tech Mono';ctx.textAlign='left';ctx.fillText(t.lbl,pad.left+4,y-2);
+  });
+  ctx.beginPath();ctx.strokeStyle='rgba(0,212,255,.7)';ctx.lineWidth=1;let first=true;
+  for(let i=0;i<freqs.length;i++){if(freqs[i]>maxFreq)break;const x=fX(freqs[i]),db=magToDb(mag[i],fundMag),y=Math.max(pad.top,Math.min(pad.top+plotH,dY(db)));if(first){ctx.moveTo(x,y);first=false;}else ctx.lineTo(x,y);}
+  ctx.stroke();
+  ctx.lineTo(fX(maxFreq),pad.top+plotH);ctx.lineTo(pad.left,pad.top+plotH);ctx.closePath();
+  const g=ctx.createLinearGradient(0,pad.top,0,pad.top+plotH);g.addColorStop(0,'rgba(0,212,255,.1)');g.addColorStop(1,'rgba(0,212,255,0)');ctx.fillStyle=g;ctx.fill();
+  const fx2=fX(f0);ctx.strokeStyle='rgba(0,212,255,.4)';ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(fx2,pad.top);ctx.lineTo(fx2,pad.top+plotH);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#00D4FF';ctx.font='9px Share Tech Mono';ctx.textAlign='center';ctx.fillText('60Hz',fx2,pad.top+10);
+  const FC={brb:'#FF3B5C',bpfo:'#FFB020',bpfi:'#FF8C00',bsf:'#CC44FF',ecc:'#44AAFF',unb:'#00FF88'};
+  const FF={brb:2*faults.slip*f0,bpfo:faults.bearing.BPFO,bpfi:faults.bearing.BPFI,bsf:faults.bearing.BSF,ecc:faults.bearing.fpp,unb:faults.bearing.fr};
+  Object.keys(FC).forEach(k=>{
+    if(!faults[k]||faults[k].conf<5)return;const ff=FF[k];if(!ff)return;
+    [-1,1].forEach(sign=>{
+      const fx3=f0+sign*ff;if(fx3<=0||fx3>maxFreq)return;
+      const x=fX(fx3),db=magToDb(getBinMag(freqs,mag,fx3,.5),fundMag),y=dY(db);
+      ctx.strokeStyle=FC[k];ctx.lineWidth=1;ctx.setLineDash([2,4]);ctx.beginPath();ctx.moveTo(x,pad.top);ctx.lineTo(x,pad.top+plotH);ctx.stroke();ctx.setLineDash([]);
+      if(faults[k].conf>20){ctx.beginPath();ctx.arc(x,y,3,0,2*Math.PI);ctx.fillStyle=FC[k];ctx.fill();ctx.beginPath();ctx.arc(x,y,6,0,2*Math.PI);ctx.strokeStyle=FC[k]+'44';ctx.lineWidth=1;ctx.stroke();}
+    });
+  });
+  document.getElementById('fft-meta').textContent=`Δf=${(freqs[1]-freqs[0]).toFixed(3)}Hz · ${freqs.length} bins · Hann window · 65536pt Cooley-Tukey`;
+  canvas.onmousemove=e=>{
+    const rect=canvas.getBoundingClientRect(),mx=(e.clientX-rect.left)*(W/rect.width),f=((mx-pad.left)/plotW)*maxFreq;
+    if(f<0||f>maxFreq){document.getElementById('cursor-tip').style.display='none';return;}
+    const ci=Array.from(freqs).reduce((best,fq,i)=>Math.abs(fq-f)<Math.abs(freqs[best]-f)?i:best,0);
+    const db=magToDb(mag[ci],fundMag),tip=document.getElementById('cursor-tip');
+    tip.style.display='block';tip.style.left=(e.offsetX+12)+'px';tip.style.top=(e.offsetY-10)+'px';tip.textContent=`${f.toFixed(1)}Hz · ${db.toFixed(1)}dBc`;
+  };
+  canvas.onmouseleave=()=>{document.getElementById('cursor-tip').style.display='none';};
+}
+
+function drawWaveform(signal){
+  const canvas=document.getElementById('wave-canvas'),ctx=canvas.getContext('2d');
+  const W=canvas.offsetWidth;canvas.width=W;canvas.height=120;const H=120;
+  ctx.fillStyle='#0A0F1A';ctx.fillRect(0,0,W,H);
+  const show=Math.min(signal.length,2400),mid=H/2;let maxV=0;
+  for(let i=0;i<show;i++)maxV=Math.max(maxV,Math.abs(signal[i]));
+  ctx.strokeStyle='#1E2D45';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(0,mid);ctx.lineTo(W,mid);ctx.stroke();
+  ctx.beginPath();ctx.strokeStyle='rgba(0,212,255,.15)';ctx.lineWidth=4;
+  for(let i=0;i<show;i++){const x=i/show*W,y=mid-(signal[i]/maxV)*(mid-10);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();
+  ctx.beginPath();ctx.strokeStyle='rgba(0,212,255,.85)';ctx.lineWidth=1.2;
+  for(let i=0;i<show;i++){const x=i/show*W,y=mid-(signal[i]/maxV)*(mid-10);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();
+  document.getElementById('wave-meta').textContent=`${show} samples · Peak: ${maxV.toFixed(4)} · CT10x via UG65 LoRaWAN`;
+}
+
+function drawFaultGrid(faults){
+  const keys=['brb','bpfo','bpfi','bsf','ecc','unb'];
+  const labels={brb:'Broken Rotor Bar',bpfo:'Bearing Outer Race',bpfi:'Bearing Inner Race',bsf:'Ball Spin Fault',ecc:'Air Gap Eccentricity',unb:'Mech Unbalance'};
+  document.getElementById('fault-grid').innerHTML=keys.map(k=>{
+    const f=faults[k],c=Math.round(f.conf),cls=c>=50?'fc-crit':c>=20?'fc-warn':'fc-ok',status=c>=50?'FAULT DETECTED':c>=20?'MONITOR':'NORMAL';
+    return`<div class="fc ${cls}"><div class="fc-name">${labels[k]}</div><div class="fc-freq">${f.freq}</div><div class="fc-bar-w"><div class="fc-bar" style="width:${c}%"></div></div><div class="fc-score">${c}%</div><div class="fc-lbl">${f.db.toFixed(1)} dBc · ${status}</div></div>`;
+  }).join('');
+}
+
+function drawConstellation(freqs,mag,faults){
+  const canvas=document.getElementById('constellation-canvas'),ctx=canvas.getContext('2d');
+  const W=canvas.offsetWidth;canvas.width=W;canvas.height=220;const H=220;
+  ctx.fillStyle='#0A0F1A';ctx.fillRect(0,0,W,H);
+  const f0=parseFloat(document.getElementById('supply-freq').value),fundMag=faults.fundMag;
+  const radius=Math.min(W,H)/2-36,cx=W/2,cy=H/2;
+  [1,.75,.5,.25].forEach(r=>{ctx.beginPath();ctx.arc(cx,cy,radius*r,0,2*Math.PI);ctx.strokeStyle=r===1?'#1E2D45':'rgba(30,45,69,.4)';ctx.lineWidth=r===1?1:.5;ctx.stroke();});
+  ctx.fillStyle='#4A6480';ctx.font='8px Share Tech Mono';ctx.textAlign='left';
+  ctx.fillText('-20dBc',cx+radius*.75+2,cy-2);ctx.fillText('-40dBc',cx+radius*.5+2,cy-2);ctx.fillText('-60dBc',cx+radius*.25+2,cy-2);
+  const FD={brb:{freq:2*faults.slip*f0,color:'#FF3B5C',angle:0},bpfo:{freq:faults.bearing.BPFO,color:'#FFB020',angle:60},bpfi:{freq:faults.bearing.BPFI,color:'#FF8C00',angle:120},bsf:{freq:faults.bearing.BSF,color:'#CC44FF',angle:180},ecc:{freq:faults.bearing.fpp,color:'#44AAFF',angle:240},unb:{freq:faults.bearing.fr,color:'#00FF88',angle:300}};
+  Object.entries(FD).forEach(([key,def])=>{
+    const conf=faults[key]?faults[key].conf:0,db=faults[key]?faults[key].db:-80;
+    const r=Math.max(0,Math.min(1,(db+60)/60))*radius,theta=(def.angle-90)*Math.PI/180;
+    const x=cx+r*Math.cos(theta),y=cy+r*Math.sin(theta);
+    ctx.beginPath();ctx.moveTo(cx+4*Math.cos(theta),cy+4*Math.sin(theta));ctx.lineTo(cx+radius*Math.cos(theta),cy+radius*Math.sin(theta));ctx.strokeStyle='rgba(30,45,69,.5)';ctx.lineWidth=.5;ctx.stroke();
+    const dr=4+conf/12;ctx.beginPath();ctx.arc(x,y,dr,0,2*Math.PI);ctx.fillStyle=def.color+(conf>10?'FF':'55');ctx.fill();
+    if(conf>20){ctx.beginPath();ctx.arc(x,y,dr+5,0,2*Math.PI);ctx.strokeStyle=def.color+'44';ctx.lineWidth=1;ctx.stroke();}
+    const lx=cx+(radius+16)*Math.cos(theta),ly=cy+(radius+16)*Math.sin(theta);
+    ctx.fillStyle=conf>10?def.color:'#4A6480';ctx.font='9px Share Tech Mono';ctx.textAlign='center';ctx.fillText(key.toUpperCase(),lx,ly+3);
+  });
+}
+
+function drawTrend(){
+  const canvas=document.getElementById('trend-canvas'),ctx=canvas.getContext('2d'),W=160,H=28;
+  ctx.clearRect(0,0,W,H);const h=S.healthHistory;if(h.length<2)return;
+  ctx.strokeStyle='#1E2D45';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(0,H/2);ctx.lineTo(W,H/2);ctx.stroke();
+  ctx.beginPath();ctx.strokeStyle='rgba(0,212,255,.8)';ctx.lineWidth=1.5;
+  h.forEach((v,i)=>{const x=i/(h.length-1)*W,y=H-(v/100)*(H-4)-2;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.stroke();
+  const lx=W,ly=H-(h[h.length-1]/100)*(H-4)-2,col=h[h.length-1]>=70?'#00FF88':h[h.length-1]>=40?'#FFB020':'#FF3B5C';
+  ctx.beginPath();ctx.arc(lx,ly,3,0,2*Math.PI);ctx.fillStyle=col;ctx.fill();
+}
+
+function updateArc(score){
+  const arc=document.getElementById('arc-progress'),circ=251.2;
+  arc.style.strokeDashoffset=circ-(score/100*circ*.75);arc.style.stroke=score>=70?'#00D4FF':score>=40?'#FFB020':'#FF3B5C';
+  const el=document.getElementById('health-score');el.textContent=score;el.style.color=score>=70?'#E8F4FF':score>=40?'#FFB020':'#FF3B5C';
+}
+
+function updateFreqTable(freqs,mag,faults){
+  const f0=parseFloat(document.getElementById('supply-freq').value),fundMag=faults.fundMag;
+  const rows=[{label:'Broken Rotor Bar',faultFreq:2*faults.slip*f0,thresh:-46,key:'brb'},{label:'BPFO (Outer Race)',faultFreq:faults.bearing.BPFO,thresh:-50,key:'bpfo'},{label:'BPFI (Inner Race)',faultFreq:faults.bearing.BPFI,thresh:-50,key:'bpfi'},{label:'BSF (Ball Spin)',faultFreq:faults.bearing.BSF,thresh:-56,key:'bsf'},{label:'FTF (Cage)',faultFreq:faults.bearing.FTF,thresh:-52,key:'ftf'},{label:'Eccentricity',faultFreq:faults.bearing.fpp,thresh:-46,key:'ecc'},{label:'Unbalance 1xf_r',faultFreq:faults.bearing.fr,thresh:-48,key:'unb'}];
+  document.getElementById('freq-tbody').innerHTML=rows.map(r=>{
+    const ff=r.faultFreq,sb1n=(f0-ff).toFixed(2),sb1p=(f0+ff).toFixed(2),sb2n=(f0-2*ff).toFixed(2),sb2p=(f0+2*ff).toFixed(2);
+    const d1=magToDb(getBinMag(freqs,mag,f0-ff,.5),fundMag),d2=magToDb(getBinMag(freqs,mag,f0+ff,.5),fundMag),dbMax=Math.max(d1,d2);
+    const isFault=dbMax>r.thresh,isWarn=dbMax>r.thresh-8&&!isFault;
+    const tag=isFault?`<span class="ftag ftag-f">FAULT</span>`:isWarn?`<span class="ftag ftag-w">MONITOR</span>`:`<span class="ftag ftag-n">NORMAL</span>`;
+    return`<tr><td>${r.label}</td><td>${ff.toFixed(2)} Hz</td><td>${sb1n}</td><td>${sb1p}</td><td>${sb2n}</td><td>${sb2p}</td><td style="color:${isFault?'#FF3B5C':isWarn?'#FFB020':'#00FF88'}">${dbMax.toFixed(1)} dBc</td><td style="color:var(--muted)">${r.thresh}</td><td>${tag}</td></tr>`;
+  }).join('');
+}
+
+function pushAlerts(faults,health,motorId){
+  const keys=['brb','bpfo','bpfi','bsf','ecc','unb'],now=new Date().toLocaleTimeString('en-US',{hour12:false});
+  keys.forEach(k=>{
+    if(faults[k].conf>=20){
+      S.alerts.unshift({time:now,motor:motorId,code:k.toUpperCase(),name:faults[k].name,conf:Math.round(faults[k].conf),db:faults[k].db.toFixed(1),health,level:faults[k].conf>=50?'crit':'warn'});
+    }
+  });
+  S.alerts=S.alerts.slice(0,50);renderAlerts();
+}
+function renderAlerts(){
+  const el=document.getElementById('alert-list');
+  if(!S.alerts.length){el.innerHTML='<div class="alert-empty">No alerts. Run analysis on a fault scenario to generate alerts.</div>';return;}
+  el.innerHTML=S.alerts.map(a=>`<div class="alert-row"><span style="padding:2px 8px;border-radius:3px;font-size:9px;letter-spacing:2px;min-width:40px;text-align:center;background:${a.level==='crit'?'rgba(255,59,92,.15)':'rgba(255,176,32,.1)'};color:${a.level==='crit'?'#FF3B5C':'#FFB020'};border:1px solid ${a.level==='crit'?'rgba(255,59,92,.3)':'rgba(255,176,32,.25)'}">${a.code}</span><span style="flex:1;color:var(--white)">${a.motor} — ${a.name}</span><span style="color:${a.level==='crit'?'#FF3B5C':'#FFB020'}">${a.conf}% conf · ${a.db} dBc</span><span style="color:var(--muted);font-size:10px">${a.time}</span></div>`).join('');
+}
+function clearAlerts(){S.alerts=[];renderAlerts();}
+
+function generateReport(faults,health){
+  const motorId=document.getElementById('motor-id').value,hp=document.getElementById('motor-hp').value,volt=document.getElementById('motor-v').value,now=new Date().toLocaleString();
+  const keys=['brb','bpfo','bpfi','bsf','ecc','unb'];
+  const active=keys.filter(k=>faults[k].conf>=50).map(k=>faults[k]),warn=keys.filter(k=>faults[k].conf>=20&&faults[k].conf<50).map(k=>faults[k]);
+  const badgeCls=health>=70?'badge-ok':health>=40?'badge-warn':'badge-crit',badgeTxt=health>=70?'HEALTHY':health>=40?'WARNING':'CRITICAL';
+  const dominant=active[0]?active[0].name:warn[0]?warn[0].name+' (monitor)':'None detected';
+  const action=health>=70?'Continue normal operations. Schedule next ESA at 90-day interval.':health>=40?'Schedule inspection within 30 days. Increase monitoring to weekly.':'Immediate attention required. Schedule maintenance within 72 hours.';
+  const findingsHTML=active.map(f=>`<div class="rfinding" style="border-left-color:var(--red)"><span class="ricon" style="color:var(--red)">⚠</span><div><strong style="color:var(--red)">${f.name}</strong> — ${f.conf.toFixed(0)}% confidence · ${f.db.toFixed(1)} dBc · Sideband at ${f.freq}</div></div>`).join('')+warn.map(f=>`<div class="rfinding" style="border-left-color:var(--amber)"><span class="ricon" style="color:var(--amber)">◈</span><div><strong style="color:var(--amber)">${f.name}</strong> — ${f.conf.toFixed(0)}% confidence · ${f.db.toFixed(1)} dBc · Monitor at ${f.freq}</div></div>`).join('');
+  const interpHTML=active.length===0&&warn.length===0?`<div class="rbody">Current signature analysis shows no anomalous sideband activity above detection threshold. Motor electrical health score of ${health}/100 reflects normal operating parameters. Harmonic distortion within acceptable limits at ${faults.thd.toFixed(2)}% THD. Recommend continuing standard 90-day monitoring interval.</div>`:`<div class="rbody">ESA detected ${active.length} active fault signature${active.length!==1?'s':''} and ${warn.length} developing condition${warn.length!==1?'s':''} in the current waveform for ${motorId}. ${active.length?`The dominant fault signature is <strong>${active[0].name}</strong> presenting at ${active[0].conf.toFixed(0)}% confidence (${active[0].db.toFixed(1)} dBc). This sideband energy level indicates the fault is progressing and requires scheduled maintenance attention.`:''} ${faults.thd>4?`Current THD of ${faults.thd.toFixed(2)}% exceeds the 3% baseline threshold, suggesting harmonic pollution in the supply or internal winding distress.`:''} Slip frequency of ${(faults.slip*100).toFixed(2)}% is within normal range for load conditions.</div>`;
+  document.getElementById('report-container').innerHTML=`<div class="report-block" id="report-content"><div class="report-hdr"><div><div class="report-title">MOTOR INTELLIGENCE REPORT</div><div class="report-sub">${motorId} · ${hp}HP / ${volt}V · Generated ${now}</div><div class="report-sub" style="color:var(--cyan);margin-top:4px">AI Base³ Solutions · EBMI Credentialed · 27,000+ hrs field experience</div></div><div class="report-badge ${badgeCls}">${badgeTxt}</div></div><div class="rmeta"><div class="rmeta-cell"><div class="rmeta-lbl">Health Score</div><div class="rmeta-val" style="color:${health>=70?'#00D4FF':health>=40?'#FFB020':'#FF3B5C'};font-size:22px">${health}<span style="font-size:12px">/100</span></div></div><div class="rmeta-cell"><div class="rmeta-lbl">THD</div><div class="rmeta-val" style="color:${faults.thd>5?'#FF3B5C':faults.thd>3?'#FFB020':'#00FF88'}">${faults.thd.toFixed(2)}%</div></div><div class="rmeta-cell"><div class="rmeta-lbl">Slip Frequency</div><div class="rmeta-val">${(faults.slip*100).toFixed(2)}%</div></div><div class="rmeta-cell"><div class="rmeta-lbl">Active Faults</div><div class="rmeta-val" style="color:${active.length>0?'#FF3B5C':'#00FF88'}">${active.length} detected</div></div></div>${findingsHTML?`<div class="rsec"><div class="rsec-title">Active Findings</div>${findingsHTML}</div>`:''}<div class="rsec"><div class="rsec-title">Interpretation</div>${interpHTML}</div><div class="rsec"><div class="rsec-title">Recommended Action</div><div class="rbody">${action}</div></div><div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--navy-b);font-family:var(--mono);font-size:10px;color:var(--muted)">Analysis: MCSA · FFT: Hann window, ${S.fftFreqs?S.fftFreqs.length:'—'} bins · 65536pt Cooley-Tukey · Bearing: ${document.getElementById('bearing-model').value} · Thresholds per IEEE 1068</div></div>`;
+  document.getElementById('copy-btn').style.display='block';
+  document.getElementById('wo-btn').style.display=active.length?'block':'none';
+}
+
+function generateWorkOrder(){
+  if(!S.faults)return;
+  const keys=['brb','bpfo','bpfi','bsf','ecc','unb'],active=keys.filter(k=>S.faults[k].conf>=50).map(k=>S.faults[k]);
+  if(!active.length)return;
+  const motorId=document.getElementById('motor-id').value,hp=document.getElementById('motor-hp').value,volt=document.getElementById('motor-v').value,now=new Date().toLocaleString();
+  const priority=S.health<40?'CRITICAL — 72 HRS':S.health<70?'HIGH — 30 DAYS':'MEDIUM — 90 DAYS';
+  document.getElementById('wo-container').innerHTML=`<div class="report-block" style="border-left-color:var(--amber);margin-top:16px" id="wo-content"><div class="report-hdr"><div><div class="report-title" style="font-size:15px">MAINTENANCE WORK ORDER</div><div class="report-sub">WO-${Date.now().toString().slice(-6)} · ${motorId} · ${now}</div></div><div class="report-badge badge-warn">${priority}</div></div><div class="rmeta" style="grid-template-columns:repeat(3,1fr)"><div class="rmeta-cell"><div class="rmeta-lbl">Asset</div><div class="rmeta-val">${motorId}</div></div><div class="rmeta-cell"><div class="rmeta-lbl">Rating</div><div class="rmeta-val">${hp}HP / ${volt}V</div></div><div class="rmeta-cell"><div class="rmeta-lbl">Health Score</div><div class="rmeta-val" style="color:var(--amber)">${S.health}/100</div></div></div><div class="rsec"><div class="rsec-title">Fault Findings</div>${active.map(f=>`<div class="rfinding" style="border-left-color:var(--red)"><span class="ricon" style="color:var(--red)">⚠</span><div><strong style="color:var(--red)">${f.name}</strong> — ${f.conf.toFixed(0)}% confidence · ${f.db.toFixed(1)} dBc</div></div>`).join('')}</div><div class="rsec"><div class="rsec-title">Required Actions</div><div class="rbody" style="font-family:var(--mono);font-size:11px;line-height:2">${active.map((f,i)=>`${i+1}. ${f.name}: Inspect and repair/replace as indicated. Verify with follow-up ESA within 14 days post-maintenance.`).join('<br>')}</div></div><div class="rsec"><div class="rsec-title">Safety Notes</div><div class="rbody" style="font-family:var(--mono);font-size:11px">Lock out / tag out per NFPA 70E before physical inspection. ESA diagnosis performed non-intrusively — motor was not shut down for this analysis.</div></div><div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--navy-b);font-family:var(--mono);font-size:10px;color:var(--muted)">Issued by: AI Base³ Solutions · Anthony McGee, Lead ESA Analyst · EBMI Credentialed · ai-base-3.durable.site</div></div>`;
+}
+
+function copyReport(){
+  const el=document.getElementById('report-content');if(!el)return;
+  navigator.clipboard.writeText(el.innerText).then(()=>{const btn=document.getElementById('copy-btn');btn.textContent='✓ Copied';setTimeout(()=>btn.textContent='Copy Report',2000);});
+}
+
+function updateRevenue(){
+  const pts=parseInt(document.getElementById('rev-points').value)||0,rate=parseInt(document.getElementById('rev-tier').value)||297,mrr=pts*rate,arr=mrr*12;
+  const fmt=n=>n>=1000?'$'+(n/1000).toFixed(1)+'K':'$'+n;
+  document.getElementById('rev-mrr').textContent=fmt(mrr);document.getElementById('rev-arr').textContent=fmt(arr);document.getElementById('rev-pts').textContent=pts;document.getElementById('sb-mrr').textContent=fmt(mrr);
+}
+
+async function runAnalysis(){
+  const scenario=document.getElementById('fault-scenario').value,fs=parseFloat(document.getElementById('sample-rate').value);
+  const fill=document.getElementById('loading-fill');fill.style.width='0%';let p=0;
+  const timer=setInterval(()=>{p=Math.min(90,p+Math.random()*15);fill.style.width=p+'%';},80);
+  await new Promise(r=>setTimeout(r,50));
+  const signal=S.signal||generateSignal(scenario);S.signal=signal;
+  const{freqs,mag}=computeFFT(signal,fs);S.fftMag=mag;S.fftFreqs=freqs;
+  const faults=classifyFaults(freqs,mag);S.faults=faults;
+  const health=calcHealth(faults);S.health=health;
+  S.healthHistory.push(health);if(S.healthHistory.length>10)S.healthHistory.shift();
+  clearInterval(timer);fill.style.width='100%';setTimeout(()=>fill.style.width='0%',500);
+  updateArc(health);drawFFT(freqs,mag,faults);drawWaveform(signal);drawFaultGrid(faults);drawConstellation(freqs,mag,faults);drawTrend();updateFreqTable(freqs,mag,faults);generateReport(faults,health);
+  const motorId=document.getElementById('motor-id').value,keys=['brb','bpfo','bpfi','bsf','ecc','unb'];
+  const active=keys.filter(k=>faults[k].conf>=50).map(k=>faults[k]),warn=keys.filter(k=>faults[k].conf>=20&&faults[k].conf<50).map(k=>faults[k]);
+  const dominant=active[0]?active[0].name:warn[0]?warn[0].name+' (monitor)':'None detected';
+  const action=health>=70?'Continue normal ops. Next ESA in 90 days.':health>=40?'Schedule inspection within 30 days.':'Immediate attention — maintenance within 72hrs.';
+  document.getElementById('stat-motor-id').textContent=motorId;
+  document.getElementById('stat-slip').textContent=(faults.slip*100).toFixed(2)+'%';
+  const thdEl=document.getElementById('stat-thd');thdEl.textContent=faults.thd.toFixed(2)+'%';thdEl.className='h-val '+(faults.thd>5?'bad':faults.thd>3?'warn':'good');
+  document.getElementById('stat-dominant').textContent=dominant;document.getElementById('stat-dominant').className='h-val '+(active.length?'bad':warn.length?'warn':'good');
+  document.getElementById('stat-action').textContent=action;document.getElementById('stat-action').className='h-val '+(health>=70?'good':health>=40?'warn':'bad');
+  document.getElementById('sb-health').textContent=health;document.getElementById('sb-health').style.color=health>=70?'#00D4FF':health>=40?'#FFB020':'#FF3B5C';
+  document.getElementById('sb-faults').textContent=active.length;document.getElementById('sb-faults').style.color=active.length?'#FF3B5C':'#00FF88';
+  pushAlerts(faults,health,motorId);
+  if(S.activeAsset!==null){S.fleet[S.activeAsset].health=health;S.fleet[S.activeAsset].status=health>=70?'ok':health>=40?'warn':'crit';renderFleet();}
+  S.analyzed=true;
+}
+
+function switchTab(id){
+  document.querySelectorAll('.tab').forEach((t,i)=>{const ids=['spectrum','classifiers','frequencies','alerts','report'];t.classList.toggle('active',ids[i]===id);});
+  document.querySelectorAll('.tab-panel').forEach(p=>{p.classList.toggle('active',p.id==='tab-'+id);});
+  if(S.analyzed){setTimeout(()=>{if(id==='spectrum'){drawFFT(S.fftFreqs,S.fftMag,S.faults);drawWaveform(S.signal);}if(id==='classifiers')drawConstellation(S.fftFreqs,S.fftMag,S.faults);},50);}
+}
+
+function loadFile(evt){
+  const file=evt.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{const lines=e.target.result.split('\n').filter(Boolean),vals=[];lines.forEach(line=>{const parts=line.split(/[,\t\s]+/),v=parseFloat(parts[parts.length-1]);if(!isNaN(v))vals.push(v);});if(vals.length>256){S.signal=new Float64Array(vals);document.getElementById('fault-scenario').value='none';}};
+  reader.readAsText(file);
+}
+
+function init(){
+  renderFleet();updateBearingFreqs();updateRevenue();
+  document.querySelectorAll('.field input,.field select').forEach(el=>{el.addEventListener('change',()=>{updateBearingFreqs();if(S.analyzed){S.signal=null;runAnalysis();}});});
+  setInterval(()=>{document.getElementById('sys-time').textContent=new Date().toLocaleTimeString('en-US',{hour12:false});},1000);
+  window.addEventListener('resize',()=>{if(S.analyzed){drawFFT(S.fftFreqs,S.fftMag,S.faults);drawWaveform(S.signal);drawConstellation(S.fftFreqs,S.fftMag,S.faults);}});
+  const dz=document.getElementById('drop-zone');
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if(e.dataTransfer.files[0])loadFile({target:{files:e.dataTransfer.files}});});
+  setTimeout(()=>{document.getElementById('fault-scenario').value='bearing_outer';runAnalysis();},400);
+}
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
