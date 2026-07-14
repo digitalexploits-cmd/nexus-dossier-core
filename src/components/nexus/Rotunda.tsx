@@ -380,38 +380,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         </div>
       )}
 
-      {/* Compass */}
-      <div className="absolute inset-x-0 bottom-6 z-20">
-        <div className="container">
-          <div className="mono text-[0.55rem] tracking-[0.32em] uppercase text-muted-foreground mb-2 text-center">HEADING · DRAG · ARROWS · CLICK ZONE</div>
-          <div className="relative h-10 border border-primary/25 bg-background/50 backdrop-blur-sm">
-            {Array.from({ length: 21 }).map((_, i) => (
-              <div key={i} className="absolute top-0 bottom-0 w-px bg-primary/10" style={{ left: `${(i / 20) * 100}%` }} />
-            ))}
-            {ZONES.map((z) => {
-              const isLocked = lockedZone?.id === z.id;
-              return (
-                <button
-                  key={z.id}
-                  onClick={() => snapTo(z.pos)}
-                  className={`absolute top-1/2 -translate-y-1/2 mono text-[0.55rem] tracking-[0.28em] uppercase px-2 py-1 border transition-colors whitespace-nowrap ${
-                    isLocked
-                      ? "border-primary text-primary bg-primary/15"
-                      : "border-primary/30 text-muted-foreground hover:text-primary hover:border-primary/60 bg-background/60"
-                  }`}
-                  style={{ left: `${z.pos * 100}%`, transform: "translate(-50%, -50%)" }}
-                >
-                  {z.index} · {z.label.split(" ")[0]}
-                </button>
-              );
-            })}
-            <div
-              className="absolute top-0 bottom-0 w-[2px] bg-primary shadow-[0_0_10px_rgba(70,150,255,0.9)]"
-              style={{ left: `${heading * 100}%`, transition: "left 200ms linear" }}
-            />
-          </div>
-        </div>
-      </div>
+      {/* Compass bar removed — bay tiles on the panorama are the selection buttons. */}
 
       {/* Vault HUD panel (compact / collapsible) */}
       <div className="absolute right-3 top-28 z-20 anim-fade-up" style={{ animationDelay: "300ms" }}>
