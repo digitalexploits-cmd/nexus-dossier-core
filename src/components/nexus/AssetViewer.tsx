@@ -40,7 +40,7 @@ export const AssetViewer = ({ asset, onClose, resolveHref }: Props) => {
             </DialogHeader>
 
             <div className="bg-[#0b1220]">
-              {(asset.kind === "pdf" || asset.kind === "html") && (
+              {(asset.kind === "pdf" || asset.kind === "html" || asset.kind === "text" || asset.kind === "markdown") && (
                 <iframe src={href} title={asset.title} className="w-full min-h-[75vh] bg-[#0b1220] border-0" />
               )}
               {asset.kind === "image" && (

@@ -131,8 +131,9 @@ const Index = () => {
 
   const handleIntroComplete = useCallback(() => {
     try { sessionStorage.setItem("nexus:intro", "done"); } catch { /* ignore */ }
+    commitView("home");
     setIntroDone(true);
-  }, []);
+  }, [commitView]);
 
   return (
     <div className="min-h-screen flex flex-col">
