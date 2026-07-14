@@ -71,8 +71,11 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   }
 
   // ---------- First-person camera ----------
-  const [heading, setHeading] = useState(0.30);   // horizontal 0..1
-  const [headingV, setHeadingV] = useState(0.58); // vertical 0..1, slightly below middle
+  // Initial framing differs on mobile: center on the Arch so the centerpiece,
+  // right-leg river, and Busch Stadium all read on a narrow viewport.
+  const isMobileInitial = typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
+  const [heading, setHeading] = useState(isMobileInitial ? 0.50 : 0.30);
+  const [headingV, setHeadingV] = useState(isMobileInitial ? 0.50 : 0.58);
   const [dragging, setDragging] = useState(false);
   const [snapping, setSnapping] = useState(false);
   const [hintVisible, setHintVisible] = useState(true);
@@ -223,23 +226,23 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
       onPointerCancel={endDrag}
       style={{ cursor: dragging ? "grabbing" : "grab", touchAction: "none" }}
     >
-      {/* WORLD — image scaled so height ≈ 135vh, width preserves aspect. */}
+      {/* WORLD — panorama scaled so height fills the viewport, width preserves aspect.
+          Mobile uses 100dvh (Arch-centered initial framing keeps stadium/river readable);
+          tablet/desktop uses 135dvh for a fuller first-person feel. */}
       <div
         ref={worldRef}
-        className="absolute top-0 left-0"
+        className="absolute top-0 left-0 h-[100dvh] md:h-[135dvh] w-auto"
         style={{
           transform: worldTransform,
           transition: worldTransition,
           willChange: "transform",
-          height: "135dvh",
-          width: "auto",
         }}
       >
         <img
           src={ROTUNDA_HERO}
           alt="Nexus rotunda panorama"
-          className="block max-w-none"
-          style={{ height: "135dvh", width: "auto", filter: "brightness(1.08) contrast(1.06) saturate(1.10)" }}
+          className="block max-w-none h-[100dvh] md:h-[135dvh] w-auto"
+          style={{ filter: "brightness(1.08) contrast(1.06) saturate(1.10)" }}
           draggable={false}
           onLoad={measure}
         />
