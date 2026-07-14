@@ -77,6 +77,8 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   const [snapping, setSnapping] = useState(false);
   const [hintVisible, setHintVisible] = useState(true);
   const [vaultPanelOpen, setVaultPanelOpen] = useState(false);
+  const [mediaPanelOpen, setMediaPanelOpen] = useState(false);
+  const [mediaConsoleOpen, setMediaConsoleOpen] = useState(false);
   const interactedRef = useRef(false);
   const headingRef = useRef(heading);
   const headingVRef = useRef(headingV);
