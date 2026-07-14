@@ -111,12 +111,6 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
     else onSelect(z.id as BayId);
   }, [onOpenVault, onSelect]);
 
-  const snapTo = useCallback((pos: number) => {
-    dismissHint();
-    setSnapping(true);
-    setHeading(clamp(pos));
-    window.setTimeout(() => setSnapping(false), 650);
-  }, [dismissHint]);
 
   const stepH = useCallback((delta: number) => {
     dismissHint();
