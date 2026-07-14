@@ -1,0 +1,8 @@
+# Evidence Register
+
+| Evidence item | Source | Domain | Status | Used in proposal? | Public-safe? | Notes |
+|---|---|---|---|---|---|---|
+| NASA IMS benchmark notes | Public dataset / internal analysis | Accelerometer-domain degradation proxy | Pending final review | Yes if qualified | Proposal-safe | Must not be described as current-domain proof |
+| Paderborn current-channel notes | Public/current dataset | Motor current / bearing test rig | Pending final review | Yes | Proposal-safe | Confirm channel, decimation, processing details |
+| Synthetic VFD artifact tests | Internal analysis | Controlled stress test | Pending | Yes if bounded | Internal/proposal-safe | Do not imply field deployment proof |
+| Steve White pilot/reference | Direct contact | Industrial stakeholder | Pending permission | Planned | Proposal-safe after approval | Need title, company, permission, and approved letter |
