@@ -69,6 +69,8 @@ export const BayShell = ({
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
   const [viewingAsset, setViewingAsset] = useState<Asset | null>(null);
   const [certsOpen, setCertsOpen] = useState(false);
+  const [mediaConsoleOpen, setMediaConsoleOpen] = useState(false);
+
 
   // Lighting console — accent rim glow (0–100) and ambient exposure (0–100).
   // Persisted per-bay so the room "remembers" how the user lit it.
