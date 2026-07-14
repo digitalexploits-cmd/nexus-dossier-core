@@ -74,7 +74,15 @@ export const MEDIA_LIBRARY: MediaItem[] = [
   pdf("cr-g-ux",              "Google · UX Design",                "Credentials", "/credentials/google-ux-design.pdf"),
 
   // ─── Videos ─────────────────────────────────────────────────────────────
-  vid("vid-intro-load", "Nexus Intro · Load Sequence", "Sequences", "/media/intro-load.mp4"),
+  vid("vid-intro-load",       "Nexus Intro · Load Sequence",                    "Sequences",   "/media/intro-load.mp4"),
+  vid("vid-decoding-factory", "Decoding the Invisible Factory",                 "Doctrine",    "/__l5e/assets-v1/8b99b4ab-93a9-4e37-a64a-4b795e669bce/Decoding_the_Invisible_Factory.mp4"),
+  vid("vid-134-hours",        "134 Hours of Warning · Deterministic Motor Faults","Doctrine",  "/__l5e/assets-v1/e9bc8b44-813f-4d20-bf20-90202e1e779e/134_Hours_of_Warning_Extracting_Deterministic_Motor_Faults_fro.mp4"),
+  vid("vid-vfd-noise",        "Extracting Signal from VFD Noise · SINE-WaiV",   "Doctrine",    "/__l5e/assets-v1/15b6ec13-a4b8-467f-b54f-ee1e1de692c1/Extracting_Signal_from_VFD_Noise_The_SINE-WaiV_Doctrine_1.mp4"),
+  vid("vid-grok-1304",        "Field Cinematic · 1304",                         "Cinematics",  "/__l5e/assets-v1/bc68d4ac-2180-4143-b590-cadf845fe7d0/grok-video-1304fff2-9357-46c5-81ff-6a57bfc5b7d6.mp4"),
+  vid("vid-grok-7110",        "Field Cinematic · 7110",                         "Cinematics",  "/__l5e/assets-v1/30ac6859-baa2-4c5d-a2df-d09d2907be56/grok-video-7110fcb2-fb54-4bff-9ecb-38b839bc3657.mp4"),
+  vid("vid-grok-b672",        "Field Cinematic · B672",                         "Cinematics",  "/__l5e/assets-v1/3956d476-7532-4685-978a-0d6850099b8d/grok-video-b6725d81-0e6b-47ee-8eb7-add63ddae473.mp4"),
+  vid("vid-grok-d4",          "Field Cinematic · D4",                           "Cinematics",  "/__l5e/assets-v1/70e23ab7-91bf-4656-92c2-fed49f1846cb/grok-video-d4.mp4"),
+
 
   // ─── Images ─────────────────────────────────────────────────────────────
   img("hero-rotunda",      "Rotunda · Panoramic Hero",         "Bay Heroes", "/__l5e/assets-v1/681bea02-2f61-49a6-be5c-26fa9e58d577/rotunda-hero.png"),
