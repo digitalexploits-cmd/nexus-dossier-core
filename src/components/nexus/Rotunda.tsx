@@ -276,10 +276,10 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
             <button
               key={z.id}
               onPointerDown={(e) => e.stopPropagation()}
-              onClick={(e) => { e.stopPropagation(); if (isLocked) enterZone(z); else snapTo(z.pos); }}
+              onClick={(e) => { e.stopPropagation(); dismissHint(); enterZone(z); }}
               className="bay-hover-glow absolute top-1/2 group rounded-sm"
               style={{ left: `${z.pos * 100}%`, transform: "translate(-50%, -50%)" }}
-              aria-label={`${z.label} — ${isLocked ? "enter" : "look toward"}`}
+              aria-label={`${z.id === "vault" ? "Open" : "Enter"} ${z.label}`}
             >
               <div className="relative flex flex-col items-center pointer-events-auto">
                 <div
