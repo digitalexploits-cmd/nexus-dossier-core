@@ -225,14 +225,17 @@ export const DOCUMENTS: DocItem[] = [
   // MISSION
   { id: "d_resume", title: "Chronological AI Technical Solutions Résumé (v6)", bay: "mission", kind: "pdf", href: "/dossier/anthony-mcgee-resume-v6.pdf", category: "Résumé", date: "2026-07", featured: true },
   { id: "d_dossier", title: "Executive Dossier", bay: "mission", kind: "html", href: "/dossier/executive-dossier.html", category: "Dossier", featured: true },
-  { id: "d_portfolio", title: "Master Executive Portfolio", bay: "mission", kind: "html", href: "/dossier/master-executive-portfolio.html", category: "Portfolio" },
-  { id: "d_deck", title: "AI Base³ Presentation", bay: "mission", kind: "pdf", href: "/dossier/ai-base3-presentation.pdf", category: "Deck" },
+  { id: "d_portfolio", title: "Master Executive Portfolio", bay: "mission", kind: "html", href: "/__l5e/assets-v1/3f4a38c4-3b38-42f9-b831-fde4dbcac72c/master-executive-portfolio.html", category: "Portfolio" },
+  { id: "d_deck", title: "AI Base³ Presentation", bay: "mission", kind: "pdf", href: "/__l5e/assets-v1/75706416-2958-4fc0-9c84-75fb675ac95d/ai-base3-presentation.pdf", category: "Deck" },
   { id: "d_cover", title: "AI Implementation Cover Letter (v6)", bay: "mission", kind: "pdf", href: "/dossier/cover-letter-v6.pdf", category: "Cover Letter", date: "2026-07" },
 
   // TECHNICAL
-  { id: "t_diag", title: "SINE~WaiV Algorithmic Motor Diagnostics", bay: "technical", kind: "pdf", href: "/technical/sine-waiv-algorithmic-motor-diagnostics.pdf", category: "Technical Paper", featured: true },
+  { id: "t_diag", title: "SINE~WaiV Algorithmic Motor Diagnostics", bay: "technical", kind: "pdf", href: "/__l5e/assets-v1/a7ab8a25-b252-4b62-80f8-e9e1f0ce556b/sine-waiv-algorithmic-motor-diagnostics.pdf", category: "Technical Paper", featured: true },
   { id: "t_defense", title: "SINE~WaiV Technical Defense Framework", bay: "technical", kind: "pdf", href: "/technical/sine-waiv-technical-defense-framework.pdf", category: "Framework", featured: true },
   { id: "t_infographic", title: "Predictive Maintenance Software Infographic", bay: "technical", kind: "image", href: "/technical/predictive-maintenance-infographic.png", category: "Infographic" },
+  { id: "t_esa", title: "SINE~WaiV ESA Engine (Interactive)", bay: "technical", kind: "html", href: "/technical/esa-engine.html", category: "Interactive Tool", featured: true },
+  { id: "t_interactive", title: "SINE~WaiV Interactive Demo", bay: "technical", kind: "html", href: "/technical/sinewaiv-interactive.html", category: "Interactive Demo" },
+  { id: "t_mir", title: "Motor Intelligence Report (Sample)", bay: "technical", kind: "html", href: "/technical/motor-intelligence-report.html", category: "Sample Output" },
 
   // CAPABILITY
   { id: "c_nsf", title: "NSF SBIR Phase I — Full Draft (Canonical)", bay: "capability", kind: "pdf", href: "/proposals/nsf-sbir-phase1-canonical.pdf", category: "Proposal", featured: true },
