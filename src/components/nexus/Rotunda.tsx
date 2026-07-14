@@ -2,6 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { BRAND, type BayId } from "@/data/content";
 import { prefersReducedMotion } from "@/lib/audio";
+import rotundaAsset from "@/assets/nexus-rotunda.jpg.asset.json";
+
+const ROTUNDA_HERO = rotundaAsset.url;
 
 interface Props {
   onSelect: (id: BayId) => void;
