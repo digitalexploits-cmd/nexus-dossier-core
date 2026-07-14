@@ -11,6 +11,15 @@ export default defineConfig(({ mode }) => ({
     hmr: {
       overlay: false,
     },
+    proxy: {
+      // Lovable CDN assets (/__l5e/...) are served by the platform in prod.
+      // Proxy them in dev so <img> tags backed by .asset.json pointers resolve.
+      "/__l5e": {
+        target: "https://nexus-dossier-core.lovable.app",
+        changeOrigin: true,
+        secure: true,
+      },
+    },
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
