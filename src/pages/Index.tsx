@@ -18,12 +18,12 @@ const HERO_IMAGES: Record<BayId, string> = {
   operations: "/media/operations-landing.jpg",
 };
 
-// Restrained cyan accent per bay. Same architectural language across all.
+// Gold family accent per bay — unified brand theme, subtle warmth variation.
 const BAY_ACCENTS: Record<BayId, string> = {
-  mission:    "#4db7ff",
-  technical:  "#5fe1d6",
-  capability: "#e8b96b",
-  operations: "#ff8f5c",
+  mission:    "#d4a84a", // signature gold
+  technical:  "#e8c46b", // light gold
+  capability: "#b8892d", // deep gold
+  operations: "#f0d78c", // pale gold
 };
 
 const BAY_AMBIENT: Record<BayId, string> = {
