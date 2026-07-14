@@ -18,6 +18,7 @@ import { CategoryIcon } from "./CategoryIcons";
 import { BAYS, type BayId } from "@/data/content";
 import { OfficialCertificationsGallery } from "./OfficialCertificationsGallery";
 import { AssetViewer } from "./AssetViewer";
+import { MediaConsole } from "./MediaConsole";
 import llcCert from "@/assets/ai-base3-llc-certificate.jpg.asset.json";
 import whiteHouseLetter from "@/assets/white-house-letter.jpg.asset.json";
 
@@ -68,6 +69,8 @@ export const BayShell = ({
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
   const [viewingAsset, setViewingAsset] = useState<Asset | null>(null);
   const [certsOpen, setCertsOpen] = useState(false);
+  const [mediaConsoleOpen, setMediaConsoleOpen] = useState(false);
+
 
   // Lighting console — accent rim glow (0–100) and ambient exposure (0–100).
   // Persisted per-bay so the room "remembers" how the user lit it.
@@ -161,8 +164,30 @@ export const BayShell = ({
 
 
 
+        {/* Multimedia Viewer launcher — glass panel button */}
+        <div className="absolute top-6 right-6 z-20">
+          <button
+            type="button"
+            onClick={() => setMediaConsoleOpen(true)}
+            className="interactive group relative flex items-center gap-2.5 rounded-sm px-4 py-2.5 backdrop-blur-md transition-all duration-300"
+            style={{
+              borderWidth: 1,
+              borderStyle: "solid",
+              borderColor: `${accent}66`,
+              background: `linear-gradient(180deg, ${accent}18, rgba(10,18,30,0.55))`,
+              boxShadow: `0 0 24px -6px ${accent}55, inset 0 1px 0 ${accent}33`,
+            }}
+            aria-label="Open multimedia viewer"
+          >
+            <span className="text-base leading-none" style={{ color: accent }}>◫</span>
+            <span className="mono text-[0.6rem] tracking-[0.28em] uppercase" style={{ color: "#eef6ff" }}>
+              Multimedia Viewer
+            </span>
+          </button>
+        </div>
 
       </section>
+
 
 
       {/* ============ LAYER 1 — CATEGORY RAIL ============ */}
@@ -278,6 +303,9 @@ export const BayShell = ({
 
       {/* Local asset viewer */}
       <AssetViewer asset={viewingAsset} onClose={() => setViewingAsset(null)} resolveHref={resolveHref} />
+
+      {/* Multimedia Console — big glass window for documents/images/videos */}
+      <MediaConsole open={mediaConsoleOpen} onClose={() => setMediaConsoleOpen(false)} />
     </div>
   );
 };
