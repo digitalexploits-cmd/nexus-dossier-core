@@ -97,13 +97,13 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: "auto" });
   }, []);
 
+  // Curtain (see BayTransition + @keyframes bay-curtain) peaks at ~35% of 1400ms ≈ 490ms.
+  // Swap the underlying view at peak so the curtain covers the change, then let the
+  // overlay play its reveal-out half and self-clear via onDone.
   const runTransition = useCallback((label: string, kind: TransitionKind, next: View) => {
     if (prefersReducedMotion()) { commitView(next); return; }
     setTransition({ label, kind });
-    setTimeout(() => {
-      commitView(next);
-      setTransition(null);
-    }, 600);
+    window.setTimeout(() => { commitView(next); }, 490);
   }, [commitView]);
 
   const goHome = useCallback(() => {
