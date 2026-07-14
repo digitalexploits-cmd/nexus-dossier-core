@@ -365,12 +365,12 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
       <button
         onClick={() => stepV(STEP_V)}
         aria-label="Look down"
-        className="absolute left-1/2 -translate-x-1/2 bottom-44 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-8 flex items-center justify-center"
+        className="absolute left-1/2 -translate-x-1/2 bottom-6 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-8 flex items-center justify-center"
       >▼</button>
 
-      {/* Lock-on ENTER prompt */}
+      {/* Lock-on ENTER prompt (keyboard/drag flow) */}
       {lockedZone && (
-        <div className="absolute inset-x-0 bottom-32 z-20 flex justify-center pointer-events-none">
+        <div className="absolute inset-x-0 bottom-20 z-20 flex justify-center pointer-events-none">
           <button
             onClick={() => enterZone(lockedZone)}
             className="pointer-events-auto mono uppercase text-primary border border-primary/70 bg-primary/10 hover:bg-primary/20 backdrop-blur-sm px-6 py-3 tracking-[0.32em] text-sm shadow-[0_0_40px_rgba(70,150,255,0.35)] transition-colors"
