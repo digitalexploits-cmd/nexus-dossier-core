@@ -164,8 +164,30 @@ export const BayShell = ({
 
 
 
+        {/* Multimedia Viewer launcher — glass panel button */}
+        <div className="absolute top-6 right-6 z-20">
+          <button
+            type="button"
+            onClick={() => setMediaConsoleOpen(true)}
+            className="interactive group relative flex items-center gap-2.5 rounded-sm px-4 py-2.5 backdrop-blur-md transition-all duration-300"
+            style={{
+              borderWidth: 1,
+              borderStyle: "solid",
+              borderColor: `${accent}66`,
+              background: `linear-gradient(180deg, ${accent}18, rgba(10,18,30,0.55))`,
+              boxShadow: `0 0 24px -6px ${accent}55, inset 0 1px 0 ${accent}33`,
+            }}
+            aria-label="Open multimedia viewer"
+          >
+            <span className="text-base leading-none" style={{ color: accent }}>◫</span>
+            <span className="mono text-[0.6rem] tracking-[0.28em] uppercase" style={{ color: "#eef6ff" }}>
+              Multimedia Viewer
+            </span>
+          </button>
+        </div>
 
       </section>
+
 
 
       {/* ============ LAYER 1 — CATEGORY RAIL ============ */}
