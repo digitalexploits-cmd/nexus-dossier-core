@@ -303,6 +303,9 @@ export const BayShell = ({
 
       {/* Local asset viewer */}
       <AssetViewer asset={viewingAsset} onClose={() => setViewingAsset(null)} resolveHref={resolveHref} />
+
+      {/* Multimedia Console — big glass window for documents/images/videos */}
+      <MediaConsole open={mediaConsoleOpen} onClose={() => setMediaConsoleOpen(false)} />
     </div>
   );
 };
