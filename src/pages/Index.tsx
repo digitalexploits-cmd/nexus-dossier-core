@@ -19,11 +19,12 @@ const HERO_IMAGES: Record<BayId, string> = {
 };
 
 // Restrained cyan accent per bay. Same architectural language across all.
+// Unified cool-cyan tactical palette across every bay. No warm accents.
 const BAY_ACCENTS: Record<BayId, string> = {
-  mission:    "#4db7ff",
-  technical:  "#5fe1d6",
-  capability: "#e8b96b",
-  operations: "#ff8f5c",
+  mission:    "#00d4ff",
+  technical:  "#00e5ff",
+  capability: "#4dd8ff",
+  operations: "#00c8ff",
 };
 
 const BAY_AMBIENT: Record<BayId, string> = {
