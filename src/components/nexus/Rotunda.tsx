@@ -2,9 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { BRAND, type BayId } from "@/data/content";
 import { prefersReducedMotion } from "@/lib/audio";
-import rotundaHero from "@/assets/rotunda.jpg";
+import rotundaAsset from "@/assets/rotunda-hero.png.asset.json";
 
-const ROTUNDA_HERO = rotundaHero;
+const ROTUNDA_HERO = rotundaAsset.url;
 
 interface Props {
   onSelect: (id: BayId) => void;
