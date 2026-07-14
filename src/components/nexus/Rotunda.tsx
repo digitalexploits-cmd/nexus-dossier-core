@@ -71,8 +71,11 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   }
 
   // ---------- First-person camera ----------
-  const [heading, setHeading] = useState(0.30);   // horizontal 0..1
-  const [headingV, setHeadingV] = useState(0.58); // vertical 0..1, slightly below middle
+  // Initial framing differs on mobile: center on the Arch so the centerpiece,
+  // right-leg river, and Busch Stadium all read on a narrow viewport.
+  const isMobileInitial = typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
+  const [heading, setHeading] = useState(isMobileInitial ? 0.50 : 0.30);
+  const [headingV, setHeadingV] = useState(isMobileInitial ? 0.50 : 0.58);
   const [dragging, setDragging] = useState(false);
   const [snapping, setSnapping] = useState(false);
   const [hintVisible, setHintVisible] = useState(true);
