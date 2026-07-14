@@ -44,7 +44,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   if (reduced) {
     return (
       <section className="relative h-[100dvh] w-full overflow-hidden bg-[#05070a]">
-        <img src="/nexus-rotunda-new.jpg" alt="Nexus rotunda" className="absolute inset-0 w-full h-full object-cover opacity-70" draggable={false} />
+        <img src={ROTUNDA_HERO} alt="Nexus rotunda" className="absolute inset-0 w-full h-full object-cover opacity-70" draggable={false} />
         <div className="absolute inset-0 bg-background/60" />
         <div className="relative z-10 h-full flex flex-col items-center justify-center gap-4 container">
           <h1 className="mono text-primary text-lg tracking-[0.32em]">NEXUS ROTUNDA</h1>
@@ -239,7 +239,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         }}
       >
         <img
-          src="/nexus-rotunda-new.jpg"
+          src={ROTUNDA_HERO}
           alt="Nexus rotunda panorama"
           className="block max-w-none"
           style={{ height: "135dvh", width: "auto", filter: "brightness(1.08) contrast(1.06) saturate(1.10)" }}
