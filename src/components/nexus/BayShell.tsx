@@ -128,17 +128,14 @@ export const BayShell = ({
         <img
           src={heroImage}
           alt={`${bayMeta.title} — immersive environment`}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-out ${heroLoaded ? "opacity-100" : "opacity-0"}`}
-          style={{ filter: `brightness(${ambientBrightness.toFixed(3)}) contrast(1.06) saturate(0.98)` }}
+          className={`absolute inset-0 w-full h-full object-cover contrast-[1.04] saturate-[1.10] transition-opacity duration-700 ease-out ${heroLoaded ? "opacity-100" : "opacity-0"}`}
+          style={{ filter: `brightness(${ambientBrightness.toFixed(3)}) contrast(1.04) saturate(1.10)` }}
           draggable={false}
           loading="eager"
           decoding="async"
           onLoad={() => setHeroLoaded(true)}
           onError={() => setHeroLoaded(true)}
         />
-        {/* Subtle cool grade — kills warm cast, keeps scenery crisp and natural. */}
-        <div className="absolute inset-0 pointer-events-none mix-blend-color bg-[hsl(200_70%_35%)] opacity-[0.15]" />
-        <div className="absolute inset-0 pointer-events-none mix-blend-multiply bg-[hsl(215_55%_12%)] opacity-[0.10]" />
         {/* Legibility overlays — quiet, do not clutter */}
         <div className="absolute inset-x-0 top-0 h-[45%] pointer-events-none bg-[linear-gradient(180deg,rgba(4,8,16,0.55)_0%,rgba(4,8,16,0.15)_60%,transparent_100%)]" />
         <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/50 to-transparent" />
