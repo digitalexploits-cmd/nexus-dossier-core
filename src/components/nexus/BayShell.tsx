@@ -136,9 +136,9 @@ export const BayShell = ({
           onLoad={() => setHeroLoaded(true)}
           onError={() => setHeroLoaded(true)}
         />
-        {/* Cool-navy brand grade — knocks down warm/amber tones and pulls the whole hero toward the AI Base³ cyan/navy identity. */}
-        <div className="absolute inset-0 pointer-events-none mix-blend-color bg-[hsl(200_85%_28%)] opacity-55" />
-        <div className="absolute inset-0 pointer-events-none mix-blend-multiply bg-[hsl(215_60%_10%)] opacity-25" />
+        {/* Subtle cool grade — kills warm cast, keeps scenery crisp and natural. */}
+        <div className="absolute inset-0 pointer-events-none mix-blend-color bg-[hsl(200_70%_35%)] opacity-[0.15]" />
+        <div className="absolute inset-0 pointer-events-none mix-blend-multiply bg-[hsl(215_55%_12%)] opacity-[0.10]" />
         {/* Legibility overlays — quiet, do not clutter */}
         <div className="absolute inset-x-0 top-0 h-[45%] pointer-events-none bg-[linear-gradient(180deg,rgba(4,8,16,0.55)_0%,rgba(4,8,16,0.15)_60%,transparent_100%)]" />
         <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/50 to-transparent" />
