@@ -279,26 +279,39 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
               aria-label={`${z.label} — ${isLocked ? "enter" : "look toward"}`}
             >
               <div className="relative flex flex-col items-center pointer-events-auto">
-                <div
-                  className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                    isLocked
-                      ? "bg-primary shadow-[0_0_24px_rgba(70,150,255,1)] scale-150"
-                      : "bg-primary/70 shadow-[0_0_10px_rgba(70,150,255,0.9)] anim-flicker"
-                  }`}
-                />
-                <div className={`mt-2 w-px transition-all ${isLocked ? "h-24 bg-primary/60" : "h-12 bg-primary/30"}`} />
+                {/* Tactical target reticle — concentric rings + crosshair segments. */}
+                <div className={`relative transition-all duration-200 ${isLocked ? "scale-125" : "scale-100"}`}>
+                  {/* Outer ring */}
+                  <div className={`w-10 h-10 rounded-full border-2 ${isLocked ? "border-[hsl(var(--interactive))]" : "border-[hsl(var(--interactive)/0.55)] anim-flicker"}`} />
+                  {/* Inner ring */}
+                  <div className="absolute inset-1.5 rounded-full border border-[hsl(var(--interactive)/0.7)]" />
+                  {/* Center dot */}
+                  <div
+                    className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full ${
+                      isLocked
+                        ? "w-2 h-2 bg-[hsl(var(--interactive))] shadow-[0_0_18px_hsl(var(--interactive))]"
+                        : "w-1.5 h-1.5 bg-[hsl(var(--interactive)/0.9)] shadow-[0_0_10px_hsl(var(--interactive)/0.8)]"
+                    }`}
+                  />
+                  {/* Crosshair arms (N/S/E/W ticks) */}
+                  <div className="absolute left-1/2 -top-2 -translate-x-1/2 w-px h-2 bg-[hsl(var(--interactive)/0.8)]" />
+                  <div className="absolute left-1/2 -bottom-2 -translate-x-1/2 w-px h-2 bg-[hsl(var(--interactive)/0.8)]" />
+                  <div className="absolute top-1/2 -left-2 -translate-y-1/2 h-px w-2 bg-[hsl(var(--interactive)/0.8)]" />
+                  <div className="absolute top-1/2 -right-2 -translate-y-1/2 h-px w-2 bg-[hsl(var(--interactive)/0.8)]" />
+                </div>
+                <div className={`mt-2 w-px transition-all ${isLocked ? "h-24 bg-[hsl(var(--interactive)/0.6)]" : "h-12 bg-[hsl(var(--interactive)/0.3)]"}`} />
                 <div
                   className={`mt-2 mono uppercase whitespace-nowrap transition-all ${
                     isLocked
-                      ? "text-primary text-sm tracking-[0.32em]"
-                      : "text-primary/70 text-[0.6rem] tracking-[0.28em] group-hover:text-primary"
+                      ? "text-[hsl(var(--interactive))] text-sm tracking-[0.32em]"
+                      : "text-[hsl(var(--interactive)/0.75)] text-[0.6rem] tracking-[0.28em] group-hover:text-[hsl(var(--interactive))]"
                   }`}
-                  style={isLocked ? { textShadow: "0 0 18px hsl(var(--primary) / 0.7)" } : undefined}
+                  style={isLocked ? { textShadow: "0 0 18px hsl(var(--interactive) / 0.7)" } : undefined}
                 >
                   {z.index} · {z.label}
                 </div>
                 <div className={`mono text-[0.55rem] tracking-[0.28em] uppercase mt-1 transition-opacity ${
-                  isLocked ? "text-primary/80 opacity-100" : "text-muted-foreground opacity-0 group-hover:opacity-70"
+                  isLocked ? "text-[hsl(var(--interactive)/0.85)] opacity-100" : "text-muted-foreground opacity-0 group-hover:opacity-70"
                 }`}>
                   {z.sub}
                 </div>
