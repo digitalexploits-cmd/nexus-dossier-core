@@ -47,7 +47,7 @@ const THEMES: Record<BayTheme, ThemeTokens> = {
     overlayCool: "radial-gradient(ellipse at 82% 82%, rgba(90,150,220,0.26) 0%, transparent 52%)",
     ambient: "CALIBRATED",
     glassBorder: "rgba(120,215,205,0.42)",
-    glassBg: "rgba(22,52,58,0.78)",
+    glassBg: "rgba(16,30,52,0.82)",
   },
   // Capability Gallery — warm gold/amber, curated showroom.
   gallery: {
@@ -57,7 +57,7 @@ const THEMES: Record<BayTheme, ThemeTokens> = {
     overlayCool: "radial-gradient(ellipse at 82% 82%, rgba(160,120,80,0.22) 0%, transparent 55%)",
     ambient: "ON DISPLAY",
     glassBorder: "rgba(232,185,107,0.40)",
-    glassBg: "rgba(50,38,24,0.80)",
+    glassBg: "rgba(16,30,52,0.82)",
   },
   // Command & Control — amber/red tactical HUD, live and monitored.
   command: {
@@ -67,7 +67,7 @@ const THEMES: Record<BayTheme, ThemeTokens> = {
     overlayCool: "radial-gradient(ellipse at 82% 82%, rgba(120,180,255,0.22) 0%, transparent 52%)",
     ambient: "MONITORED · LIVE",
     glassBorder: "rgba(255,143,92,0.38)",
-    glassBg: "rgba(46,26,20,0.80)",
+    glassBg: "rgba(16,30,52,0.82)",
   },
 };
 
