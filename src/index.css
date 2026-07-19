@@ -219,6 +219,7 @@
   .anim-flicker { animation: flicker 6s infinite; }
   .anim-bay-enter { animation: bay-enter 620ms cubic-bezier(0.22,1,0.36,1) both; }
   .anim-swap-in  { animation: swap-in 460ms cubic-bezier(0.22,1,0.36,1) both; }
+  .anim-branch-sway { animation: branch-sway 8s ease-in-out infinite; }
   .rim-sweep { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
   .rim-sweep::before {
     content: ""; position: absolute; inset: 0;
