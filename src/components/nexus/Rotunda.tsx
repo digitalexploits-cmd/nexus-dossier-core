@@ -248,6 +248,15 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           onLoad={measure}
         />
 
+        {/* Subtle animated foreground branch layer */}
+        <img
+          src={branchAsset.url}
+          alt=""
+          className="absolute inset-0 block max-w-none h-[100dvh] md:h-[135dvh] w-auto pointer-events-none opacity-65 mix-blend-multiply anim-branch-sway"
+          draggable={false}
+          aria-hidden="true"
+        />
+
         <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_14%_38%,rgba(110,200,255,0.18)_0%,transparent_45%)]" />
         <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_86%_88%,rgba(255,180,100,0.16)_0%,transparent_52%)]" />
 
