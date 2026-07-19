@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => ({
       // Lovable CDN assets (/__l5e/...) are served by the platform in prod.
       // Proxy them in dev so <img> tags backed by .asset.json pointers resolve.
       "/__l5e": {
-        target: "https://nexus.aibase3.com",
+        target: "https://nexus-dossier-core.lovable.app",
         changeOrigin: true,
         secure: true,
       },
