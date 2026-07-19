@@ -512,7 +512,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
               <input
                 type="range" min={0} max={2.5} step={0.05}
                 value={windStrength}
-                onChange={(e) => setWindStrength(parseFloat(e.target.value))}
+                onChange={(e) => { setWindUserOverride(true); setWindStrength(parseFloat(e.target.value)); }}
                 className="w-full accent-primary"
               />
             </label>
@@ -523,24 +523,30 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
               <input
                 type="range" min={0.25} max={3} step={0.05}
                 value={windSpeed}
-                onChange={(e) => setWindSpeed(parseFloat(e.target.value))}
+                onChange={(e) => { setWindUserOverride(true); setWindSpeed(parseFloat(e.target.value)); }}
                 className="w-full accent-primary"
               />
             </label>
             <div className="flex gap-2 pt-1">
               <button
-                onClick={() => { setWindStrength(0.4); setWindSpeed(0.7); }}
+                onClick={() => { setWindUserOverride(true); setWindStrength(0.4); setWindSpeed(0.7); }}
                 className="flex-1 mono text-[0.55rem] tracking-[0.24em] uppercase text-primary/80 hover:text-primary border border-primary/40 px-2 py-1"
               >Calm</button>
               <button
-                onClick={() => { setWindStrength(1); setWindSpeed(1); }}
+                onClick={() => { setWindUserOverride(true); setWindStrength(1); setWindSpeed(1); }}
                 className="flex-1 mono text-[0.55rem] tracking-[0.24em] uppercase text-primary/80 hover:text-primary border border-primary/40 px-2 py-1"
               >Breeze</button>
               <button
-                onClick={() => { setWindStrength(2); setWindSpeed(1.8); }}
+                onClick={() => { setWindUserOverride(true); setWindStrength(2); setWindSpeed(1.8); }}
                 className="flex-1 mono text-[0.55rem] tracking-[0.24em] uppercase text-primary/80 hover:text-primary border border-primary/40 px-2 py-1"
               >Gust</button>
+              <button
+                onClick={() => setWindUserOverride(false)}
+                title="Sync to live St. Louis wind"
+                className="mono text-[0.55rem] tracking-[0.24em] uppercase text-primary/80 hover:text-primary border border-primary/40 px-2 py-1"
+              >Live</button>
             </div>
+
           </div>
         ) : (
           <button
