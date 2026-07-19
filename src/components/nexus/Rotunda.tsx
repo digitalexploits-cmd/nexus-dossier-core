@@ -5,15 +5,13 @@ import { prefersReducedMotion } from "@/lib/audio";
 import rotundaAsset from "@/assets/rotunda-hero.png.asset.json";
 import rotundaLoopAsset from "@/assets/rotunda-hero-loop.mp4.asset.json";
 import { MediaConsole } from "@/components/nexus/MediaConsole";
-import { FoliageOverlay } from "@/components/nexus/FoliageOverlay";
-import { SkyOverlay } from "@/components/nexus/SkyOverlay";
 import { useAdaptiveLighting } from "@/lib/adaptiveLighting";
 import { useStLouisWeather } from "@/lib/weather";
 
 const ROTUNDA_HERO = rotundaAsset.url;
 const ROTUNDA_LOOP = rotundaLoopAsset.url;
-// Slow the landing footage so it feels cinematic and extends its perceived length.
-const ROTUNDA_LOOP_RATE = 0.5;
+// Keep the live view moving at normal speed so it feels like a real window, not a screenshot.
+const ROTUNDA_LOOP_RATE = 1;
 
 
 interface Props {
@@ -252,12 +250,11 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
       onPointerCancel={endDrag}
       style={{ cursor: dragging ? "grabbing" : "grab", touchAction: "none" }}
     >
-      {/* WORLD — panorama scaled so height fills the viewport, width preserves aspect.
-          Mobile uses 100dvh (Arch-centered initial framing keeps stadium/river readable);
-          tablet/desktop uses 135dvh for a fuller first-person feel. */}
+      {/* WORLD — the video is the actual view through the rotunda windows.
+          Fill the viewport so it reads as a real scene rather than a framed screenshot. */}
       <div
         ref={worldRef}
-        className="absolute top-0 left-0 h-[210dvh] md:h-[250dvh] w-auto min-w-full"
+        className="absolute inset-0 h-full w-full"
         style={{
           transform: worldTransform,
           transition: worldTransition,
@@ -266,9 +263,8 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
       >
         <video
           src={ROTUNDA_LOOP}
-          poster={ROTUNDA_HERO}
-          className="block max-w-none h-[210dvh] md:h-[250dvh] w-auto min-w-full object-cover"
-          style={{ filter: `brightness(${lighting.sceneBrightness}) contrast(${lighting.sceneContrast}) saturate(1.10)` }}
+          className="block h-full w-full object-cover"
+          style={{ filter: `brightness(${lighting.sceneBrightness}) contrast(${lighting.sceneContrast}) saturate(1.05)` }}
           autoPlay
           muted
           loop
@@ -277,18 +273,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           ref={(el) => { if (el) { el.playbackRate = ROTUNDA_LOOP_RATE; el.play?.().catch(() => {}); } }}
           onLoadedMetadata={(e) => { (e.currentTarget as HTMLVideoElement).playbackRate = ROTUNDA_LOOP_RATE; measure(); }}
         />
-
-
-
-
-
-
       </div>
-
-      {/* CAMERA-FIXED OVERLAYS */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_72%,rgba(5,7,10,0.55)_100%)]" />
-      <div className="absolute inset-x-0 top-0 h-20 pointer-events-none bg-gradient-to-b from-background/50 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/70 to-transparent" />
 
       {/* Look arrows */}
       <button
