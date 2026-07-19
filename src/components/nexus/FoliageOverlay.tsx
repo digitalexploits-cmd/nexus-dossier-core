@@ -93,16 +93,20 @@ const Cluster = ({
 export const FoliageOverlay = ({
   strength = 1,
   speed = 1,
+  opacity = 0.92,
+  brightness = 1,
 }: {
   strength?: number;
   speed?: number;
+  opacity?: number;
+  brightness?: number;
 }) => (
-  <div className="absolute inset-0 pointer-events-none overflow-hidden z-[5]">
-    <Cluster className="-top-24 -left-16" size={360} swayClass="foliage-sway" delay="0s" leaves={6} strength={strength} speed={speed} />
-    <Cluster className="-top-20 -right-24" size={340} swayClass="foliage-sway-slow" delay="1.2s" leaves={6} strength={strength} speed={speed} />
-    <Cluster className="top-1/3 -left-20" size={240} swayClass="foliage-sway-slow" delay="0.6s" leaves={4} strength={strength} speed={speed} />
-    <Cluster className="top-1/2 -right-14" size={220} swayClass="foliage-sway" delay="1.8s" leaves={4} strength={strength} speed={speed} />
-    <Cluster className="-bottom-16 right-4" size={280} swayClass="foliage-sway-slow" delay="0.3s" leaves={5} strength={strength} speed={speed} />
-    <Cluster className="-bottom-20 left-6" size={260} swayClass="foliage-sway" delay="2.4s" leaves={5} strength={strength} speed={speed} />
+  <div
+    className="absolute inset-0 pointer-events-none overflow-hidden z-[5]"
+    style={{ opacity, filter: `brightness(${brightness})` }}
+  >
+    {/* Only outside-the-facility clusters — mid-height so they read through the windows. */}
+    <Cluster className="top-1/3 -left-20" size={240} swayClass="foliage-sway-slow" delay="0.6s" leaves={4} strength={strength} speed={speed} opacity={opacity} brightness={brightness} />
+    <Cluster className="top-1/2 -right-14" size={220} swayClass="foliage-sway" delay="1.8s" leaves={4} strength={strength} speed={speed} opacity={opacity} brightness={brightness} />
   </div>
 );
