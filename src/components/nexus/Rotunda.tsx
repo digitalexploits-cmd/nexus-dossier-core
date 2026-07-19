@@ -278,6 +278,17 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           onLoadedMetadata={(e) => { (e.currentTarget as HTMLVideoElement).playbackRate = ROTUNDA_LOOP_RATE; measure(); }}
         />
 
+        {/* Continuous outside-environment animation: drifting sky + swaying foliage */}
+        <SkyOverlay weather={weather} reduced={reduced} />
+        <FoliageOverlay
+          strength={windStrength}
+          speed={windSpeed}
+          opacity={lighting.foliageOpacity ?? 0.55}
+          brightness={lighting.foliageBrightness ?? 1}
+        />
+
+
+
 
 
 
