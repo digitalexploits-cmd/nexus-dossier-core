@@ -55,7 +55,7 @@ export const SkyOverlay = ({ weather, reduced }: Props) => {
 
   // Cloud pass opacity scales with cover — boosted so motion reads clearly
   // through the rotunda's windows against the baked-in sky.
-  const cloudOpacity = Math.min(0.95, 0.45 + weather.cloudCover * 0.55);
+  const cloudOpacity = Math.min(0.35, 0.10 + weather.cloudCover * 0.25);
   // Faster drift so the sky visibly moves (was up to 2 min per loop).
   const cloudDur = reduced ? 0 : Math.max(28, 70 - Math.min(40, weather.windMps * 3));
 
