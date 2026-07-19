@@ -257,7 +257,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           tablet/desktop uses 135dvh for a fuller first-person feel. */}
       <div
         ref={worldRef}
-        className="absolute top-0 left-0 h-[185dvh] md:h-[210dvh] w-auto min-w-full"
+        className="absolute top-0 left-0 h-[210dvh] md:h-[250dvh] w-auto min-w-full"
         style={{
           transform: worldTransform,
           transition: worldTransition,
@@ -267,7 +267,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         <video
           src={ROTUNDA_LOOP}
           poster={ROTUNDA_HERO}
-          className="block max-w-none h-[185dvh] md:h-[210dvh] w-auto min-w-full object-cover"
+          className="block max-w-none h-[210dvh] md:h-[250dvh] w-auto min-w-full object-cover"
           style={{ filter: `brightness(${lighting.sceneBrightness}) contrast(${lighting.sceneContrast}) saturate(1.10)` }}
           autoPlay
           muted
