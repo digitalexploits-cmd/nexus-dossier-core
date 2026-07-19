@@ -78,9 +78,10 @@ const Cluster = ({
                 top: `calc(50% + ${y}px - ${sz / 2}px)`,
                 animationDelay: `${(i * 0.4).toFixed(2)}s`,
                 animationDuration: `${leafDur}s`,
-                filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.45))",
-                opacity: 0.92,
+                filter: "drop-shadow(0 3px 6px rgba(0,0,0,0.25))",
+                opacity: 0.7,
                 ["--wind" as string]: strength.toString(),
+
               }}
             />
           );
@@ -93,7 +94,7 @@ const Cluster = ({
 export const FoliageOverlay = ({
   strength = 1,
   speed = 1,
-  opacity = 0.92,
+  opacity = 0.55,
   brightness = 1,
 }: {
   strength?: number;
@@ -106,7 +107,7 @@ export const FoliageOverlay = ({
     style={{ opacity, filter: `brightness(${brightness})` }}
   >
     {/* Only outside-the-facility clusters — mid-height so they read through the windows. */}
-    <Cluster className="top-1/3 -left-20" size={240} swayClass="foliage-sway-slow" delay="0.6s" leaves={4} strength={strength} speed={speed} opacity={opacity} brightness={brightness} />
-    <Cluster className="top-1/2 -right-14" size={220} swayClass="foliage-sway" delay="1.8s" leaves={4} strength={strength} speed={speed} opacity={opacity} brightness={brightness} />
+    <Cluster className="top-1/3 -left-20" size={200} swayClass="foliage-sway-slow" delay="0.6s" leaves={3} strength={strength} speed={speed} opacity={opacity} brightness={brightness} />
+    <Cluster className="top-1/2 -right-14" size={190} swayClass="foliage-sway" delay="1.8s" leaves={3} strength={strength} speed={speed} opacity={opacity} brightness={brightness} />
   </div>
 );

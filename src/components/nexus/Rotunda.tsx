@@ -278,21 +278,19 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         <FoliageOverlay
           strength={windStrength}
           speed={windSpeed}
-          opacity={lighting.foliageOpacity}
+          opacity={Math.min(lighting.foliageOpacity, 0.55)}
           brightness={lighting.foliageBrightness}
         />
 
         {/* Live St. Louis sky: drifting clouds, stars at night, rain streaks. */}
         <SkyOverlay weather={weather} reduced={reduced} />
 
-
-
-        {/* Wet-glass sheen when rain is active */}
+        {/* Wet-glass sheen — only during active rain, very subtle */}
         {(weather.condition === "rain" || weather.condition === "storm") && (
           <div
-            className="absolute inset-0 pointer-events-none mix-blend-screen z-[6]"
+            className="absolute inset-0 pointer-events-none mix-blend-soft-light z-[6]"
             style={{
-              opacity: 0.35,
+              opacity: 0.12,
               backgroundImage:
                 "radial-gradient(circle at 22% 18%, rgba(180,210,255,0.35) 0 2px, transparent 3px)," +
                 "radial-gradient(circle at 68% 42%, rgba(180,210,255,0.30) 0 2px, transparent 3px)," +
@@ -302,6 +300,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
             }}
           />
         )}
+
 
         <div
           className="absolute top-1/2 pointer-events-none"

@@ -16,17 +16,18 @@ type Props = {
 };
 
 const conditionTint = (w: WeatherProfile) => {
-  if (w.isNight) return "rgba(8,14,32,0.55)";
+  if (w.isNight) return "rgba(8,14,32,0.28)";
   switch (w.condition) {
-    case "clear":         return "rgba(120,190,255,0.18)";
-    case "partly-cloudy": return "rgba(150,190,225,0.22)";
-    case "overcast":      return "rgba(120,135,155,0.42)";
-    case "fog":           return "rgba(180,190,200,0.45)";
-    case "rain":          return "rgba(90,110,135,0.50)";
-    case "snow":          return "rgba(210,220,235,0.40)";
-    case "storm":         return "rgba(50,60,80,0.65)";
+    case "clear":         return "rgba(120,190,255,0.06)";
+    case "partly-cloudy": return "rgba(150,190,225,0.08)";
+    case "overcast":      return "rgba(120,135,155,0.18)";
+    case "fog":           return "rgba(180,190,200,0.20)";
+    case "rain":          return "rgba(90,110,135,0.22)";
+    case "snow":          return "rgba(210,220,235,0.18)";
+    case "storm":         return "rgba(50,60,80,0.30)";
   }
 };
+
 
 export const SkyOverlay = ({ weather, reduced }: Props) => {
   const stars = useMemo(() => {
@@ -54,37 +55,17 @@ export const SkyOverlay = ({ weather, reduced }: Props) => {
 
   // Cloud pass opacity scales with cover — boosted so motion reads clearly
   // through the rotunda's windows against the baked-in sky.
-  const cloudOpacity = Math.min(0.95, 0.45 + weather.cloudCover * 0.55);
+  const cloudOpacity = Math.min(0.35, 0.10 + weather.cloudCover * 0.25);
   // Faster drift so the sky visibly moves (was up to 2 min per loop).
   const cloudDur = reduced ? 0 : Math.max(28, 70 - Math.min(40, weather.windMps * 3));
 
-  // Sun/moon disk position — a subtle luminous body that anchors the sky.
-  const bodyLeft = weather.isNight ? 72 : 24;
-  const bodyTop = weather.isNight ? 18 : 24;
-  const bodyColor = weather.isNight
-    ? "rgba(220,230,255,0.55)"
-    : weather.condition === "overcast" || weather.condition === "fog"
-      ? "rgba(255,240,215,0.35)"
-      : "rgba(255,225,175,0.75)";
-
   return (
     <div
-      className="absolute inset-x-0 top-0 h-[58%] pointer-events-none overflow-hidden mix-blend-screen z-[4]"
+      className="absolute inset-x-0 top-0 h-[38%] pointer-events-none overflow-hidden mix-blend-soft-light z-[4]"
       style={{ background: conditionTint(weather) }}
       aria-hidden
     >
-      {/* Sun / moon disk */}
-      <div
-        className="absolute rounded-full"
-        style={{
-          left: `${bodyLeft}%`,
-          top: `${bodyTop}%`,
-          width: weather.isNight ? 70 : 110,
-          height: weather.isNight ? 70 : 110,
-          background: `radial-gradient(circle, ${bodyColor} 0%, transparent 70%)`,
-          filter: "blur(2px)",
-        }}
-      />
+
 
       {/* Cloud layers (two, opposing speeds) */}
       {!reduced && (
