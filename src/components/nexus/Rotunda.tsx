@@ -102,6 +102,14 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   headingRef.current = heading;
   headingVRef.current = headingV;
 
+  // Sync foliage sway with live St. Louis wind unless the user tuned it.
+  useEffect(() => {
+    if (windUserOverride || !weather.ok) return;
+    setWindStrength(weather.windScale);
+    setWindSpeed(Math.max(0.4, Math.min(2.2, 0.6 + weather.windMps * 0.12)));
+  }, [weather.windScale, weather.windMps, weather.ok, windUserOverride]);
+
+
   const lockedZone = useMemo(() => {
     let best: { z: Zone; d: number } | null = null;
     for (const z of ZONES) {
