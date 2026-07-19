@@ -5,6 +5,7 @@ import { prefersReducedMotion } from "@/lib/audio";
 import rotundaAsset from "@/assets/rotunda-hero.png.asset.json";
 import { MediaConsole } from "@/components/nexus/MediaConsole";
 import { FoliageOverlay } from "@/components/nexus/FoliageOverlay";
+import { useAdaptiveLighting } from "@/lib/adaptiveLighting";
 
 const ROTUNDA_HERO = rotundaAsset.url;
 
@@ -41,6 +42,7 @@ const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 
 export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   const reduced = prefersReducedMotion();
+  const lighting = useAdaptiveLighting();
 
   // ---------- Reduced-motion fallback ----------
   if (reduced) {
@@ -246,7 +248,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           src={ROTUNDA_HERO}
           alt="Nexus rotunda panorama"
           className="block max-w-none h-[100dvh] md:h-[135dvh] w-auto"
-          style={{ filter: "brightness(1.08) contrast(1.06) saturate(1.10)" }}
+          style={{ filter: `brightness(${lighting.sceneBrightness}) contrast(${lighting.sceneContrast}) saturate(1.10)` }}
           draggable={false}
           onLoad={measure}
         />
@@ -256,8 +258,13 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
         <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.18)_0%,transparent_65%)]" />
 
-        {/* Animated foliage — trees/leaves gently sway around the panorama */}
-        <FoliageOverlay strength={windStrength} speed={windSpeed} />
+        {/* Animated foliage — trees/leaves gently sway outside the windows */}
+        <FoliageOverlay
+          strength={windStrength}
+          speed={windSpeed}
+          opacity={lighting.foliageOpacity}
+          brightness={lighting.foliageBrightness}
+        />
 
         {/* Synthetic Vault doorway */}
         <div
