@@ -2,16 +2,16 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { BRAND, type BayId } from "@/data/content";
 import { prefersReducedMotion } from "@/lib/audio";
-import rotundaAsset from "@/assets/rotunda-hero.png.asset.json";
-import rotundaLoopAsset from "@/assets/rotunda-hero-loop.mp4.asset.json";
+import rotundaHero from "@/assets/rotunda-hero-cropped.png";
+import rotundaLoop from "@/assets/rotunda-hero-loop-cropped.mp4";
 import { MediaConsole } from "@/components/nexus/MediaConsole";
 import { FoliageOverlay } from "@/components/nexus/FoliageOverlay";
 import { SkyOverlay } from "@/components/nexus/SkyOverlay";
 import { useAdaptiveLighting } from "@/lib/adaptiveLighting";
 import { useStLouisWeather } from "@/lib/weather";
 
-const ROTUNDA_HERO = rotundaAsset.url;
-const ROTUNDA_LOOP = rotundaLoopAsset.url;
+const ROTUNDA_HERO = rotundaHero;
+const ROTUNDA_LOOP = rotundaLoop;
 // Slow the landing footage so it feels cinematic and extends its perceived length.
 const ROTUNDA_LOOP_RATE = 0.5;
 
