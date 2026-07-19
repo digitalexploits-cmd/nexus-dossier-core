@@ -89,6 +89,14 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   headingRef.current = heading;
   headingVRef.current = headingV;
 
+  // Weather-driven foliage sway. Baseline stays obvious even in calm air;
+  // higher wind → wider swing and quicker cadence. Storms add extra motion.
+  const weather = useWeather();
+  const windMph = weather?.windMph ?? 0;
+  const stormy = weather ? [61,63,65,80,81,82,95,96,99,71,73,75].includes(weather.code) : false;
+  const swayAmp = Math.min(9, 3 + windMph * 0.35 + (stormy ? 1.5 : 0)).toFixed(2);
+  const swayDur = Math.max(1.8, 4.2 - windMph * 0.11 - (stormy ? 0.4 : 0)).toFixed(2);
+
   const lockedZone = useMemo(() => {
     let best: { z: Zone; d: number } | null = null;
     for (const z of ZONES) {
