@@ -1,5 +1,6 @@
 import { BRAND } from "@/data/content";
 import { useEffect, useMemo, useState } from "react";
+import { Cloud, CloudDrizzle, CloudFog, CloudLightning, CloudRain, CloudSnow, Sun } from "lucide-react";
 
 const WEATHER_CODES: Record<number, string> = {
   0: "Clear", 1: "Clear", 2: "Partly Cloudy", 3: "Cloudy",
