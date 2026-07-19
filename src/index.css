@@ -251,7 +251,7 @@
     transform: translateY(-1px);
   }
   @media (prefers-reduced-motion: reduce) {
-    .anim-bay-enter, .anim-swap-in { animation: none !important; }
+    .anim-bay-enter, .anim-swap-in, .anim-branch-sway { animation: none !important; }
     .bay-hover-glow { transition: none !important; }
     .bay-hover-glow:hover { transform: none !important; }
   }
