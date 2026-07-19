@@ -59,33 +59,13 @@ export const SkyOverlay = ({ weather, reduced }: Props) => {
   // Faster drift so the sky visibly moves (was up to 2 min per loop).
   const cloudDur = reduced ? 0 : Math.max(28, 70 - Math.min(40, weather.windMps * 3));
 
-  // Sun/moon disk position — a subtle luminous body that anchors the sky.
-  const bodyLeft = weather.isNight ? 72 : 24;
-  const bodyTop = weather.isNight ? 18 : 24;
-  const bodyColor = weather.isNight
-    ? "rgba(220,230,255,0.55)"
-    : weather.condition === "overcast" || weather.condition === "fog"
-      ? "rgba(255,240,215,0.35)"
-      : "rgba(255,225,175,0.75)";
-
   return (
     <div
-      className="absolute inset-x-0 top-0 h-[58%] pointer-events-none overflow-hidden mix-blend-screen z-[4]"
+      className="absolute inset-x-0 top-0 h-[38%] pointer-events-none overflow-hidden mix-blend-soft-light z-[4]"
       style={{ background: conditionTint(weather) }}
       aria-hidden
     >
-      {/* Sun / moon disk */}
-      <div
-        className="absolute rounded-full"
-        style={{
-          left: `${bodyLeft}%`,
-          top: `${bodyTop}%`,
-          width: weather.isNight ? 70 : 110,
-          height: weather.isNight ? 70 : 110,
-          background: `radial-gradient(circle, ${bodyColor} 0%, transparent 70%)`,
-          filter: "blur(2px)",
-        }}
-      />
+
 
       {/* Cloud layers (two, opposing speeds) */}
       {!reduced && (
