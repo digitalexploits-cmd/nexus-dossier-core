@@ -2,6 +2,9 @@
  * Decorative animated foliage overlay for the rotunda hero.
  * SVG leaf clusters positioned around the panorama frame that gently
  * sway to suggest the facility is tucked into the trees.
+ *
+ * Wind strength (0..2) scales sway amplitude; speed (0.25..3) scales
+ * animation duration inversely (higher = faster).
  */
 const Leaf = ({ className = "", style }: { className?: string; style?: React.CSSProperties }) => (
   <svg viewBox="0 0 64 64" className={className} style={style} aria-hidden>
@@ -25,17 +28,35 @@ const Cluster = ({
   swayClass = "foliage-sway",
   delay = "0s",
   leaves = 5,
+  strength = 1,
+  speed = 1,
 }: {
   className: string;
   size?: number;
   swayClass?: "foliage-sway" | "foliage-sway-slow";
   delay?: string;
   leaves?: number;
+  strength?: number;
+  speed?: number;
 }) => {
   const arr = Array.from({ length: leaves });
+  const baseDur = swayClass === "foliage-sway" ? 5.5 : 8;
+  const dur = (baseDur / Math.max(0.05, speed)).toFixed(2);
+  const leafDur = (3.8 / Math.max(0.05, speed)).toFixed(2);
   return (
     <div className={`absolute pointer-events-none ${className}`} style={{ width: size, height: size }}>
-      <div className={swayClass} style={{ animationDelay: delay, width: "100%", height: "100%", position: "relative" }}>
+      <div
+        className={swayClass}
+        style={{
+          animationDelay: delay,
+          animationDuration: `${dur}s`,
+          width: "100%",
+          height: "100%",
+          position: "relative",
+          // CSS variable read by the keyframes to scale amplitude
+          ["--wind" as string]: strength.toString(),
+        }}
+      >
         {arr.map((_, i) => {
           const angle = (i / leaves) * 140 - 70;
           const dist = size * 0.28;
@@ -52,8 +73,10 @@ const Cluster = ({
                 left: `calc(50% + ${x}px - ${sz / 2}px)`,
                 top: `calc(50% + ${y}px - ${sz / 2}px)`,
                 animationDelay: `${(i * 0.4).toFixed(2)}s`,
+                animationDuration: `${leafDur}s`,
                 filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.45))",
                 opacity: 0.92,
+                ["--wind" as string]: strength.toString(),
               }}
             />
           );
@@ -63,19 +86,19 @@ const Cluster = ({
   );
 };
 
-export const FoliageOverlay = () => (
+export const FoliageOverlay = ({
+  strength = 1,
+  speed = 1,
+}: {
+  strength?: number;
+  speed?: number;
+}) => (
   <div className="absolute inset-0 pointer-events-none overflow-hidden z-[5]">
-    {/* Top-left canopy */}
-    <Cluster className="-top-24 -left-16" size={360} swayClass="foliage-sway" delay="0s" leaves={6} />
-    {/* Top-right canopy */}
-    <Cluster className="-top-20 -right-24" size={340} swayClass="foliage-sway-slow" delay="1.2s" leaves={6} />
-    {/* Mid-left branch */}
-    <Cluster className="top-1/3 -left-20" size={240} swayClass="foliage-sway-slow" delay="0.6s" leaves={4} />
-    {/* Mid-right branch */}
-    <Cluster className="top-1/2 -right-14" size={220} swayClass="foliage-sway" delay="1.8s" leaves={4} />
-    {/* Lower right bush */}
-    <Cluster className="-bottom-16 right-4" size={280} swayClass="foliage-sway-slow" delay="0.3s" leaves={5} />
-    {/* Lower left bush */}
-    <Cluster className="-bottom-20 left-6" size={260} swayClass="foliage-sway" delay="2.4s" leaves={5} />
+    <Cluster className="-top-24 -left-16" size={360} swayClass="foliage-sway" delay="0s" leaves={6} strength={strength} speed={speed} />
+    <Cluster className="-top-20 -right-24" size={340} swayClass="foliage-sway-slow" delay="1.2s" leaves={6} strength={strength} speed={speed} />
+    <Cluster className="top-1/3 -left-20" size={240} swayClass="foliage-sway-slow" delay="0.6s" leaves={4} strength={strength} speed={speed} />
+    <Cluster className="top-1/2 -right-14" size={220} swayClass="foliage-sway" delay="1.8s" leaves={4} strength={strength} speed={speed} />
+    <Cluster className="-bottom-16 right-4" size={280} swayClass="foliage-sway-slow" delay="0.3s" leaves={5} strength={strength} speed={speed} />
+    <Cluster className="-bottom-20 left-6" size={260} swayClass="foliage-sway" delay="2.4s" leaves={5} strength={strength} speed={speed} />
   </div>
 );
