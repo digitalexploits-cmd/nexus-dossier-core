@@ -4,6 +4,7 @@ import { BRAND, type BayId } from "@/data/content";
 import { prefersReducedMotion } from "@/lib/audio";
 import rotundaAsset from "@/assets/rotunda-hero.png.asset.json";
 import { MediaConsole } from "@/components/nexus/MediaConsole";
+import { FoliageOverlay } from "@/components/nexus/FoliageOverlay";
 
 const ROTUNDA_HERO = rotundaAsset.url;
 
