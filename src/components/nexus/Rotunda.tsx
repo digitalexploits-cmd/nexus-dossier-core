@@ -285,10 +285,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         {/* Live St. Louis sky: drifting clouds, stars at night, rain streaks. */}
         <SkyOverlay weather={weather} reduced={reduced} />
 
-        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_14%_38%,rgba(110,200,255,0.18)_0%,transparent_45%)]" />
-        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_86%_88%,rgba(255,180,100,0.16)_0%,transparent_52%)]" />
 
-        <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.18)_0%,transparent_65%)]" />
 
         {/* Wet-glass sheen when rain is active */}
         {(weather.condition === "rain" || weather.condition === "storm") && (
