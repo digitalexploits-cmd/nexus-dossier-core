@@ -4,6 +4,7 @@ import { BRAND, type BayId } from "@/data/content";
 import { prefersReducedMotion } from "@/lib/audio";
 import rotundaAsset from "@/assets/rotunda-hero.png.asset.json";
 import { MediaConsole } from "@/components/nexus/MediaConsole";
+import { FoliageOverlay } from "@/components/nexus/FoliageOverlay";
 
 const ROTUNDA_HERO = rotundaAsset.url;
 
@@ -251,6 +252,9 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_86%_88%,rgba(255,180,100,0.16)_0%,transparent_52%)]" />
 
         <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.18)_0%,transparent_65%)]" />
+
+        {/* Animated foliage — trees/leaves gently sway around the panorama */}
+        <FoliageOverlay />
 
         {/* Synthetic Vault doorway */}
         <div
