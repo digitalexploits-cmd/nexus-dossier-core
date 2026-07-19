@@ -351,14 +351,14 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
             <button
               onClick={() => setMediaConsoleOpen(true)}
-              title="Media"
+              aria-label="Media"
               className="shrink-0 w-8 h-8 flex items-center justify-center text-primary/90 hover:text-primary border border-primary/40 hover:border-primary/70 bg-transparent hover:bg-primary/10"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" /><line x1="7" y1="2" x2="7" y2="22" /><line x1="17" y1="2" x2="17" y2="22" /><line x1="2" y1="12" x2="22" y2="12" /><line x1="2" y1="7" x2="7" y2="7" /><line x1="2" y1="17" x2="7" y2="17" /><line x1="17" y1="17" x2="22" y2="17" /><line x1="17" y1="7" x2="22" y2="7" /></svg>
             </button>
             <button
               onClick={onOpenVault}
-              title="Vault"
+              aria-label="Vault"
               className="shrink-0 w-8 h-8 flex items-center justify-center text-primary/90 hover:text-primary border border-primary/40 hover:border-primary/70 bg-transparent hover:bg-primary/10"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" /></svg>
