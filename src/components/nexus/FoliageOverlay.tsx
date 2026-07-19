@@ -30,6 +30,8 @@ const Cluster = ({
   leaves = 5,
   strength = 1,
   speed = 1,
+  opacity = 0.92,
+  brightness = 1,
 }: {
   className: string;
   size?: number;
@@ -38,6 +40,8 @@ const Cluster = ({
   leaves?: number;
   strength?: number;
   speed?: number;
+  opacity?: number;
+  brightness?: number;
 }) => {
   const arr = Array.from({ length: leaves });
   const baseDur = swayClass === "foliage-sway" ? 5.5 : 8;
