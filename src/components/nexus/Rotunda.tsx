@@ -300,8 +300,9 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_72%,rgba(5,7,10,0.55)_100%)]" />
       <div className="absolute inset-x-0 top-0 h-20 pointer-events-none bg-gradient-to-b from-background/50 to-transparent" />
 
-      {/* Kiosk mask: hides the baked-in video kiosk below its white line. */}
-      <div className="absolute inset-x-0 bottom-0 h-[14%] pointer-events-none bg-gradient-to-t from-[#05070a] via-[#05070a]/80 to-transparent" />
+      {/* Kiosk mask: fully hides the baked-in video kiosk text and icons. */}
+      <div className="absolute inset-x-0 bottom-0 h-[32%] pointer-events-none bg-[#05070a]" />
+      <div className="absolute inset-x-0 bottom-[32%] h-[10%] pointer-events-none bg-gradient-to-t from-[#05070a] to-transparent" />
 
       {/* Look arrows */}
       <button
