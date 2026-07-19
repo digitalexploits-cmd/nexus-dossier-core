@@ -5,8 +5,6 @@ import { prefersReducedMotion } from "@/lib/audio";
 import rotundaAsset from "@/assets/rotunda-hero.png.asset.json";
 import rotundaLoopAsset from "@/assets/rotunda-hero-loop.mp4.asset.json";
 import { MediaConsole } from "@/components/nexus/MediaConsole";
-import { FoliageOverlay } from "@/components/nexus/FoliageOverlay";
-import { SkyOverlay } from "@/components/nexus/SkyOverlay";
 import { useAdaptiveLighting } from "@/lib/adaptiveLighting";
 import { useStLouisWeather } from "@/lib/weather";
 
