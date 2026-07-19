@@ -275,9 +275,6 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         />
       </div>
 
-      {/* Subtle glass-edge reflection so the window frame still reads as rotunda glass. */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_80%,rgba(5,7,10,0.25)_100%)]" />
-
       {/* Look arrows */}
       <button
         onPointerDown={(e) => e.stopPropagation()}
