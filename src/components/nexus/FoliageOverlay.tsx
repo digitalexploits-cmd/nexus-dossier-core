@@ -78,9 +78,10 @@ const Cluster = ({
                 top: `calc(50% + ${y}px - ${sz / 2}px)`,
                 animationDelay: `${(i * 0.4).toFixed(2)}s`,
                 animationDuration: `${leafDur}s`,
-                filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.45))",
-                opacity: 0.92,
+                filter: "drop-shadow(0 3px 6px rgba(0,0,0,0.25))",
+                opacity: 0.7,
                 ["--wind" as string]: strength.toString(),
+
               }}
             />
           );
