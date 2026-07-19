@@ -52,16 +52,40 @@ export const SkyOverlay = ({ weather, reduced }: Props) => {
     }));
   }, [weather.condition]);
 
-  // Cloud pass opacity scales with cover.
-  const cloudOpacity = 0.15 + weather.cloudCover * 0.55;
-  const cloudDur = reduced ? 0 : 120 - Math.min(60, weather.windMps * 4);
+  // Cloud pass opacity scales with cover — boosted so motion reads clearly
+  // through the rotunda's windows against the baked-in sky.
+  const cloudOpacity = Math.min(0.95, 0.45 + weather.cloudCover * 0.55);
+  // Faster drift so the sky visibly moves (was up to 2 min per loop).
+  const cloudDur = reduced ? 0 : Math.max(28, 70 - Math.min(40, weather.windMps * 3));
+
+  // Sun/moon disk position — a subtle luminous body that anchors the sky.
+  const bodyLeft = weather.isNight ? 72 : 24;
+  const bodyTop = weather.isNight ? 18 : 24;
+  const bodyColor = weather.isNight
+    ? "rgba(220,230,255,0.55)"
+    : weather.condition === "overcast" || weather.condition === "fog"
+      ? "rgba(255,240,215,0.35)"
+      : "rgba(255,225,175,0.75)";
 
   return (
     <div
-      className="absolute inset-x-0 top-0 h-[62%] pointer-events-none overflow-hidden mix-blend-screen z-[4]"
+      className="absolute inset-x-0 top-0 h-[58%] pointer-events-none overflow-hidden mix-blend-screen z-[4]"
       style={{ background: conditionTint(weather) }}
       aria-hidden
     >
+      {/* Sun / moon disk */}
+      <div
+        className="absolute rounded-full"
+        style={{
+          left: `${bodyLeft}%`,
+          top: `${bodyTop}%`,
+          width: weather.isNight ? 70 : 110,
+          height: weather.isNight ? 70 : 110,
+          background: `radial-gradient(circle, ${bodyColor} 0%, transparent 70%)`,
+          filter: "blur(2px)",
+        }}
+      />
+
       {/* Cloud layers (two, opposing speeds) */}
       {!reduced && (
         <>
@@ -70,9 +94,10 @@ export const SkyOverlay = ({ weather, reduced }: Props) => {
             style={{
               opacity: cloudOpacity,
               backgroundImage:
-                "radial-gradient(ellipse 260px 90px at 20% 30%, rgba(255,255,255,0.55), transparent 60%)," +
-                "radial-gradient(ellipse 340px 110px at 60% 20%, rgba(255,255,255,0.45), transparent 65%)," +
-                "radial-gradient(ellipse 220px 70px at 85% 45%, rgba(255,255,255,0.5), transparent 65%)",
+                "radial-gradient(ellipse 320px 110px at 18% 28%, rgba(255,255,255,0.85), transparent 62%)," +
+                "radial-gradient(ellipse 420px 140px at 58% 18%, rgba(255,255,255,0.78), transparent 66%)," +
+                "radial-gradient(ellipse 280px 90px at 86% 42%, rgba(255,255,255,0.82), transparent 66%)," +
+                "radial-gradient(ellipse 360px 120px at 42% 62%, rgba(255,255,255,0.7), transparent 66%)",
               backgroundSize: "1600px 100%",
               backgroundRepeat: "repeat-x",
               animation: `sky-drift ${cloudDur}s linear infinite`,
@@ -81,13 +106,14 @@ export const SkyOverlay = ({ weather, reduced }: Props) => {
           <div
             className="absolute inset-0"
             style={{
-              opacity: cloudOpacity * 0.7,
+              opacity: cloudOpacity * 0.85,
               backgroundImage:
-                "radial-gradient(ellipse 380px 120px at 35% 55%, rgba(255,255,255,0.42), transparent 65%)," +
-                "radial-gradient(ellipse 260px 80px at 75% 65%, rgba(255,255,255,0.38), transparent 65%)",
+                "radial-gradient(ellipse 460px 150px at 28% 48%, rgba(255,255,255,0.72), transparent 66%)," +
+                "radial-gradient(ellipse 320px 100px at 72% 62%, rgba(255,255,255,0.66), transparent 66%)," +
+                "radial-gradient(ellipse 260px 80px at 8% 72%, rgba(255,255,255,0.6), transparent 66%)",
               backgroundSize: "1800px 100%",
               backgroundRepeat: "repeat-x",
-              animation: `sky-drift-rev ${cloudDur * 1.4}s linear infinite`,
+              animation: `sky-drift-rev ${cloudDur * 1.5}s linear infinite`,
             }}
           />
         </>
