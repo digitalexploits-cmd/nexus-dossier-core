@@ -2,25 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@keyframes foliage-sway-a {
-  0%, 100% { transform: rotate(calc(var(--sway-amp, 3deg) * -1)) translateY(0); }
-  50%      { transform: rotate(var(--sway-amp, 3deg))            translateY(-3px); }
-}
-@keyframes foliage-sway-b {
-  0%, 100% { transform: rotate(var(--sway-amp, 3deg))            translateY(0); }
-  50%      { transform: rotate(calc(var(--sway-amp, 3deg) * -1)) translateY(-4px); }
-}
-@keyframes foliage-sway-c {
-  0%, 100% { transform: rotate(calc(var(--sway-amp, 3deg) * -0.7)) translateX(0); }
-  50%      { transform: rotate(calc(var(--sway-amp, 3deg) *  0.9)) translateX(3px); }
-}
-.foliage-sway-a { animation: foliage-sway-a var(--sway-dur, 3.6s) ease-in-out infinite; transform-origin: 50% 100%; transform-box: fill-box; }
-.foliage-sway-b { animation: foliage-sway-b calc(var(--sway-dur, 3.6s) * 1.25) ease-in-out infinite; transform-origin: 50% 100%; transform-box: fill-box; }
-.foliage-sway-c { animation: foliage-sway-c calc(var(--sway-dur, 3.6s) * 1.05) ease-in-out infinite; transform-origin: 50% 100%; transform-box: fill-box; }
-@media (prefers-reduced-motion: reduce) {
-  .foliage-sway-a, .foliage-sway-b, .foliage-sway-c { animation: none; }
-}
-
 /* ============================================================
    Nexus — AI Base³ Solutions LLC
    Design system. All colors HSL. Semantic tokens only.

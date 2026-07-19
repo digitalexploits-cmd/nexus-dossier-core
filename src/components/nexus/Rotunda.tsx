@@ -4,7 +4,6 @@ import { BRAND, type BayId } from "@/data/content";
 import { prefersReducedMotion } from "@/lib/audio";
 import rotundaAsset from "@/assets/rotunda-hero.png.asset.json";
 import { MediaConsole } from "@/components/nexus/MediaConsole";
-import { useWeather } from "@/hooks/useWeather";
 
 const ROTUNDA_HERO = rotundaAsset.url;
 
@@ -88,14 +87,6 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   const headingVRef = useRef(headingV);
   headingRef.current = heading;
   headingVRef.current = headingV;
-
-  // Weather-driven foliage sway. Baseline stays obvious even in calm air;
-  // higher wind → wider swing and quicker cadence. Storms add extra motion.
-  const weather = useWeather();
-  const windMph = weather?.windMph ?? 0;
-  const stormy = weather ? [61,63,65,80,81,82,95,96,99,71,73,75].includes(weather.code) : false;
-  const swayAmp = Math.min(9, 3 + windMph * 0.35 + (stormy ? 1.5 : 0)).toFixed(2);
-  const swayDur = Math.max(1.8, 4.2 - windMph * 0.11 - (stormy ? 0.4 : 0)).toFixed(2);
 
   const lockedZone = useMemo(() => {
     let best: { z: Zone; d: number } | null = null;
@@ -315,74 +306,6 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
             </button>
           );
         })}
-
-        {/* Mid-distance foliage at the base of the Arch — animated, weather-driven.
-            Sits behind the handrail, past the yard, so it looks like the real
-            tree line in the hero image is swaying with the current wind. */}
-        <div
-          className="absolute inset-x-0 pointer-events-none overflow-visible mix-blend-screen opacity-90"
-          style={{
-            top: "55%",
-            height: "18%",
-            ["--sway-amp" as any]: `${swayAmp}deg`,
-            ["--sway-dur" as any]: `${swayDur}s`,
-          }}
-          aria-hidden="true"
-        >
-          <svg viewBox="0 0 1600 300" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 w-full h-full">
-            <defs>
-              <radialGradient id="leafGradA" cx="50%" cy="55%" r="60%">
-                <stop offset="0%"  stopColor="#2f6a35" stopOpacity="0.95" />
-                <stop offset="70%" stopColor="#1c4522" stopOpacity="0.9" />
-                <stop offset="100%" stopColor="#0d2513" stopOpacity="0.7" />
-              </radialGradient>
-              <radialGradient id="leafGradB" cx="50%" cy="50%" r="65%">
-                <stop offset="0%"  stopColor="#3d7a3f" stopOpacity="0.95" />
-                <stop offset="100%" stopColor="#12321a" stopOpacity="0.7" />
-              </radialGradient>
-            </defs>
-
-            {/* Left tree cluster (left of Arch base) */}
-            <g className="foliage-sway-a">
-              <ellipse cx="180" cy="200" rx="140" ry="70" fill="url(#leafGradA)" />
-              <circle  cx="120" cy="180" r="55" fill="url(#leafGradA)" />
-              <circle  cx="230" cy="170" r="60" fill="url(#leafGradB)" />
-              <circle  cx="310" cy="195" r="48" fill="url(#leafGradA)" />
-            </g>
-
-            {/* Center-left cluster (between facility and Arch left leg) */}
-            <g className="foliage-sway-b">
-              <ellipse cx="500" cy="215" rx="120" ry="55" fill="url(#leafGradA)" />
-              <circle  cx="460" cy="195" r="46" fill="url(#leafGradB)" />
-              <circle  cx="540" cy="185" r="50" fill="url(#leafGradA)" />
-              <circle  cx="610" cy="205" r="40" fill="url(#leafGradB)" />
-            </g>
-
-            {/* Under-Arch cluster (base of Arch, between legs) */}
-            <g className="foliage-sway-c">
-              <ellipse cx="800" cy="225" rx="130" ry="50" fill="url(#leafGradA)" />
-              <circle  cx="740" cy="205" r="42" fill="url(#leafGradB)" />
-              <circle  cx="820" cy="195" r="48" fill="url(#leafGradA)" />
-              <circle  cx="890" cy="210" r="40" fill="url(#leafGradB)" />
-            </g>
-
-            {/* Right-of-Arch cluster */}
-            <g className="foliage-sway-b">
-              <ellipse cx="1080" cy="215" rx="120" ry="55" fill="url(#leafGradA)" />
-              <circle  cx="1030" cy="195" r="46" fill="url(#leafGradB)" />
-              <circle  cx="1110" cy="185" r="52" fill="url(#leafGradA)" />
-              <circle  cx="1180" cy="205" r="40" fill="url(#leafGradB)" />
-            </g>
-
-            {/* Far-right cluster */}
-            <g className="foliage-sway-a">
-              <ellipse cx="1400" cy="205" rx="150" ry="65" fill="url(#leafGradA)" />
-              <circle  cx="1340" cy="180" r="55" fill="url(#leafGradB)" />
-              <circle  cx="1450" cy="170" r="60" fill="url(#leafGradA)" />
-              <circle  cx="1530" cy="195" r="48" fill="url(#leafGradB)" />
-            </g>
-          </svg>
-        </div>
       </div>
 
       {/* CAMERA-FIXED OVERLAYS */}
