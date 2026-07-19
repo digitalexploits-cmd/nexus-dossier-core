@@ -3,7 +3,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BRAND, type BayId } from "@/data/content";
 import { prefersReducedMotion } from "@/lib/audio";
 import rotundaAsset from "@/assets/rotunda-hero.png.asset.json";
-import rotundaLoopAsset from "@/assets/rotunda-hero-loop.mp4.asset.json";
 import { MediaConsole } from "@/components/nexus/MediaConsole";
 import { FoliageOverlay } from "@/components/nexus/FoliageOverlay";
 import { SkyOverlay } from "@/components/nexus/SkyOverlay";
@@ -11,9 +10,6 @@ import { useAdaptiveLighting } from "@/lib/adaptiveLighting";
 import { useStLouisWeather } from "@/lib/weather";
 
 const ROTUNDA_HERO = rotundaAsset.url;
-const ROTUNDA_LOOP = rotundaLoopAsset.url;
-// Slow the landing footage so it feels cinematic and extends its perceived length.
-const ROTUNDA_LOOP_RATE = 0.5;
 
 
 interface Props {
@@ -252,139 +248,340 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
       onPointerCancel={endDrag}
       style={{ cursor: dragging ? "grabbing" : "grab", touchAction: "none" }}
     >
-      {/* WORLD — panorama sized to the viewport height. Video uses object-top so
-          everything below the kiosk's white line is cropped out entirely (no
-          scroll-down black void). Only horizontal panning is meaningful. */}
+      {/* WORLD — panorama scaled so height fills the viewport, width preserves aspect.
+          Mobile uses 100dvh (Arch-centered initial framing keeps stadium/river readable);
+          tablet/desktop uses 135dvh for a fuller first-person feel. */}
       <div
         ref={worldRef}
-        className="absolute top-0 left-0 h-[100dvh] w-auto min-w-full overflow-hidden"
+        className="absolute top-0 left-0 h-[100dvh] md:h-[135dvh] w-auto"
         style={{
           transform: worldTransform,
           transition: worldTransition,
           willChange: "transform",
         }}
       >
-        <video
-          src={ROTUNDA_LOOP}
-          poster={ROTUNDA_HERO}
-          className="block max-w-none h-[125dvh] w-auto min-w-full"
-          style={{
-            filter: `brightness(${lighting.sceneBrightness}) contrast(${lighting.sceneContrast}) saturate(1.10)`,
-          }}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          ref={(el) => { if (el) { el.playbackRate = ROTUNDA_LOOP_RATE; el.play?.().catch(() => {}); } }}
-          onLoadedMetadata={(e) => { (e.currentTarget as HTMLVideoElement).playbackRate = ROTUNDA_LOOP_RATE; measure(); }}
+        <img
+          src={ROTUNDA_HERO}
+          alt="Nexus rotunda panorama"
+          className="block max-w-none h-[100dvh] md:h-[135dvh] w-auto"
+          style={{ filter: `brightness(${lighting.sceneBrightness}) contrast(${lighting.sceneContrast}) saturate(1.10)` }}
+          draggable={false}
+          onLoad={measure}
         />
 
-        {/* Continuous outside-environment animation: drifting sky + swaying foliage */}
-        <SkyOverlay weather={weather} reduced={reduced} />
+        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_14%_38%,rgba(110,200,255,0.18)_0%,transparent_45%)]" />
+        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_86%_88%,rgba(255,180,100,0.16)_0%,transparent_52%)]" />
+
+        <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.18)_0%,transparent_65%)]" />
+
+        {/* Animated foliage — trees/leaves gently sway outside the windows */}
         <FoliageOverlay
           strength={windStrength}
           speed={windSpeed}
-          opacity={lighting.foliageOpacity ?? 0.55}
-          brightness={lighting.foliageBrightness ?? 1}
+          opacity={Math.min(lighting.foliageOpacity, 0.55)}
+          brightness={lighting.foliageBrightness}
         />
+
+        {/* Live St. Louis sky: drifting clouds, stars at night, rain streaks. */}
+        <SkyOverlay weather={weather} reduced={reduced} />
+
+        {/* Wet-glass sheen — only during active rain, very subtle */}
+        {(weather.condition === "rain" || weather.condition === "storm") && (
+          <div
+            className="absolute inset-0 pointer-events-none mix-blend-soft-light z-[6]"
+            style={{
+              opacity: 0.12,
+              backgroundImage:
+                "radial-gradient(circle at 22% 18%, rgba(180,210,255,0.35) 0 2px, transparent 3px)," +
+                "radial-gradient(circle at 68% 42%, rgba(180,210,255,0.30) 0 2px, transparent 3px)," +
+                "radial-gradient(circle at 44% 66%, rgba(180,210,255,0.28) 0 2px, transparent 3px)," +
+                "radial-gradient(circle at 82% 78%, rgba(180,210,255,0.32) 0 2px, transparent 3px)",
+              backgroundSize: "180px 180px, 220px 220px, 260px 260px, 200px 200px",
+            }}
+          />
+        )}
+
+
+        <div
+          className="absolute top-1/2 pointer-events-none"
+          style={{ left: `${ZONES[4].pos * 100}%`, transform: "translate(-50%, -50%)" }}
+        >
+          <div className="relative w-[220px] h-[360px] border border-primary/50 bg-gradient-to-b from-primary/15 via-background/60 to-background/90 backdrop-blur-[2px] shadow-[0_0_60px_rgba(70,150,255,0.35)]">
+            <div className="absolute inset-2 border border-primary/30" />
+            <div className="absolute inset-x-0 top-4 text-center mono text-[0.55rem] tracking-[0.32em] text-primary/80">EVIDENCE</div>
+            <div className="absolute inset-x-0 top-9 text-center mono text-[0.55rem] tracking-[0.32em] text-primary/80">VAULT</div>
+            <div className="absolute inset-x-6 top-16 h-px bg-primary/40" />
+            <div className="absolute inset-x-0 bottom-6 text-center mono text-[0.5rem] tracking-[0.32em] text-primary/70">◆ SECURED ◆</div>
+          </div>
+        </div>
+
+        {/* Zone markers */}
+        {ZONES.map((z) => {
+          const isLocked = lockedZone?.id === z.id;
+          return (
+            <button
+              key={z.id}
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => { e.stopPropagation(); dismissHint(); enterZone(z); }}
+              className="bay-hover-glow absolute top-1/2 group rounded-sm"
+              style={{ left: `${z.pos * 100}%`, transform: "translate(-50%, -50%)" }}
+              aria-label={`${z.id === "vault" ? "Open" : "Enter"} ${z.label}`}
+            >
+              <div className="relative flex flex-col items-center pointer-events-auto">
+                <div
+                  className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                    isLocked
+                      ? "bg-primary shadow-[0_0_24px_rgba(70,150,255,1)] scale-150"
+                      : "bg-primary/70 shadow-[0_0_10px_rgba(70,150,255,0.9)] anim-flicker"
+                  }`}
+                />
+                <div className={`mt-2 w-px transition-all ${isLocked ? "h-24 bg-primary/60" : "h-12 bg-primary/30"}`} />
+                <div
+                  className={`mt-2 mono uppercase whitespace-nowrap transition-all ${
+                    isLocked
+                      ? "text-primary text-sm tracking-[0.32em]"
+                      : "text-primary/70 text-[0.6rem] tracking-[0.28em] group-hover:text-primary"
+                  }`}
+                  style={isLocked ? { textShadow: "0 0 18px hsl(var(--primary) / 0.7)" } : undefined}
+                >
+                  {z.index} · {z.label}
+                </div>
+                <div className={`mono text-[0.55rem] tracking-[0.28em] uppercase mt-1 transition-opacity ${
+                  isLocked ? "text-primary/80 opacity-100" : "text-muted-foreground opacity-0 group-hover:opacity-70"
+                }`}>
+                  {z.sub}
+                </div>
+              </div>
+            </button>
+          );
+        })}
       </div>
 
       {/* CAMERA-FIXED OVERLAYS */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_72%,rgba(5,7,10,0.55)_100%)]" />
       <div className="absolute inset-x-0 top-0 h-20 pointer-events-none bg-gradient-to-b from-background/50 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-32 pointer-events-none bg-gradient-to-t from-background/60 to-transparent" />
 
-      {/* Look arrows */}
-      <button
-        onPointerDown={(e) => e.stopPropagation()}
-        onClick={() => stepH(-STEP_H)}
-        aria-label="Look left"
-        className="absolute left-3 top-1/2 -translate-y-1/2 z-20 text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-10 h-16 flex items-center justify-center text-lg"
-      >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-      </button>
-      <button
-        onPointerDown={(e) => e.stopPropagation()}
-        onClick={() => stepH(STEP_H)}
-        aria-label="Look right"
-        className="absolute right-3 top-1/2 -translate-y-1/2 z-20 text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-10 h-16 flex items-center justify-center text-lg"
-      >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
-      </button>
 
-      {/* ===== CONSOLIDATED KIOSK — top translucent bar ===== */}
-      <div
-        className="absolute left-0 right-0 top-14 z-30 anim-fade-up"
-        onPointerDown={(e) => e.stopPropagation()}
-      >
-        <div className="mx-auto w-[min(98vw,1400px)] border-y border-primary/40 bg-background/40 backdrop-blur-md">
-          <div className="flex items-center gap-2 px-3 py-1.5 overflow-x-auto whitespace-nowrap">
-            {/* Bay tiles */}
-            {ZONES.map((z) => {
-              const isLocked = lockedZone?.id === z.id;
-              return (
-                <button
-                  key={z.id}
-                  onClick={() => enterZone(z)}
-                  aria-label={z.label}
-                  className={`shrink-0 w-8 h-8 flex items-center justify-center border transition-colors ${
-                    isLocked
-                      ? "border-primary bg-primary/20 text-primary shadow-[0_0_18px_rgba(70,150,255,0.4)]"
-                      : "border-primary/30 bg-transparent text-foreground/85 hover:border-primary/70 hover:bg-primary/10 hover:text-primary"
-                  }`}
-                >
-                  <span className="mono text-[0.65rem] tracking-widest">{z.index}</span>
-                </button>
-              );
-            })}
+      {/* Reticle */}
+      <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+        <div className="relative">
+          <div className={`w-8 h-px transition-colors ${lockedZone ? "bg-primary" : "bg-primary/30"}`} />
+          <div className={`w-px h-8 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-colors ${lockedZone ? "bg-primary" : "bg-primary/30"}`} />
+          <div className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border transition-all ${
+            lockedZone ? "w-6 h-6 border-primary shadow-[0_0_18px_rgba(70,150,255,0.7)]" : "w-4 h-4 border-primary/40"
+          }`} />
+        </div>
+      </div>
 
-            <span className="mx-1 h-4 w-px bg-primary/30 shrink-0" />
-
-            <button
-              onClick={() => setMediaConsoleOpen(true)}
-              aria-label="Media"
-              className="shrink-0 w-8 h-8 flex items-center justify-center text-primary/90 hover:text-primary border border-primary/40 hover:border-primary/70 bg-transparent hover:bg-primary/10"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" /><line x1="7" y1="2" x2="7" y2="22" /><line x1="17" y1="2" x2="17" y2="22" /><line x1="2" y1="12" x2="22" y2="12" /><line x1="2" y1="7" x2="7" y2="7" /><line x1="2" y1="17" x2="7" y2="17" /><line x1="17" y1="17" x2="22" y2="17" /><line x1="17" y1="7" x2="22" y2="7" /></svg>
-            </button>
-            <button
-              onClick={onOpenVault}
-              aria-label="Vault"
-              className="shrink-0 w-8 h-8 flex items-center justify-center text-primary/90 hover:text-primary border border-primary/40 hover:border-primary/70 bg-transparent hover:bg-primary/10"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" /></svg>
-            </button>
-
-            {/* Wind mini-controls */}
-            <div className="ml-auto flex items-center gap-2 shrink-0">
-              <input
-                type="range" min={0} max={2.5} step={0.05}
-                value={windStrength}
-                onChange={(e) => { setWindUserOverride(true); setWindStrength(parseFloat(e.target.value)); }}
-                className="w-16 accent-primary"
-                aria-label="Wind strength"
-              />
-              <input
-                type="range" min={0.25} max={3} step={0.05}
-                value={windSpeed}
-                onChange={(e) => { setWindUserOverride(true); setWindSpeed(parseFloat(e.target.value)); }}
-                className="w-16 accent-primary"
-                aria-label="Wind speed"
-              />
-              <button
-                onClick={() => setWindUserOverride(false)}
-                aria-label="Sync to live St. Louis wind"
-                className="text-primary/80 hover:text-primary border border-primary/40 px-1.5 py-0.5"
-              >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" /></svg>
-              </button>
-            </div>
+      {/* Top HUD (below fixed TopBar) */}
+      <div className="absolute inset-x-0 top-14 z-20 anim-fade-up pointer-events-none">
+        <div className="container flex items-center justify-between text-[0.68rem] mono tracking-[0.28em] uppercase text-foreground/80">
+          <div className="flex items-center gap-3 bg-background/40 backdrop-blur-sm px-3 py-1.5 border border-border/40 pointer-events-auto">
+            <span className="text-primary">NEXUS</span>
+            <span className="text-muted-foreground">|</span>
+            <span>{BRAND.company}</span>
+          </div>
+          <div className="hidden md:flex items-center gap-3 bg-background/40 backdrop-blur-sm px-3 py-1.5 border border-border/40 pointer-events-auto">
+            <span className="status-dot status-live" />
+            <span>SHELL ONLINE</span>
+            <span className="text-muted-foreground">·</span>
+            <span className="status-dot status-research" />
+            <span>FIRST-PERSON MODE</span>
           </div>
         </div>
       </div>
 
+      {/* Look buttons */}
+      <button
+        onClick={() => stepH(-STEP_H)}
+        aria-label="Look left"
+        className="absolute left-3 top-1/2 -translate-y-1/2 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-10 h-16 flex items-center justify-center text-lg"
+      >◄</button>
+      <button
+        onClick={() => stepH(STEP_H)}
+        aria-label="Look right"
+        className="absolute right-3 top-1/2 -translate-y-1/2 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-10 h-16 flex items-center justify-center text-lg"
+      >►</button>
+      <button
+        onClick={() => stepV(-STEP_V)}
+        aria-label="Look up"
+        className="absolute left-1/2 -translate-x-1/2 top-20 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-8 flex items-center justify-center"
+      >▲</button>
+      <button
+        onClick={() => stepV(STEP_V)}
+        aria-label="Look down"
+        className="absolute left-1/2 -translate-x-1/2 bottom-6 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-8 flex items-center justify-center"
+      >▼</button>
+
+      {/* Lock-on ENTER prompt (keyboard/drag flow) */}
+      {lockedZone && (
+        <div className="absolute inset-x-0 bottom-20 z-20 flex justify-center pointer-events-none">
+          <button
+            onClick={() => enterZone(lockedZone)}
+            className="pointer-events-auto mono uppercase text-primary border border-primary/70 bg-primary/10 hover:bg-primary/20 backdrop-blur-sm px-6 py-3 tracking-[0.32em] text-sm shadow-[0_0_40px_rgba(70,150,255,0.35)] transition-colors"
+          >
+            ▶ {lockedZone.id === "vault" ? "OPEN" : "ENTER"} — {lockedZone.label.toUpperCase()}
+          </button>
+        </div>
+      )}
+
+      {/* Compass bar removed — bay tiles on the panorama are the selection buttons. */}
+
+      {/* Vault HUD panel (compact / collapsible) */}
+      <div className="absolute right-3 top-28 z-20 anim-fade-up" style={{ animationDelay: "300ms" }}>
+        {vaultPanelOpen ? (
+          <div className="w-64 border border-primary/40 bg-background/70 backdrop-blur-md p-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="mono text-[0.6rem] tracking-[0.28em] text-primary">EVIDENCE VAULT</div>
+              <button
+                onClick={() => setVaultPanelOpen(false)}
+                aria-label="Collapse vault panel"
+                className="mono text-[0.6rem] text-muted-foreground hover:text-primary px-1"
+              >×</button>
+            </div>
+            <div className="text-[0.65rem] text-muted-foreground leading-relaxed">
+              Secured archive of evidence artifacts with claim boundaries and audience labels.
+            </div>
+            <button
+              onClick={onOpenVault}
+              className="w-full mono text-[0.6rem] tracking-[0.28em] uppercase text-primary border border-primary/50 hover:border-primary/80 bg-primary/10 hover:bg-primary/20 px-3 py-1.5 transition-colors"
+            >
+              OPEN VAULT →
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setVaultPanelOpen(true)}
+            className="mono text-[0.6rem] tracking-[0.28em] uppercase text-primary/80 hover:text-primary border border-primary/30 hover:border-primary/70 px-3 py-1.5 transition-colors bg-background/50 backdrop-blur-sm"
+          >
+            ◆ VAULT
+          </button>
+        )}
+      </div>
+
+      {/* Viewing Console launcher (left-side mirror of Vault) */}
+      <div className="absolute left-3 top-28 z-20 anim-fade-up" style={{ animationDelay: "300ms" }}>
+        {mediaPanelOpen ? (
+          <div className="w-64 border border-primary/40 bg-background/70 backdrop-blur-md p-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="mono text-[0.6rem] tracking-[0.28em] text-primary">VIEWING CONSOLE</div>
+              <button
+                onClick={() => setMediaPanelOpen(false)}
+                aria-label="Collapse viewing console panel"
+                className="mono text-[0.6rem] text-muted-foreground hover:text-primary px-1"
+              >×</button>
+            </div>
+            <div className="text-[0.65rem] text-muted-foreground leading-relaxed">
+              Browse and open all installed documents, videos, audio, and images. Preview inline, open externally, or save to disk.
+            </div>
+            <button
+              onClick={() => setMediaConsoleOpen(true)}
+              className="w-full mono text-[0.6rem] tracking-[0.28em] uppercase text-primary border border-primary/50 hover:border-primary/80 bg-primary/10 hover:bg-primary/20 px-3 py-1.5 transition-colors"
+            >
+              OPEN CONSOLE →
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setMediaPanelOpen(true)}
+            className="mono text-[0.6rem] tracking-[0.28em] uppercase text-primary/80 hover:text-primary border border-primary/30 hover:border-primary/70 px-3 py-1.5 transition-colors bg-background/50 backdrop-blur-sm"
+          >
+            ◇ MEDIA
+          </button>
+        )}
+      </div>
+
+      {/* Wind controls — tune foliage sway strength and speed */}
+      <div className="absolute right-3 bottom-24 z-20 anim-fade-up" style={{ animationDelay: "400ms" }} onPointerDown={(e) => e.stopPropagation()}>
+        {windPanelOpen ? (
+          <div className="w-60 border border-primary/40 bg-background/70 backdrop-blur-md p-3 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="mono text-[0.6rem] tracking-[0.28em] text-primary">WIND</div>
+              <button
+                onClick={() => setWindPanelOpen(false)}
+                aria-label="Collapse wind panel"
+                className="mono text-[0.6rem] text-muted-foreground hover:text-primary px-1"
+              >×</button>
+            </div>
+            <label className="block space-y-1">
+              <div className="flex justify-between mono text-[0.55rem] tracking-[0.24em] uppercase text-muted-foreground">
+                <span>Strength</span><span className="text-primary">{windStrength.toFixed(2)}×</span>
+              </div>
+              <input
+                type="range" min={0} max={2.5} step={0.05}
+                value={windStrength}
+                onChange={(e) => { setWindUserOverride(true); setWindStrength(parseFloat(e.target.value)); }}
+                className="w-full accent-primary"
+              />
+            </label>
+            <label className="block space-y-1">
+              <div className="flex justify-between mono text-[0.55rem] tracking-[0.24em] uppercase text-muted-foreground">
+                <span>Speed</span><span className="text-primary">{windSpeed.toFixed(2)}×</span>
+              </div>
+              <input
+                type="range" min={0.25} max={3} step={0.05}
+                value={windSpeed}
+                onChange={(e) => { setWindUserOverride(true); setWindSpeed(parseFloat(e.target.value)); }}
+                className="w-full accent-primary"
+              />
+            </label>
+            <div className="flex gap-2 pt-1">
+              <button
+                onClick={() => { setWindUserOverride(true); setWindStrength(0.4); setWindSpeed(0.7); }}
+                className="flex-1 mono text-[0.55rem] tracking-[0.24em] uppercase text-primary/80 hover:text-primary border border-primary/40 px-2 py-1"
+              >Calm</button>
+              <button
+                onClick={() => { setWindUserOverride(true); setWindStrength(1); setWindSpeed(1); }}
+                className="flex-1 mono text-[0.55rem] tracking-[0.24em] uppercase text-primary/80 hover:text-primary border border-primary/40 px-2 py-1"
+              >Breeze</button>
+              <button
+                onClick={() => { setWindUserOverride(true); setWindStrength(2); setWindSpeed(1.8); }}
+                className="flex-1 mono text-[0.55rem] tracking-[0.24em] uppercase text-primary/80 hover:text-primary border border-primary/40 px-2 py-1"
+              >Gust</button>
+              <button
+                onClick={() => setWindUserOverride(false)}
+                title="Sync to live St. Louis wind"
+                className="mono text-[0.55rem] tracking-[0.24em] uppercase text-primary/80 hover:text-primary border border-primary/40 px-2 py-1"
+              >Live</button>
+            </div>
+
+          </div>
+        ) : (
+          <button
+            onClick={() => setWindPanelOpen(true)}
+            className="mono text-[0.6rem] tracking-[0.28em] uppercase text-primary/80 hover:text-primary border border-primary/30 hover:border-primary/70 px-3 py-1.5 transition-colors bg-background/50 backdrop-blur-sm"
+          >
+            ≈ WIND
+          </button>
+        )}
+      </div>
+
       <MediaConsole open={mediaConsoleOpen} onClose={() => setMediaConsoleOpen(false)} />
+
+
+      {/* Hint */}
+      {hintVisible && (
+        <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
+          <div
+            className="panel px-8 py-6 max-w-lg text-center pointer-events-auto"
+            style={{ animation: "intro-fade-in 400ms ease-out both" }}
+          >
+            <div className="mono text-primary text-[0.65rem] tracking-[0.32em] mb-3">▲ FIRST-PERSON NAVIGATION ▲</div>
+            <div className="text-foreground/90 text-sm mb-2">Drag to look around.</div>
+            <div className="text-muted-foreground text-xs">
+              Drag or use the arrow keys to look horizontally and vertically across the rotunda.
+              Explore the four bays and the evidence vault. Press <span className="mono text-primary">ENTER</span> when a zone locks on.
+            </div>
+            <button
+              onClick={() => { interactedRef.current = true; setHintVisible(false); }}
+              className="mt-4 mono text-[0.6rem] tracking-[0.28em] uppercase text-primary/80 hover:text-primary border border-primary/40 px-3 py-1"
+            >
+              GOT IT
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
-
