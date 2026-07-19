@@ -282,7 +282,30 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           brightness={lighting.foliageBrightness}
         />
 
-        {/* Synthetic Vault doorway */}
+        {/* Live St. Louis sky: drifting clouds, stars at night, rain streaks. */}
+        <SkyOverlay weather={weather} reduced={reduced} />
+
+        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_14%_38%,rgba(110,200,255,0.18)_0%,transparent_45%)]" />
+        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_86%_88%,rgba(255,180,100,0.16)_0%,transparent_52%)]" />
+
+        <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.18)_0%,transparent_65%)]" />
+
+        {/* Wet-glass sheen when rain is active */}
+        {(weather.condition === "rain" || weather.condition === "storm") && (
+          <div
+            className="absolute inset-0 pointer-events-none mix-blend-screen z-[6]"
+            style={{
+              opacity: 0.35,
+              backgroundImage:
+                "radial-gradient(circle at 22% 18%, rgba(180,210,255,0.35) 0 2px, transparent 3px)," +
+                "radial-gradient(circle at 68% 42%, rgba(180,210,255,0.30) 0 2px, transparent 3px)," +
+                "radial-gradient(circle at 44% 66%, rgba(180,210,255,0.28) 0 2px, transparent 3px)," +
+                "radial-gradient(circle at 82% 78%, rgba(180,210,255,0.32) 0 2px, transparent 3px)",
+              backgroundSize: "180px 180px, 220px 220px, 260px 260px, 200px 200px",
+            }}
+          />
+        )}
+
         <div
           className="absolute top-1/2 pointer-events-none"
           style={{ left: `${ZONES[4].pos * 100}%`, transform: "translate(-50%, -50%)" }}
