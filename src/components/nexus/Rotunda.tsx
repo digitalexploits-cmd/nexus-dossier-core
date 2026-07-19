@@ -5,9 +5,12 @@ import { prefersReducedMotion } from "@/lib/audio";
 import rotundaAsset from "@/assets/rotunda-hero.png.asset.json";
 import { MediaConsole } from "@/components/nexus/MediaConsole";
 import { FoliageOverlay } from "@/components/nexus/FoliageOverlay";
+import { SkyOverlay } from "@/components/nexus/SkyOverlay";
 import { useAdaptiveLighting } from "@/lib/adaptiveLighting";
+import { useStLouisWeather } from "@/lib/weather";
 
 const ROTUNDA_HERO = rotundaAsset.url;
+
 
 interface Props {
   onSelect: (id: BayId) => void;
@@ -43,6 +46,9 @@ const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   const reduced = prefersReducedMotion();
   const lighting = useAdaptiveLighting();
+  const weather = useStLouisWeather();
+
+
 
   // ---------- Reduced-motion fallback ----------
   if (reduced) {
@@ -82,7 +88,9 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   const [dragging, setDragging] = useState(false);
   const [windStrength, setWindStrength] = useState(1);
   const [windSpeed, setWindSpeed] = useState(1);
+  const [windUserOverride, setWindUserOverride] = useState(false);
   const [windPanelOpen, setWindPanelOpen] = useState(false);
+
   const [snapping, setSnapping] = useState(false);
   const [hintVisible, setHintVisible] = useState(true);
   const [vaultPanelOpen, setVaultPanelOpen] = useState(false);
@@ -93,6 +101,14 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   const headingVRef = useRef(headingV);
   headingRef.current = heading;
   headingVRef.current = headingV;
+
+  // Sync foliage sway with live St. Louis wind unless the user tuned it.
+  useEffect(() => {
+    if (windUserOverride || !weather.ok) return;
+    setWindStrength(weather.windScale);
+    setWindSpeed(Math.max(0.4, Math.min(2.2, 0.6 + weather.windMps * 0.12)));
+  }, [weather.windScale, weather.windMps, weather.ok, windUserOverride]);
+
 
   const lockedZone = useMemo(() => {
     let best: { z: Zone; d: number } | null = null;
@@ -266,7 +282,27 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           brightness={lighting.foliageBrightness}
         />
 
-        {/* Synthetic Vault doorway */}
+        {/* Live St. Louis sky: drifting clouds, stars at night, rain streaks. */}
+        <SkyOverlay weather={weather} reduced={reduced} />
+
+
+
+        {/* Wet-glass sheen when rain is active */}
+        {(weather.condition === "rain" || weather.condition === "storm") && (
+          <div
+            className="absolute inset-0 pointer-events-none mix-blend-screen z-[6]"
+            style={{
+              opacity: 0.35,
+              backgroundImage:
+                "radial-gradient(circle at 22% 18%, rgba(180,210,255,0.35) 0 2px, transparent 3px)," +
+                "radial-gradient(circle at 68% 42%, rgba(180,210,255,0.30) 0 2px, transparent 3px)," +
+                "radial-gradient(circle at 44% 66%, rgba(180,210,255,0.28) 0 2px, transparent 3px)," +
+                "radial-gradient(circle at 82% 78%, rgba(180,210,255,0.32) 0 2px, transparent 3px)",
+              backgroundSize: "180px 180px, 220px 220px, 260px 260px, 200px 200px",
+            }}
+          />
+        )}
+
         <div
           className="absolute top-1/2 pointer-events-none"
           style={{ left: `${ZONES[4].pos * 100}%`, transform: "translate(-50%, -50%)" }}
@@ -476,7 +512,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
               <input
                 type="range" min={0} max={2.5} step={0.05}
                 value={windStrength}
-                onChange={(e) => setWindStrength(parseFloat(e.target.value))}
+                onChange={(e) => { setWindUserOverride(true); setWindStrength(parseFloat(e.target.value)); }}
                 className="w-full accent-primary"
               />
             </label>
@@ -487,24 +523,30 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
               <input
                 type="range" min={0.25} max={3} step={0.05}
                 value={windSpeed}
-                onChange={(e) => setWindSpeed(parseFloat(e.target.value))}
+                onChange={(e) => { setWindUserOverride(true); setWindSpeed(parseFloat(e.target.value)); }}
                 className="w-full accent-primary"
               />
             </label>
             <div className="flex gap-2 pt-1">
               <button
-                onClick={() => { setWindStrength(0.4); setWindSpeed(0.7); }}
+                onClick={() => { setWindUserOverride(true); setWindStrength(0.4); setWindSpeed(0.7); }}
                 className="flex-1 mono text-[0.55rem] tracking-[0.24em] uppercase text-primary/80 hover:text-primary border border-primary/40 px-2 py-1"
               >Calm</button>
               <button
-                onClick={() => { setWindStrength(1); setWindSpeed(1); }}
+                onClick={() => { setWindUserOverride(true); setWindStrength(1); setWindSpeed(1); }}
                 className="flex-1 mono text-[0.55rem] tracking-[0.24em] uppercase text-primary/80 hover:text-primary border border-primary/40 px-2 py-1"
               >Breeze</button>
               <button
-                onClick={() => { setWindStrength(2); setWindSpeed(1.8); }}
+                onClick={() => { setWindUserOverride(true); setWindStrength(2); setWindSpeed(1.8); }}
                 className="flex-1 mono text-[0.55rem] tracking-[0.24em] uppercase text-primary/80 hover:text-primary border border-primary/40 px-2 py-1"
               >Gust</button>
+              <button
+                onClick={() => setWindUserOverride(false)}
+                title="Sync to live St. Louis wind"
+                className="mono text-[0.55rem] tracking-[0.24em] uppercase text-primary/80 hover:text-primary border border-primary/40 px-2 py-1"
+              >Live</button>
             </div>
+
           </div>
         ) : (
           <button
