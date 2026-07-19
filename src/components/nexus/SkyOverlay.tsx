@@ -16,17 +16,18 @@ type Props = {
 };
 
 const conditionTint = (w: WeatherProfile) => {
-  if (w.isNight) return "rgba(8,14,32,0.55)";
+  if (w.isNight) return "rgba(8,14,32,0.28)";
   switch (w.condition) {
-    case "clear":         return "rgba(120,190,255,0.18)";
-    case "partly-cloudy": return "rgba(150,190,225,0.22)";
-    case "overcast":      return "rgba(120,135,155,0.42)";
-    case "fog":           return "rgba(180,190,200,0.45)";
-    case "rain":          return "rgba(90,110,135,0.50)";
-    case "snow":          return "rgba(210,220,235,0.40)";
-    case "storm":         return "rgba(50,60,80,0.65)";
+    case "clear":         return "rgba(120,190,255,0.06)";
+    case "partly-cloudy": return "rgba(150,190,225,0.08)";
+    case "overcast":      return "rgba(120,135,155,0.18)";
+    case "fog":           return "rgba(180,190,200,0.20)";
+    case "rain":          return "rgba(90,110,135,0.22)";
+    case "snow":          return "rgba(210,220,235,0.18)";
+    case "storm":         return "rgba(50,60,80,0.30)";
   }
 };
+
 
 export const SkyOverlay = ({ weather, reduced }: Props) => {
   const stars = useMemo(() => {
