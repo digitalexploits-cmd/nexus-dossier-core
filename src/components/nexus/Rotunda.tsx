@@ -46,6 +46,9 @@ const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   const reduced = prefersReducedMotion();
   const lighting = useAdaptiveLighting();
+  const weather = useStLouisWeather();
+
+
 
   // ---------- Reduced-motion fallback ----------
   if (reduced) {
