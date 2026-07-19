@@ -10,8 +10,8 @@ import { useStLouisWeather } from "@/lib/weather";
 
 const ROTUNDA_HERO = rotundaAsset.url;
 const ROTUNDA_LOOP = rotundaLoopAsset.url;
-// Slow the landing footage so it feels cinematic and extends its perceived length.
-const ROTUNDA_LOOP_RATE = 0.5;
+// Keep the live view moving at normal speed so it feels like a real window, not a screenshot.
+const ROTUNDA_LOOP_RATE = 1;
 
 
 interface Props {
