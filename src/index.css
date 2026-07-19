@@ -293,3 +293,28 @@
   ::selection { background: hsl(var(--interactive) / 0.35); color: hsl(var(--foreground)); }
 }
 
+/* ============================================================
+   Foliage sway — animates decorative tree/leaf overlays
+   ============================================================ */
+@layer utilities {
+  @keyframes foliage-sway {
+    0%, 100% { transform: rotate(-2.2deg) translateX(-2px); }
+    50%      { transform: rotate(2.4deg) translateX(3px); }
+  }
+  @keyframes foliage-sway-slow {
+    0%, 100% { transform: rotate(-1.4deg) translate(0, 0); }
+    50%      { transform: rotate(1.6deg) translate(2px, -1px); }
+  }
+  @keyframes leaf-rustle {
+    0%, 100% { transform: rotate(-4deg) scale(1); }
+    50%      { transform: rotate(5deg) scale(1.03); }
+  }
+  .foliage-sway      { transform-origin: bottom center; animation: foliage-sway 5.5s ease-in-out infinite; }
+  .foliage-sway-slow { transform-origin: bottom center; animation: foliage-sway-slow 8s ease-in-out infinite; }
+  .leaf-rustle       { transform-origin: center; animation: leaf-rustle 3.8s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) {
+    .foliage-sway, .foliage-sway-slow, .leaf-rustle { animation: none !important; }
+  }
+}
+
+
