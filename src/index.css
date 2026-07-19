@@ -2,6 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes foliage-sway-a {
+  0%, 100% { transform: rotate(-1.4deg) translateY(0); }
+  50%      { transform: rotate(1.8deg)  translateY(-2px); }
+}
+@keyframes foliage-sway-b {
+  0%, 100% { transform: rotate(1.2deg)  translateY(0); }
+  50%      { transform: rotate(-1.6deg) translateY(-3px); }
+}
+@keyframes foliage-sway-c {
+  0%, 100% { transform: rotate(-0.9deg) translateX(0); }
+  50%      { transform: rotate(1.3deg)  translateX(2px); }
+}
+.foliage-sway-a { animation: foliage-sway-a 5.5s ease-in-out infinite; transform-origin: 50% 100%; }
+.foliage-sway-b { animation: foliage-sway-b 7.2s ease-in-out infinite; transform-origin: 50% 100%; }
+.foliage-sway-c { animation: foliage-sway-c 6.3s ease-in-out infinite; transform-origin: 50% 100%; }
+@media (prefers-reduced-motion: reduce) {
+  .foliage-sway-a, .foliage-sway-b, .foliage-sway-c { animation: none; }
+}
+
 /* ============================================================
    Nexus — AI Base³ Solutions LLC
    Design system. All colors HSL. Semantic tokens only.
