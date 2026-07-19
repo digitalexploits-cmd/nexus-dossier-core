@@ -257,7 +257,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           scroll-down black void). Only horizontal panning is meaningful. */}
       <div
         ref={worldRef}
-        className="absolute top-0 left-0 h-[100dvh] w-auto min-w-full"
+        className="absolute top-0 left-0 h-[100dvh] w-auto min-w-full overflow-hidden"
         style={{
           transform: worldTransform,
           transition: worldTransition,
@@ -267,10 +267,8 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         <video
           src={ROTUNDA_LOOP}
           poster={ROTUNDA_HERO}
-          className="block max-w-none h-[100dvh] w-auto min-w-full"
+          className="block max-w-none h-[125dvh] w-auto min-w-full"
           style={{
-            objectFit: "cover",
-            objectPosition: "center 0%",
             filter: `brightness(${lighting.sceneBrightness}) contrast(${lighting.sceneContrast}) saturate(1.10)`,
           }}
           autoPlay
