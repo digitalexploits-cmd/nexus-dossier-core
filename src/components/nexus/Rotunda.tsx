@@ -335,7 +335,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
                 <button
                   key={z.id}
                   onClick={() => enterZone(z)}
-                  title={z.label}
+                  aria-label={z.label}
                   className={`shrink-0 w-8 h-8 flex items-center justify-center border transition-colors ${
                     isLocked
                       ? "border-primary bg-primary/20 text-primary shadow-[0_0_18px_rgba(70,150,255,0.4)]"
