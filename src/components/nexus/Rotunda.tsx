@@ -450,6 +450,65 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         )}
       </div>
 
+      {/* Wind controls — tune foliage sway strength and speed */}
+      <div className="absolute right-3 bottom-24 z-20 anim-fade-up" style={{ animationDelay: "400ms" }} onPointerDown={(e) => e.stopPropagation()}>
+        {windPanelOpen ? (
+          <div className="w-60 border border-primary/40 bg-background/70 backdrop-blur-md p-3 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="mono text-[0.6rem] tracking-[0.28em] text-primary">WIND</div>
+              <button
+                onClick={() => setWindPanelOpen(false)}
+                aria-label="Collapse wind panel"
+                className="mono text-[0.6rem] text-muted-foreground hover:text-primary px-1"
+              >×</button>
+            </div>
+            <label className="block space-y-1">
+              <div className="flex justify-between mono text-[0.55rem] tracking-[0.24em] uppercase text-muted-foreground">
+                <span>Strength</span><span className="text-primary">{windStrength.toFixed(2)}×</span>
+              </div>
+              <input
+                type="range" min={0} max={2.5} step={0.05}
+                value={windStrength}
+                onChange={(e) => setWindStrength(parseFloat(e.target.value))}
+                className="w-full accent-primary"
+              />
+            </label>
+            <label className="block space-y-1">
+              <div className="flex justify-between mono text-[0.55rem] tracking-[0.24em] uppercase text-muted-foreground">
+                <span>Speed</span><span className="text-primary">{windSpeed.toFixed(2)}×</span>
+              </div>
+              <input
+                type="range" min={0.25} max={3} step={0.05}
+                value={windSpeed}
+                onChange={(e) => setWindSpeed(parseFloat(e.target.value))}
+                className="w-full accent-primary"
+              />
+            </label>
+            <div className="flex gap-2 pt-1">
+              <button
+                onClick={() => { setWindStrength(0.4); setWindSpeed(0.7); }}
+                className="flex-1 mono text-[0.55rem] tracking-[0.24em] uppercase text-primary/80 hover:text-primary border border-primary/40 px-2 py-1"
+              >Calm</button>
+              <button
+                onClick={() => { setWindStrength(1); setWindSpeed(1); }}
+                className="flex-1 mono text-[0.55rem] tracking-[0.24em] uppercase text-primary/80 hover:text-primary border border-primary/40 px-2 py-1"
+              >Breeze</button>
+              <button
+                onClick={() => { setWindStrength(2); setWindSpeed(1.8); }}
+                className="flex-1 mono text-[0.55rem] tracking-[0.24em] uppercase text-primary/80 hover:text-primary border border-primary/40 px-2 py-1"
+              >Gust</button>
+            </div>
+          </div>
+        ) : (
+          <button
+            onClick={() => setWindPanelOpen(true)}
+            className="mono text-[0.6rem] tracking-[0.28em] uppercase text-primary/80 hover:text-primary border border-primary/30 hover:border-primary/70 px-3 py-1.5 transition-colors bg-background/50 backdrop-blur-sm"
+          >
+            ≈ WIND
+          </button>
+        )}
+      </div>
+
       <MediaConsole open={mediaConsoleOpen} onClose={() => setMediaConsoleOpen(false)} />
 
 
