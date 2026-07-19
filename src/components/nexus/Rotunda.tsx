@@ -5,9 +5,12 @@ import { prefersReducedMotion } from "@/lib/audio";
 import rotundaAsset from "@/assets/rotunda-hero.png.asset.json";
 import { MediaConsole } from "@/components/nexus/MediaConsole";
 import { FoliageOverlay } from "@/components/nexus/FoliageOverlay";
+import { SkyOverlay } from "@/components/nexus/SkyOverlay";
 import { useAdaptiveLighting } from "@/lib/adaptiveLighting";
+import { useStLouisWeather } from "@/lib/weather";
 
 const ROTUNDA_HERO = rotundaAsset.url;
+
 
 interface Props {
   onSelect: (id: BayId) => void;
