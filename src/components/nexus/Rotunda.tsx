@@ -78,6 +78,9 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   const [heading, setHeading] = useState(isMobileInitial ? 0.50 : 0.30);
   const [headingV, setHeadingV] = useState(isMobileInitial ? 0.50 : 0.58);
   const [dragging, setDragging] = useState(false);
+  const [windStrength, setWindStrength] = useState(1);
+  const [windSpeed, setWindSpeed] = useState(1);
+  const [windPanelOpen, setWindPanelOpen] = useState(false);
   const [snapping, setSnapping] = useState(false);
   const [hintVisible, setHintVisible] = useState(true);
   const [vaultPanelOpen, setVaultPanelOpen] = useState(false);
