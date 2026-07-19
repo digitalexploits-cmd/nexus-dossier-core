@@ -252,12 +252,12 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
       onPointerCancel={endDrag}
       style={{ cursor: dragging ? "grabbing" : "grab", touchAction: "none" }}
     >
-      {/* WORLD — panorama scaled so height fills the viewport, width preserves aspect.
-          Mobile uses 100dvh (Arch-centered initial framing keeps stadium/river readable);
-          tablet/desktop uses 135dvh for a fuller first-person feel. */}
+      {/* WORLD — panorama sized to the viewport height. Video uses object-top so
+          everything below the kiosk's white line is cropped out entirely (no
+          scroll-down black void). Only horizontal panning is meaningful. */}
       <div
         ref={worldRef}
-        className="absolute top-0 left-0 h-[210dvh] md:h-[250dvh] w-auto min-w-full"
+        className="absolute top-0 left-0 h-[100dvh] w-auto min-w-full overflow-hidden"
         style={{
           transform: worldTransform,
           transition: worldTransition,
@@ -267,8 +267,10 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         <video
           src={ROTUNDA_LOOP}
           poster={ROTUNDA_HERO}
-          className="block max-w-none h-[210dvh] md:h-[250dvh] w-auto min-w-full object-cover"
-          style={{ filter: `brightness(${lighting.sceneBrightness}) contrast(${lighting.sceneContrast}) saturate(1.10)` }}
+          className="block max-w-none h-[125dvh] w-auto min-w-full"
+          style={{
+            filter: `brightness(${lighting.sceneBrightness}) contrast(${lighting.sceneContrast}) saturate(1.10)`,
+          }}
           autoPlay
           muted
           loop
@@ -286,23 +288,11 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           opacity={lighting.foliageOpacity ?? 0.55}
           brightness={lighting.foliageBrightness ?? 1}
         />
-
-
-
-
-
-
-
-
       </div>
 
       {/* CAMERA-FIXED OVERLAYS */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_72%,rgba(5,7,10,0.55)_100%)]" />
       <div className="absolute inset-x-0 top-0 h-20 pointer-events-none bg-gradient-to-b from-background/50 to-transparent" />
-
-      {/* Kiosk mask: fully hides the baked-in video kiosk text and icons. */}
-      <div className="absolute inset-x-0 bottom-0 h-[32%] pointer-events-none bg-[#05070a]" />
-      <div className="absolute inset-x-0 bottom-[32%] h-[10%] pointer-events-none bg-gradient-to-t from-[#05070a] to-transparent" />
 
       {/* Look arrows */}
       <button
