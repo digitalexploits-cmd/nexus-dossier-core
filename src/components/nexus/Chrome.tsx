@@ -1,6 +1,5 @@
 import { BRAND } from "@/data/content";
 import { useEffect, useMemo, useState } from "react";
-import { Cloud, CloudDrizzle, CloudFog, CloudLightning, CloudRain, CloudSnow, Sun } from "lucide-react";
 
 const WEATHER_CODES: Record<number, string> = {
   0: "Clear", 1: "Clear", 2: "Partly Cloudy", 3: "Cloudy",
@@ -53,16 +52,15 @@ export const TopBar = ({ view }: { view: string }) => {
   const timeStr = now ? formatTime(now) : "--:--:--";
   const dateStr = now ? formatDate(now) : "---";
 
-  const WeatherIcon = useMemo(() => {
-    if (!weather) return null;
+  const weatherIcon = useMemo(() => {
+    if (!weather) return "—";
     const code = weather.code;
-    if (code >= 51 && code <= 67) return CloudRain;
-    if (code >= 71 && code <= 77) return CloudSnow;
-    if (code >= 80 && code <= 82) return CloudDrizzle;
-    if (code >= 95) return CloudLightning;
-    if (code >= 1 && code <= 3) return Cloud;
-    if (code >= 45 && code <= 48) return CloudFog;
-    return Sun;
+    if (code >= 51 && code <= 67) return "▒"; // rain
+    if (code >= 71 && code <= 77) return "✻"; // snow
+    if (code >= 80 && code <= 82) return "≋"; // showers
+    if (code >= 95) return "⚡"; // storm
+    if (code >= 1 && code <= 3) return "☁"; // cloudy
+    return "☀"; // clear
   }, [weather]);
 
   return (
@@ -89,10 +87,8 @@ export const TopBar = ({ view }: { view: string }) => {
             {weather && (
               <>
                 <span className="h-3 w-px bg-primary/30" />
-                <span className="flex items-center gap-1.5 mono text-[0.62rem] tracking-widest text-primary/80" title={weather.condition}>
-                  {WeatherIcon && <WeatherIcon size={13} strokeWidth={1.75} className="text-primary/90" />}
-                  <span className="text-primary/90">{weather.condition}</span>
-                  <span className="text-primary/70">{weather.temp}°F</span>
+                <span className="mono text-[0.62rem] tracking-widest text-primary/80" title={weather.condition}>
+                  {weatherIcon} {weather.temp}°F
                 </span>
               </>
             )}

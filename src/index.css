@@ -143,12 +143,6 @@
     0%, 100% { transform: translate3d(0,0,0); }
     50% { transform: translate3d(0,-6px,0); }
   }
-  @keyframes branch-sway {
-    0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
-    25% { transform: translate3d(2px, -1px, 0) rotate(0.2deg); }
-    50% { transform: translate3d(-1px, 1px, 0) rotate(-0.15deg); }
-    75% { transform: translate3d(1px, -2px, 0) rotate(0.1deg); }
-  }
   @keyframes rim-sweep {
     0% { transform: translateY(-100%); opacity: 0; }
     30% { opacity: 1; }
@@ -225,7 +219,6 @@
   .anim-flicker { animation: flicker 6s infinite; }
   .anim-bay-enter { animation: bay-enter 620ms cubic-bezier(0.22,1,0.36,1) both; }
   .anim-swap-in  { animation: swap-in 460ms cubic-bezier(0.22,1,0.36,1) both; }
-  .anim-branch-sway { animation: branch-sway 8s ease-in-out infinite; }
   .rim-sweep { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
   .rim-sweep::before {
     content: ""; position: absolute; inset: 0;
@@ -251,7 +244,7 @@
     transform: translateY(-1px);
   }
   @media (prefers-reduced-motion: reduce) {
-    .anim-bay-enter, .anim-swap-in, .anim-branch-sway { animation: none !important; }
+    .anim-bay-enter, .anim-swap-in { animation: none !important; }
     .bay-hover-glow { transition: none !important; }
     .bay-hover-glow:hover { transform: none !important; }
   }
