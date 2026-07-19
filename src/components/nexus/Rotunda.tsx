@@ -257,7 +257,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           tablet/desktop uses 135dvh for a fuller first-person feel. */}
       <div
         ref={worldRef}
-        className="absolute top-0 left-0 h-[100dvh] md:h-[135dvh] w-auto"
+        className="absolute top-0 left-0 h-[170dvh] md:h-[190dvh] w-auto min-w-full"
         style={{
           transform: worldTransform,
           transition: worldTransition,
@@ -267,7 +267,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         <video
           src={ROTUNDA_LOOP}
           poster={ROTUNDA_HERO}
-          className="block max-w-none h-[100dvh] md:h-[135dvh] w-auto object-cover"
+          className="block max-w-none h-[170dvh] md:h-[190dvh] w-auto min-w-full object-cover"
           style={{ filter: `brightness(${lighting.sceneBrightness}) contrast(${lighting.sceneContrast}) saturate(1.10)` }}
           autoPlay
           muted
@@ -277,6 +277,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           ref={(el) => { if (el) { el.playbackRate = ROTUNDA_LOOP_RATE; el.play?.().catch(() => {}); } }}
           onLoadedMetadata={(e) => { (e.currentTarget as HTMLVideoElement).playbackRate = ROTUNDA_LOOP_RATE; measure(); }}
         />
+
 
 
 
