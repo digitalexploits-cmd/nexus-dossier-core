@@ -299,21 +299,27 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
       {/* CAMERA-FIXED OVERLAYS */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_72%,rgba(5,7,10,0.55)_100%)]" />
       <div className="absolute inset-x-0 top-0 h-20 pointer-events-none bg-gradient-to-b from-background/50 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/70 to-transparent" />
+
+      {/* Kiosk mask: hides the baked-in video kiosk below its white line. */}
+      <div className="absolute inset-x-0 bottom-0 h-[14%] pointer-events-none bg-gradient-to-t from-[#05070a] via-[#05070a]/80 to-transparent" />
 
       {/* Look arrows */}
       <button
         onPointerDown={(e) => e.stopPropagation()}
         onClick={() => stepH(-STEP_H)}
         aria-label="Look left"
-        className="absolute left-3 top-1/2 -translate-y-1/2 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-10 h-16 flex items-center justify-center text-lg"
-      >◄</button>
+        className="absolute left-3 top-1/2 -translate-y-1/2 z-20 text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-10 h-16 flex items-center justify-center text-lg"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+      </button>
       <button
         onPointerDown={(e) => e.stopPropagation()}
         onClick={() => stepH(STEP_H)}
         aria-label="Look right"
-        className="absolute right-3 top-1/2 -translate-y-1/2 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-10 h-16 flex items-center justify-center text-lg"
-      >►</button>
+        className="absolute right-3 top-1/2 -translate-y-1/2 z-20 text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-10 h-16 flex items-center justify-center text-lg"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+      </button>
 
       {/* ===== CONSOLIDATED KIOSK — top translucent bar ===== */}
       <div
@@ -322,16 +328,6 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
       >
         <div className="mx-auto w-[min(98vw,1400px)] border-y border-primary/40 bg-background/40 backdrop-blur-md">
           <div className="flex items-center gap-2 px-3 py-1.5 overflow-x-auto whitespace-nowrap">
-            {/* Brand */}
-            <div className="flex items-center gap-2 mono text-[0.6rem] tracking-[0.28em] uppercase text-primary shrink-0">
-              <span className="status-dot status-live" />
-              <span>NEXUS</span>
-              <span className="text-muted-foreground">|</span>
-              <span className="text-foreground/80">{BRAND.company}</span>
-            </div>
-
-            <span className="mx-1 h-4 w-px bg-primary/30 shrink-0" />
-
             {/* Bay tiles */}
             {ZONES.map((z) => {
               const isLocked = lockedZone?.id === z.id;
@@ -339,14 +335,14 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
                 <button
                   key={z.id}
                   onClick={() => enterZone(z)}
-                  className={`shrink-0 px-2.5 py-1 border mono text-[0.6rem] tracking-[0.24em] uppercase transition-colors ${
+                  title={z.label}
+                  className={`shrink-0 w-8 h-8 flex items-center justify-center border transition-colors ${
                     isLocked
                       ? "border-primary bg-primary/20 text-primary shadow-[0_0_18px_rgba(70,150,255,0.4)]"
                       : "border-primary/30 bg-transparent text-foreground/85 hover:border-primary/70 hover:bg-primary/10 hover:text-primary"
                   }`}
                 >
-                  <span className="text-primary/80 mr-1.5">{z.index}</span>
-                  {z.label}
+                  <span className="mono text-[0.65rem] tracking-widest">{z.index}</span>
                 </button>
               );
             })}
@@ -355,16 +351,21 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
             <button
               onClick={() => setMediaConsoleOpen(true)}
-              className="shrink-0 mono text-[0.6rem] tracking-[0.24em] uppercase text-primary/90 hover:text-primary border border-primary/40 hover:border-primary/70 bg-transparent hover:bg-primary/10 px-2.5 py-1"
-            >◇ MEDIA</button>
+              title="Media"
+              className="shrink-0 w-8 h-8 flex items-center justify-center text-primary/90 hover:text-primary border border-primary/40 hover:border-primary/70 bg-transparent hover:bg-primary/10"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" /><line x1="7" y1="2" x2="7" y2="22" /><line x1="17" y1="2" x2="17" y2="22" /><line x1="2" y1="12" x2="22" y2="12" /><line x1="2" y1="7" x2="7" y2="7" /><line x1="2" y1="17" x2="7" y2="17" /><line x1="17" y1="17" x2="22" y2="17" /><line x1="17" y1="7" x2="22" y2="7" /></svg>
+            </button>
             <button
               onClick={onOpenVault}
-              className="shrink-0 mono text-[0.6rem] tracking-[0.24em] uppercase text-primary/90 hover:text-primary border border-primary/40 hover:border-primary/70 bg-transparent hover:bg-primary/10 px-2.5 py-1"
-            >◆ VAULT</button>
+              title="Vault"
+              className="shrink-0 w-8 h-8 flex items-center justify-center text-primary/90 hover:text-primary border border-primary/40 hover:border-primary/70 bg-transparent hover:bg-primary/10"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" /></svg>
+            </button>
 
             {/* Wind mini-controls */}
-            <div className="ml-auto flex items-center gap-2 mono text-[0.55rem] tracking-[0.24em] uppercase text-muted-foreground shrink-0">
-              <span className="hidden md:inline">≈ WIND</span>
+            <div className="ml-auto flex items-center gap-2 shrink-0">
               <input
                 type="range" min={0} max={2.5} step={0.05}
                 value={windStrength}
@@ -383,28 +384,15 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
                 onClick={() => setWindUserOverride(false)}
                 className="text-primary/80 hover:text-primary border border-primary/40 px-1.5 py-0.5"
                 title="Sync to live St. Louis wind"
-              >LIVE</button>
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" /></svg>
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-
-
       <MediaConsole open={mediaConsoleOpen} onClose={() => setMediaConsoleOpen(false)} />
-
-      {/* Hint */}
-      {hintVisible && (
-        <div className="absolute inset-x-0 top-16 z-40 flex justify-center pointer-events-none">
-          <div className="panel px-4 py-2 pointer-events-auto mono text-[0.6rem] tracking-[0.28em] uppercase text-primary/90 flex items-center gap-3">
-            <span>DRAG TO LOOK · SELECT A BAY FROM THE KIOSK</span>
-            <button
-              onClick={() => { interactedRef.current = true; setHintVisible(false); }}
-              className="text-primary/70 hover:text-primary border border-primary/40 px-2 py-0.5"
-            >×</button>
-          </div>
-        </div>
-      )}
     </section>
   );
 };
