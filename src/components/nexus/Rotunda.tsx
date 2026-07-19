@@ -252,7 +252,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         <img
           src={branchAsset.url}
           alt=""
-          className="absolute inset-0 block max-w-none h-[100dvh] md:h-[135dvh] w-auto pointer-events-none opacity-65 mix-blend-multiply anim-branch-sway"
+          className="absolute inset-0 block max-w-none h-[100dvh] md:h-[135dvh] w-auto pointer-events-none opacity-40 mix-blend-multiply anim-branch-sway"
           draggable={false}
           aria-hidden="true"
         />
