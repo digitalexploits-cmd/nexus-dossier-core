@@ -304,73 +304,68 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         className="absolute right-3 top-1/2 -translate-y-1/2 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-10 h-16 flex items-center justify-center text-lg"
       >►</button>
 
-      {/* ===== CONSOLIDATED KIOSK ===== */}
+      {/* ===== CONSOLIDATED KIOSK — top translucent bar ===== */}
       <div
-        className="absolute left-1/2 bottom-4 md:bottom-6 -translate-x-1/2 z-30 w-[min(96vw,880px)] anim-fade-up"
+        className="absolute left-0 right-0 top-14 z-30 anim-fade-up"
         onPointerDown={(e) => e.stopPropagation()}
       >
-        <div className="border border-primary/50 bg-background/75 backdrop-blur-md shadow-[0_0_60px_rgba(70,150,255,0.35)]">
-          {/* Header strip */}
-          <div className="flex items-center justify-between px-3 py-1.5 border-b border-primary/30 mono text-[0.6rem] tracking-[0.28em] uppercase">
-            <div className="flex items-center gap-2 text-primary">
+        <div className="mx-auto w-[min(98vw,1400px)] border-y border-primary/40 bg-background/40 backdrop-blur-md">
+          <div className="flex items-center gap-2 px-3 py-1.5 overflow-x-auto whitespace-nowrap">
+            {/* Brand */}
+            <div className="flex items-center gap-2 mono text-[0.6rem] tracking-[0.28em] uppercase text-primary shrink-0">
               <span className="status-dot status-live" />
-              <span>NEXUS · {BRAND.company}</span>
+              <span>NEXUS</span>
+              <span className="text-muted-foreground">|</span>
+              <span className="text-foreground/80">{BRAND.company}</span>
             </div>
-            <div className="hidden sm:flex items-center gap-2 text-muted-foreground">
-              <span>KIOSK</span>
-              <span>·</span>
-              <span className="text-primary/80">SELECT ZONE</span>
-            </div>
-          </div>
 
-          {/* Bay grid */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-2 p-3">
+            <span className="mx-1 h-4 w-px bg-primary/30 shrink-0" />
+
+            {/* Bay tiles */}
             {ZONES.map((z) => {
               const isLocked = lockedZone?.id === z.id;
               return (
                 <button
                   key={z.id}
                   onClick={() => enterZone(z)}
-                  className={`text-left px-3 py-2 border transition-colors ${
+                  className={`shrink-0 px-2.5 py-1 border mono text-[0.6rem] tracking-[0.24em] uppercase transition-colors ${
                     isLocked
-                      ? "border-primary bg-primary/15 shadow-[0_0_24px_rgba(70,150,255,0.45)]"
-                      : "border-primary/30 bg-background/40 hover:border-primary/70 hover:bg-primary/10"
+                      ? "border-primary bg-primary/20 text-primary shadow-[0_0_18px_rgba(70,150,255,0.4)]"
+                      : "border-primary/30 bg-transparent text-foreground/85 hover:border-primary/70 hover:bg-primary/10 hover:text-primary"
                   }`}
                 >
-                  <div className="mono text-[0.55rem] tracking-[0.28em] text-primary">{z.index}</div>
-                  <div className="mono text-[0.7rem] tracking-[0.2em] uppercase text-foreground">{z.label}</div>
-                  <div className="mono text-[0.55rem] tracking-[0.22em] uppercase text-muted-foreground truncate">{z.sub}</div>
+                  <span className="text-primary/80 mr-1.5">{z.index}</span>
+                  {z.label}
                 </button>
               );
             })}
-          </div>
 
-          {/* Actions row */}
-          <div className="flex flex-wrap items-center gap-2 px-3 pb-3">
+            <span className="mx-1 h-4 w-px bg-primary/30 shrink-0" />
+
             <button
               onClick={() => setMediaConsoleOpen(true)}
-              className="mono text-[0.6rem] tracking-[0.28em] uppercase text-primary/90 hover:text-primary border border-primary/50 hover:border-primary/80 bg-primary/10 hover:bg-primary/20 px-3 py-1.5"
-            >◇ MEDIA CONSOLE</button>
+              className="shrink-0 mono text-[0.6rem] tracking-[0.24em] uppercase text-primary/90 hover:text-primary border border-primary/40 hover:border-primary/70 bg-transparent hover:bg-primary/10 px-2.5 py-1"
+            >◇ MEDIA</button>
             <button
               onClick={onOpenVault}
-              className="mono text-[0.6rem] tracking-[0.28em] uppercase text-primary/90 hover:text-primary border border-primary/50 hover:border-primary/80 bg-primary/10 hover:bg-primary/20 px-3 py-1.5"
-            >◆ EVIDENCE VAULT</button>
+              className="shrink-0 mono text-[0.6rem] tracking-[0.24em] uppercase text-primary/90 hover:text-primary border border-primary/40 hover:border-primary/70 bg-transparent hover:bg-primary/10 px-2.5 py-1"
+            >◆ VAULT</button>
 
             {/* Wind mini-controls */}
-            <div className="ml-auto flex items-center gap-2 mono text-[0.55rem] tracking-[0.24em] uppercase text-muted-foreground">
-              <span className="hidden sm:inline">≈ WIND</span>
+            <div className="ml-auto flex items-center gap-2 mono text-[0.55rem] tracking-[0.24em] uppercase text-muted-foreground shrink-0">
+              <span className="hidden md:inline">≈ WIND</span>
               <input
                 type="range" min={0} max={2.5} step={0.05}
                 value={windStrength}
                 onChange={(e) => { setWindUserOverride(true); setWindStrength(parseFloat(e.target.value)); }}
-                className="w-20 accent-primary"
+                className="w-16 accent-primary"
                 aria-label="Wind strength"
               />
               <input
                 type="range" min={0.25} max={3} step={0.05}
                 value={windSpeed}
                 onChange={(e) => { setWindUserOverride(true); setWindSpeed(parseFloat(e.target.value)); }}
-                className="w-20 accent-primary"
+                className="w-16 accent-primary"
                 aria-label="Wind speed"
               />
               <button
@@ -382,6 +377,8 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           </div>
         </div>
       </div>
+
+
 
       <MediaConsole open={mediaConsoleOpen} onClose={() => setMediaConsoleOpen(false)} />
 
