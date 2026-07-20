@@ -146,6 +146,9 @@ export const SkyOverlay = ({ weather, reduced }: Props) => {
           style={{ opacity: 0, animation: "storm-flash 9s ease-out infinite" }}
         />
       )}
+
+      {/* Occasional birds gliding across the sky */}
+      <Birds reduced={reduced} />
     </div>
   );
 };
