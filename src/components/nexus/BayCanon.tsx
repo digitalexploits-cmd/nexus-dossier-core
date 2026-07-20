@@ -1,6 +1,8 @@
 import { AnimatedBarGraph, type BarItem } from "./AnimatedBarGraph";
 import { NarratedSlideshow, type Slide } from "./NarratedSlideshow";
 import { DecisionTimeline, type TimelineItem } from "./DecisionTimeline";
+import { ProposalWalkthrough, type ProposalSection, type ProposalStat } from "./ProposalWalkthrough";
+import { CanonReference, type CanonTerm } from "./CanonReference";
 import type { BayId } from "@/data/content";
 
 // ============================================================
