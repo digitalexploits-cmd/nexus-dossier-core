@@ -1,5 +1,7 @@
 import { useMemo } from "react";
 import type { WeatherProfile } from "@/lib/weather";
+import { Birds } from "./Birds";
+
 
 /**
  * Animated sky overlay for the rotunda hero.
@@ -144,6 +146,9 @@ export const SkyOverlay = ({ weather, reduced }: Props) => {
           style={{ opacity: 0, animation: "storm-flash 9s ease-out infinite" }}
         />
       )}
+
+      {/* Occasional birds gliding across the sky */}
+      <Birds reduced={reduced} />
     </div>
   );
 };
