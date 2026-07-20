@@ -274,11 +274,11 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
         <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.18)_0%,transparent_65%)]" />
 
-        {/* Animated foliage — trees/leaves gently sway outside the windows */}
+        {/* Animated foliage — trees/leaves sway outside the windows */}
         <FoliageOverlay
-          strength={windStrength}
-          speed={windSpeed}
-          opacity={Math.min(lighting.foliageOpacity, 0.55)}
+          strength={Math.max(1.1, windStrength)}
+          speed={Math.max(1.1, windSpeed)}
+          opacity={Math.min(lighting.foliageOpacity + 0.25, 0.9)}
           brightness={lighting.foliageBrightness}
         />
 
