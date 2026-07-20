@@ -53,15 +53,14 @@ export const SkyOverlay = ({ weather, reduced }: Props) => {
     }));
   }, [weather.condition]);
 
-  // Cloud pass opacity scales with cover — boosted so motion reads clearly
-  // through the rotunda's windows against the baked-in sky.
-  const cloudOpacity = Math.min(0.35, 0.10 + weather.cloudCover * 0.25);
-  // Faster drift so the sky visibly moves (was up to 2 min per loop).
-  const cloudDur = reduced ? 0 : Math.max(28, 70 - Math.min(40, weather.windMps * 3));
+  // Cloud pass opacity scales with cover — boosted for lively outdoor motion.
+  const cloudOpacity = Math.min(0.65, 0.28 + weather.cloudCover * 0.4);
+  // Faster drift so clouds visibly move across the sky.
+  const cloudDur = reduced ? 0 : Math.max(18, 45 - Math.min(30, weather.windMps * 2.5));
 
   return (
     <div
-      className="absolute inset-x-0 top-0 h-[38%] pointer-events-none overflow-hidden mix-blend-soft-light z-[4]"
+      className="absolute inset-x-0 top-0 h-[46%] pointer-events-none overflow-hidden mix-blend-screen z-[4]"
       style={{ background: conditionTint(weather) }}
       aria-hidden
     >
