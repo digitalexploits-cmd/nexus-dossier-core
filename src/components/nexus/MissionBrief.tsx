@@ -12,6 +12,7 @@ import {
   TECHNICAL_FOCUS,
 } from "@/data/content";
 import { DocumentShelf } from "./DocumentShelf";
+import { ContentEngineChecklist } from "./ContentEngineChecklist";
 import { CredentialsDialog } from "./CredentialsDialog";
 import { OfficialCertificationsGallery } from "./OfficialCertificationsGallery";
 import llcCert from "@/assets/ai-base3-llc-certificate.jpg.asset.json";
@@ -235,6 +236,16 @@ export const MissionBrief = ({ onOpenVault, onContact }: Props) => {
                   </div>
                 ))}
               </div>
+            </Glass>
+          </section>
+
+          {/* Content Engine — internal doctrine reference */}
+          <section className="container py-10">
+            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#4db7ff] mb-3">
+              03B / CONTENT ENGINE — DOCTRINE REFERENCE
+            </div>
+            <Glass className="p-5 md:p-6">
+              <ContentEngineChecklist />
             </Glass>
           </section>
 
