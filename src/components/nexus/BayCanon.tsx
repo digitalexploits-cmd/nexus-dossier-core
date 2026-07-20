@@ -199,8 +199,31 @@ const TechnicalCanon = () => (
 );
 
 
+const PATCH_RULES: PatchRule[] = [
+  {
+    dataset: "Paderborn University",
+    rule: "Primary current-domain validation target for review-safe SINE~WaiV framing.",
+  },
+  {
+    dataset: "NASA IMS",
+    rule: "Must not be described as direct current-domain, MCSA, or ESA validation. Vibration-domain reference only, when clearly labeled.",
+  },
+  {
+    dataset: "XJTU-SY",
+    rule: "Inactive for NSF review-safe framing unless formally reintroduced by founder decision and recorded in the Decision Log.",
+  },
+];
+
 const OperationsCanon = () => (
   <>
+    <section className="container py-10 space-y-4">
+      <SectionEyebrow>10 / OS PATCH 001 — DATASET BOUNDARY CONTROL</SectionEyebrow>
+      <PatchDiagram
+        status="OPERATIONAL PATCH · June 29, 2026"
+        purpose="Standing dataset-boundary rules governing how each source may be described in reviewer-facing material."
+        rules={PATCH_RULES}
+      />
+    </section>
     <section className="container py-10">
       <SectionEyebrow>06 / DECISION LOG — STANDING DECISIONS</SectionEyebrow>
       <DecisionTimeline items={DECISIONS} />
@@ -228,6 +251,7 @@ const PROPOSAL_SECTIONS: ProposalSection[] = [
     id: "objective",
     part: "PART I · SPECIFIC AIMS",
     title: "Objective",
+    patched: true,
     summary:
       "Evaluates the technical feasibility of SINE~WaiV as a candidate software-defined diagnostic architecture for current-domain spectral-state estimation. Tests whether motor stator current can support fault-relevant degradation observability under controlled validation conditions, addressing the cost and scalability barriers of vibration-sensor networks.",
   },
@@ -235,6 +259,7 @@ const PROPOSAL_SECTIONS: ProposalSection[] = [
     id: "premise",
     part: "PART I · SPECIFIC AIMS",
     title: "Disruptive Premise",
+    patched: true,
     summary:
       "Existing electrical measurement infrastructure may support a software-defined diagnostic architecture that reduces dependence on added asset-mounted sensing hardware for selected motor-health monitoring tasks.",
   },
@@ -242,6 +267,7 @@ const PROPOSAL_SECTIONS: ProposalSection[] = [
     id: "aim1",
     part: "PART I · SPECIFIC AIMS",
     title: "Aim 1 — Spectral Separation vs. Fixed-Window Baseline",
+    patched: true,
     summary:
       "Evaluate the mixed-radix spectral-estimation framework on Paderborn University KAt current-channel data against a fixed-window spectral baseline. Measures statistically documented improvement in fault-relevant spectral separation (SNR, distributional metrics), with uncertainty and limitations reported.",
   },
@@ -249,6 +275,7 @@ const PROPOSAL_SECTIONS: ProposalSection[] = [
     id: "aim2",
     part: "PART I · SPECIFIC AIMS",
     title: "Aim 2 — Robustness Under VFD Artifacts",
+    patched: true,
     summary:
       "Evaluate robustness under controlled, synthetic VFD artifact injection based on documented industrial PWM switching-frequency ranges. Measures whether fault-relevant feature stability is preserved under non-sinusoidal switching noise.",
   },
@@ -256,6 +283,7 @@ const PROPOSAL_SECTIONS: ProposalSection[] = [
     id: "aim3",
     part: "PART I · SPECIFIC AIMS",
     title: "Aim 3 — Edge Computational Feasibility",
+    patched: true,
     summary:
       "Quantify computational feasibility by benchmarking execution latency, memory overhead, and estimated power feasibility on ARM Cortex-M7 class microprocessors against a ≤40 mW target.",
   },
@@ -263,6 +291,7 @@ const PROPOSAL_SECTIONS: ProposalSection[] = [
     id: "innovation",
     part: "PART II",
     title: "Innovation & Significance",
+    patched: true,
     summary:
       "Stator current is evaluated as an electromagnetically coupled observation channel for selected fault-relevant mechanical state variables. The proposal tests whether a mixed-radix spectral-estimation approach improves separation of weak current-domain fault features from VFD-related electrical artifacts.",
   },
@@ -322,6 +351,12 @@ const CANON_TERMS: CanonTerm[] = [
     category: "Fault Physics",
     short:
       "Ball Pass Frequency Inner / Outer, Ball Spin Frequency, and Fundamental Train Frequency — bearing fault frequencies computed directly from bearing geometry constants, first-principles rather than machine-learned.",
+  },
+  {
+    term: "Spectral Baseline Note (100 Hz artifact)",
+    category: "Fault Physics",
+    short:
+      "The dominant 100 Hz peak observed in Paderborn N15_M07 phase-current data is expected 2× line-frequency behavior from full-wave rectification in a 50 Hz AC system — a known MCSA artifact, not a fault indicator, and not a data-quality anomaly.",
   },
   {
     term: "Current-domain validation",
