@@ -219,6 +219,8 @@ export type DocItem = {
   date?: string;
   featured?: boolean;
   category?: string;
+  thumb?: string;
+  stats?: Array<{ label: string; value: string }>;
 };
 
 export const DOCUMENTS: DocItem[] = [
@@ -226,10 +228,23 @@ export const DOCUMENTS: DocItem[] = [
   { id: "c_nsf", title: "NSF SBIR Phase I — Full Draft (Canonical)", bay: "capability", kind: "pdf", href: "/proposals/nsf-sbir-phase1-canonical.pdf", category: "Proposal", featured: true },
   { id: "c_sbir2", title: "SBIR Proposal (2026-07-01)", bay: "capability", kind: "pdf", href: "/proposals/sbir-proposal-2026-07-01.pdf", category: "Proposal", date: "2026-07-01" },
 
+  // TECHNICAL — Doctrine videos (Sine Wave / Algorithm Data Bank)
+  { id: "t_decoding", title: "Decoding the Invisible Factory", bay: "technical", kind: "video", href: "/__l5e/assets-v1/8b99b4ab-93a9-4e37-a64a-4b795e669bce/Decoding_the_Invisible_Factory.mp4", category: "Doctrine", description: "Doctrine reel on turning motor-current noise into signal.", featured: true },
+  { id: "t_134hours", title: "134 Hours of Warning · Deterministic Motor Faults", bay: "technical", kind: "video", href: "/__l5e/assets-v1/e9bc8b44-813f-4d20-bf20-90202e1e779e/134_Hours_of_Warning_Extracting_Deterministic_Motor_Faults_fro.mp4", category: "Doctrine", description: "Deterministic fault extraction lead-time walkthrough." },
+  { id: "t_vfd", title: "Extracting Signal from VFD Noise · SINE~WaiV", bay: "technical", kind: "video", href: "/__l5e/assets-v1/15b6ec13-a4b8-467f-b54f-ee1e1de692c1/Extracting_Signal_from_VFD_Noise_The_SINE-WaiV_Doctrine_1.mp4", category: "Doctrine", description: "Signal recovery from VFD-driven current." },
+
   // OPERATIONS
-  { id: "o_paderborn", title: "Official Paderborn Validation Results", bay: "operations", kind: "pdf", href: "/evidence/paderborn-validation-results.pdf", category: "Validation", featured: true },
-  { id: "o_femto", title: "IEEE PHM 2012 FEMTO Bearing Diagnostic Results", bay: "operations", kind: "pdf", href: "/evidence/ieee-phm-femto-bearing-results.pdf", category: "Validation" },
+  { id: "o_paderborn", title: "Official Paderborn Validation Results", bay: "operations", kind: "pdf", href: "/evidence/paderborn-validation-results.pdf", category: "Validation", featured: true,
+    stats: [{ label: "SNR", value: "+24.6 dB" }, { label: "Kurtosis", value: "669.71" }] },
+  { id: "o_femto", title: "IEEE PHM 2012 FEMTO Bearing Diagnostic Results", bay: "operations", kind: "pdf", href: "/evidence/ieee-phm-femto-bearing-results.pdf", category: "Validation",
+    stats: [{ label: "Dataset", value: "FEMTO PHM 2012" }, { label: "Class", value: "Bearing" }] },
   { id: "o_evmanifest", title: "NSF Evidence Manifest", bay: "operations", kind: "text", href: "/evidence/nsf-evidence-manifest.txt", category: "Evidence" },
+
+  // OPERATIONS — Field cinematics
+  { id: "o_cin_1304", title: "Field Cinematic · 1304", bay: "operations", kind: "video", href: "/__l5e/assets-v1/bc68d4ac-2180-4143-b590-cadf845fe7d0/grok-video-1304fff2-9357-46c5-81ff-6a57bfc5b7d6.mp4", category: "Cinematics" },
+  { id: "o_cin_7110", title: "Field Cinematic · 7110", bay: "operations", kind: "video", href: "/__l5e/assets-v1/30ac6859-baa2-4c5d-a2df-d09d2907be56/grok-video-7110fcb2-fb54-4bff-9ecb-38b839bc3657.mp4", category: "Cinematics" },
+  { id: "o_cin_b672", title: "Field Cinematic · B672", bay: "operations", kind: "video", href: "/__l5e/assets-v1/3956d476-7532-4685-978a-0d6850099b8d/grok-video-b6725d81-0e6b-47ee-8eb7-add63ddae473.mp4", category: "Cinematics" },
+  { id: "o_cin_d4", title: "Field Cinematic · D4", bay: "operations", kind: "video", href: "/__l5e/assets-v1/70e23ab7-91bf-4656-92c2-fed49f1846cb/grok-video-d4.mp4", category: "Cinematics" },
 ];
 
 export const documentsForBay = (bay: BayId): DocItem[] => {
