@@ -19,6 +19,8 @@ import { BAYS, type BayId } from "@/data/content";
 import { OfficialCertificationsGallery } from "./OfficialCertificationsGallery";
 import { AssetViewer } from "./AssetViewer";
 import { MediaConsole } from "./MediaConsole";
+import { BayCanon } from "./BayCanon";
+import { DocumentShelf } from "./DocumentShelf";
 import llcCert from "@/assets/ai-base3-llc-certificate.jpg.asset.json";
 import whiteHouseLetter from "@/assets/white-house-letter.jpg.asset.json";
 
@@ -279,6 +281,14 @@ export const BayShell = ({
           </div>
         )}
       </section>
+
+      {/* ============ BAY CANON — validation graph / decision log / evidence walkthrough ============ */}
+      <BayCanon bayId={bayId} />
+
+      {/* ============ FILES ON RECORD ============ */}
+      <DocumentShelf bay={bayId} />
+
+
 
       {/* Credentials gallery — modal-like overlay when opened */}
       {certsOpen && (
