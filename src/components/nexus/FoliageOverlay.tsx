@@ -107,7 +107,11 @@ export const FoliageOverlay = ({
     style={{ opacity, filter: `brightness(${brightness})` }}
   >
     {/* Only outside-the-facility clusters — mid-height so they read through the windows. */}
-    <Cluster className="top-1/3 -left-20" size={200} swayClass="foliage-sway-slow" delay="0.6s" leaves={3} strength={strength} speed={speed} opacity={opacity} brightness={brightness} />
-    <Cluster className="top-1/2 -right-14" size={190} swayClass="foliage-sway" delay="1.8s" leaves={3} strength={strength} speed={speed} opacity={opacity} brightness={brightness} />
+    <Cluster className="top-1/4 -left-24" size={240} swayClass="foliage-sway-slow" delay="0.2s" leaves={5} strength={strength} speed={speed} opacity={opacity} brightness={brightness} />
+    <Cluster className="top-1/3 -left-10" size={180} swayClass="foliage-sway" delay="0.9s" leaves={4} strength={strength * 1.1} speed={speed * 1.15} opacity={opacity} brightness={brightness} />
+    <Cluster className="top-1/2 -right-20" size={230} swayClass="foliage-sway" delay="1.4s" leaves={5} strength={strength} speed={speed} opacity={opacity} brightness={brightness} />
+    <Cluster className="top-[42%] -right-6" size={170} swayClass="foliage-sway-slow" delay="2.1s" leaves={4} strength={strength * 1.15} speed={speed * 1.2} opacity={opacity} brightness={brightness} />
+    <Cluster className="top-[58%] left-[12%]" size={140} swayClass="foliage-sway" delay="1.1s" leaves={3} strength={strength * 0.9} speed={speed * 1.3} opacity={opacity * 0.85} brightness={brightness} />
+    <Cluster className="top-[46%] right-[18%]" size={150} swayClass="foliage-sway-slow" delay="2.6s" leaves={3} strength={strength * 0.9} speed={speed * 1.1} opacity={opacity * 0.85} brightness={brightness} />
   </div>
 );
