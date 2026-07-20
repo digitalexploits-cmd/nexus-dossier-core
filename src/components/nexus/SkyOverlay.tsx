@@ -1,5 +1,7 @@
 import { useMemo } from "react";
 import type { WeatherProfile } from "@/lib/weather";
+import { Birds } from "./Birds";
+
 
 /**
  * Animated sky overlay for the rotunda hero.
