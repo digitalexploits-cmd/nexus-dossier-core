@@ -154,41 +154,41 @@ const SectionEyebrow = ({ children }: { children: React.ReactNode }) => (
 );
 
 const TechnicalCanon = () => (
-  <section className="container py-10 space-y-4">
-    <SectionEyebrow>07 / VALIDATION STATUS — LIVE EVIDENCE GRAPH</SectionEyebrow>
-    <p className="text-xs md:text-sm text-[#c8d4e2] leading-relaxed max-w-3xl">
-      Validation controls credibility — the goal is a technically defensible bounded claim, not an
-      impressive-sounding one.
-    </p>
-    <div
-      className="rounded-sm border p-5 md:p-6"
-      style={{
-        borderColor: "rgba(201,162,74,0.42)",
-        background: "rgba(16,30,52,0.82)",
-        boxShadow: "0 30px 80px -30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08), 0 0 56px #c9a24a22",
-      }}
-    >
-      <AnimatedBarGraph items={VALIDATION_BARS} />
-    </div>
+  <>
+    <section className="container py-10 space-y-4">
+      <SectionEyebrow>07 / VALIDATION STATUS — LIVE EVIDENCE GRAPH</SectionEyebrow>
+      <p className="text-xs md:text-sm text-[#c8d4e2] leading-relaxed max-w-3xl">
+        Validation controls credibility — the goal is a technically defensible bounded claim, not an
+        impressive-sounding one.
+      </p>
+      <div
+        className="rounded-sm border p-5 md:p-6"
+        style={{
+          borderColor: "rgba(201,162,74,0.42)",
+          background: "rgba(16,30,52,0.82)",
+          boxShadow: "0 30px 80px -30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08), 0 0 56px #c9a24a22",
+        }}
+      >
+        <AnimatedBarGraph items={VALIDATION_BARS} />
+      </div>
 
-    <div className="mt-4 flex flex-wrap gap-2">
-      {DATASET_CHIPS.map((c) => {
-        const s = chipStyle(c.tone);
-        return (
-          <div
-            key={c.label}
-            className="mono text-[0.6rem] tracking-[0.24em] uppercase px-3 py-1.5 rounded-sm border flex items-center gap-2"
-            style={{ borderColor: s.border, background: "rgba(11,18,32,0.7)", color: s.color }}
-          >
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: s.dot, boxShadow: `0 0 6px ${s.dot}` }} />
-            <span>{c.label}</span>
-            <span className="text-[#8fa3b8] normal-case tracking-normal font-normal">— {c.note}</span>
-          </div>
-        );
-      })}
-    </div>
-  </section>
-);
+      <div className="mt-4 flex flex-wrap gap-2">
+        {DATASET_CHIPS.map((c) => {
+          const s = chipStyle(c.tone);
+          return (
+            <div
+              key={c.label}
+              className="mono text-[0.6rem] tracking-[0.24em] uppercase px-3 py-1.5 rounded-sm border flex items-center gap-2"
+              style={{ borderColor: s.border, background: "rgba(11,18,32,0.7)", color: s.color }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: s.dot, boxShadow: `0 0 6px ${s.dot}` }} />
+              <span>{c.label}</span>
+              <span className="text-[#8fa3b8] normal-case tracking-normal font-normal">— {c.note}</span>
+            </div>
+          );
+        })}
+      </div>
+    </section>
 
     <section className="container py-10">
       <SectionEyebrow>09 / LIVING TECHNICAL CANON — REFERENCE</SectionEyebrow>
@@ -196,6 +196,7 @@ const TechnicalCanon = () => (
     </section>
   </>
 );
+
 
 const OperationsCanon = () => (
   <>
