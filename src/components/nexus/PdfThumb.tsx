@@ -16,7 +16,7 @@ async function renderThumb(url: string): Promise<string> {
   if (INFLIGHT.has(url)) return INFLIGHT.get(url)!;
 
   const p = (async () => {
-    const loadingTask = pdfjsLib.getDocument(url);
+    const loadingTask = pdfjsLib.getDocument({ url });
     const pdf = await loadingTask.promise;
     const page = await pdf.getPage(1);
     const baseViewport = page.getViewport({ scale: 1 });
