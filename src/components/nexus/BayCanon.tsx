@@ -190,6 +190,13 @@ const TechnicalCanon = () => (
   </section>
 );
 
+    <section className="container py-10">
+      <SectionEyebrow>09 / LIVING TECHNICAL CANON — REFERENCE</SectionEyebrow>
+      <CanonReference terms={CANON_TERMS} />
+    </section>
+  </>
+);
+
 const OperationsCanon = () => (
   <>
     <section className="container py-10">
@@ -203,8 +210,153 @@ const OperationsCanon = () => (
   </>
 );
 
+// ============================================================
+// CAPABILITY BAY — NSF SBIR Proposal walkthrough
+// ============================================================
+const PROPOSAL_STATS: ProposalStat[] = [
+  { label: "Solicitation", value: "NSF 26-510" },
+  { label: "Proposal #", value: "00113162" },
+  { label: "Ask", value: "$305,000" },
+  { label: "Period", value: "12 months" },
+  { label: "Deadline", value: "Jul 27, 2026" },
+];
+
+const PROPOSAL_SECTIONS: ProposalSection[] = [
+  {
+    id: "objective",
+    part: "PART I · SPECIFIC AIMS",
+    title: "Objective",
+    summary:
+      "Evaluates the technical feasibility of SINE~WaiV as a candidate software-defined diagnostic architecture for current-domain spectral-state estimation. Tests whether motor stator current can support fault-relevant degradation observability under controlled validation conditions, addressing the cost and scalability barriers of vibration-sensor networks.",
+  },
+  {
+    id: "premise",
+    part: "PART I · SPECIFIC AIMS",
+    title: "Disruptive Premise",
+    summary:
+      "Existing electrical measurement infrastructure may support a software-defined diagnostic architecture that reduces dependence on added asset-mounted sensing hardware for selected motor-health monitoring tasks.",
+  },
+  {
+    id: "aim1",
+    part: "PART I · SPECIFIC AIMS",
+    title: "Aim 1 — Spectral Separation vs. Fixed-Window Baseline",
+    summary:
+      "Evaluate the mixed-radix spectral-estimation framework on Paderborn University KAt current-channel data against a fixed-window spectral baseline. Measures statistically documented improvement in fault-relevant spectral separation (SNR, distributional metrics), with uncertainty and limitations reported.",
+  },
+  {
+    id: "aim2",
+    part: "PART I · SPECIFIC AIMS",
+    title: "Aim 2 — Robustness Under VFD Artifacts",
+    summary:
+      "Evaluate robustness under controlled, synthetic VFD artifact injection based on documented industrial PWM switching-frequency ranges. Measures whether fault-relevant feature stability is preserved under non-sinusoidal switching noise.",
+  },
+  {
+    id: "aim3",
+    part: "PART I · SPECIFIC AIMS",
+    title: "Aim 3 — Edge Computational Feasibility",
+    summary:
+      "Quantify computational feasibility by benchmarking execution latency, memory overhead, and estimated power feasibility on ARM Cortex-M7 class microprocessors against a ≤40 mW target.",
+  },
+  {
+    id: "innovation",
+    part: "PART II",
+    title: "Innovation & Significance",
+    summary:
+      "Stator current is evaluated as an electromagnetically coupled observation channel for selected fault-relevant mechanical state variables. The proposal tests whether a mixed-radix spectral-estimation approach improves separation of weak current-domain fault features from VFD-related electrical artifacts.",
+  },
+  {
+    id: "commercialization",
+    part: "PART II-B",
+    title: "Commercialization Plan",
+    summary:
+      "Two-mode deployment: Mode A is a pure software layer for facilities with existing current-data capture, delivered as SaaS via Nexus. Mode II covers Phase II Spectral Guardian Dot autonomous sensing nodes for facilities lacking data infrastructure — notably hazardous / ATEX-rated environments. Three-phase path: Phase I algorithm validation, Phase II field validation and beta deployment, Phase III fleet-scale licensing.",
+  },
+  {
+    id: "methodology",
+    part: "PART III",
+    title: "Technical Methodology",
+    summary:
+      "Three sequential Specific Aims, each gating entry to the next, anchored to native electrical-domain data. Central hypothesis: a 1,728-point mixed-radix (2^6 × 3^3) sub-window spectral estimator, adaptively steered, achieves better fault-sideband isolation than conventional global FFT at edge-compatible computational cost.",
+  },
+  {
+    id: "stats",
+    part: "PART IV",
+    title: "Statistical Grounding",
+    summary:
+      "Dual-stage statistical verification: an RLS-filter-based dynamic confidence interval on each state estimate, plus a distributional benchmark (Kolmogorov–Smirnov test, KL divergence) comparing SINE~WaiV output against the FFT baseline. Characterizes a defensible performance envelope rather than a single-figure claim.",
+  },
+];
+
+// ============================================================
+// TECHNICAL BAY — Living Technical Canon reference terms
+// ============================================================
+const CANON_TERMS: CanonTerm[] = [
+  {
+    term: "SINE~WaiV",
+    category: "Core System",
+    short:
+      "Software-only Motor Current Signature Analysis engine using mixed-radix spectral resolution to separate fault signatures from VFD switching noise, with no added sensor hardware.",
+  },
+  {
+    term: "Mixed-radix 1,728-point FFT",
+    category: "Core System",
+    short:
+      "A 2^6 × 3^3 factorization producing 28 valid integer sub-window sizes, giving flexibility to steer analysis away from VFD kill zones that fixed binary FFTs cannot avoid.",
+  },
+  {
+    term: "VFD kill zones",
+    category: "Core System",
+    short:
+      "Empirically mapped frequency bands (170–185 Hz, 258–260 Hz) where VFD switching artifacts dominate the current spectrum and mask fault signatures.",
+  },
+  {
+    term: "K(f,t) adaptive filter",
+    category: "Core System",
+    short:
+      "The frequency-and-time adaptive weighting function that repositions the spectral sub-window toward fault-relevant bands and de-emphasizes VFD carrier harmonics.",
+  },
+  {
+    term: "BPFI / BPFO / BSF / FTF",
+    category: "Fault Physics",
+    short:
+      "Ball Pass Frequency Inner / Outer, Ball Spin Frequency, and Fundamental Train Frequency — bearing fault frequencies computed directly from bearing geometry constants, first-principles rather than machine-learned.",
+  },
+  {
+    term: "Current-domain validation",
+    category: "Evidence Discipline",
+    short:
+      "Validation performed on real motor current data (e.g. Paderborn KAt), as distinct from vibration/accelerometer-domain data — the only validation type that directly supports SINE~WaiV's current-domain claims.",
+  },
+  {
+    term: "Vibration-domain reference",
+    category: "Evidence Discipline",
+    short:
+      "Data such as NASA IMS that measures mechanical vibration, not electrical current. Useful only as a qualified proxy/reference — never as direct proof of current-domain performance.",
+  },
+  {
+    term: "Preliminary internal benchmark",
+    category: "Evidence Discipline",
+    short:
+      "A result observed internally that has not yet been independently validated or reproduced under controlled baseline conditions. Reported with that qualifier, not as settled fact.",
+  },
+  {
+    term: "Independent validator",
+    category: "Evidence Discipline",
+    short:
+      "A domain-credentialed third party (DSP/MCSA specialist) engaged to independently review methodology and results — distinct from internal preliminary findings.",
+  },
+];
+
+const CapabilityCanon = () => (
+  <section className="container py-10">
+    <SectionEyebrow>01 / PROPOSAL WALKTHROUGH — INTERACTIVE</SectionEyebrow>
+    <ProposalWalkthrough stats={PROPOSAL_STATS} sections={PROPOSAL_SECTIONS} />
+  </section>
+);
+
 export const BayCanon = ({ bayId }: { bayId: BayId }) => {
   if (bayId === "technical") return <TechnicalCanon />;
   if (bayId === "operations") return <OperationsCanon />;
+  if (bayId === "capability") return <CapabilityCanon />;
   return null;
 };
