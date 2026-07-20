@@ -5,6 +5,7 @@ export interface ProposalSection {
   part: string; // e.g. "PART I"
   title: string;
   summary: string;
+  patched?: boolean;
 }
 
 export interface ProposalStat {
@@ -76,8 +77,22 @@ export const ProposalWalkthrough = ({ stats, sections }: Props) => {
                     {sec.title}
                   </span>
                 </span>
-                <span className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
-                  {isOpen ? "COLLAPSE ▲" : "EXPAND ▾"}
+                <span className="flex items-center gap-2">
+                  {sec.patched && (
+                    <span
+                      className="mono text-[0.5rem] tracking-[0.24em] uppercase px-2 py-0.5 rounded-sm border"
+                      style={{
+                        borderColor: "rgba(201,162,74,0.65)",
+                        background: "rgba(11,18,32,0.6)",
+                        color: "#eed99a",
+                      }}
+                    >
+                      Reviewer-Safe Patch Applied
+                    </span>
+                  )}
+                  <span className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
+                    {isOpen ? "COLLAPSE ▲" : "EXPAND ▾"}
+                  </span>
                 </span>
               </button>
               <div
