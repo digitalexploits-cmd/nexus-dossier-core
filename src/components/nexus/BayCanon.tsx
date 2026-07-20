@@ -3,6 +3,7 @@ import { NarratedSlideshow, type Slide } from "./NarratedSlideshow";
 import { DecisionTimeline, type TimelineItem } from "./DecisionTimeline";
 import { ProposalWalkthrough, type ProposalSection, type ProposalStat } from "./ProposalWalkthrough";
 import { CanonReference, type CanonTerm } from "./CanonReference";
+import { PatchDiagram, type PatchRule } from "./PatchDiagram";
 import type { BayId } from "@/data/content";
 
 // ============================================================
