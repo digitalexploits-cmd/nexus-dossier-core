@@ -282,6 +282,14 @@ export const BayShell = ({
         )}
       </section>
 
+      {/* ============ BAY CANON — validation graph / decision log / evidence walkthrough ============ */}
+      <BayCanon bayId={bayId} />
+
+      {/* ============ FILES ON RECORD ============ */}
+      <DocumentShelf bay={bayId} />
+
+
+
       {/* Credentials gallery — modal-like overlay when opened */}
       {certsOpen && (
         <div className="fixed inset-0 z-[70] overflow-y-auto bg-[rgba(3,6,12,0.94)] backdrop-blur-lg">
