@@ -388,16 +388,19 @@ export const BayShell = ({
                 TAP ANY CATEGORY TO REVEAL
               </div>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-              {content.categories.map((c) => {
+            {(() => {
+              const contentCats = content.categories.filter((c) => !c.action);
+              const actionCats = content.categories.filter((c) => c.action);
+              const renderTile = (c: Category) => {
                 const count = c.assets?.length ?? 0;
                 return (
                   <button
                     key={c.id}
                     type="button"
                     onClick={() => onCategoryClick(c)}
-                    className="interactive group flex items-center gap-2 rounded-sm border px-2.5 py-2 text-left transition-all duration-200 hover:border-[color:var(--bay-accent)]"
+                    className="interactive group flex items-center gap-2 rounded-sm border px-2.5 py-2 text-left transition-all duration-200 hover:-translate-y-[1px] hover:border-[color:var(--bay-accent)]"
                     style={{ borderColor: "rgba(130,205,255,0.18)", background: "rgba(8,14,24,0.55)" }}
+                    aria-label={`${c.label}${c.action ? " — action" : count ? ` — ${count} items` : ""}`}
                   >
                     <span style={{ color: accent }} className="shrink-0">
                       <CategoryIcon name={c.icon} />
@@ -408,8 +411,26 @@ export const BayShell = ({
                     </span>
                   </button>
                 );
-              })}
-            </div>
+              };
+              return (
+                <>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                    {contentCats.map(renderTile)}
+                  </div>
+                  {actionCats.length > 0 && (
+                    <>
+                      <div className="flex items-center gap-3 mt-5 mb-2">
+                        <div className="mono text-[0.55rem] tracking-[0.28em] uppercase text-[#8fa3b8]">ACTIONS</div>
+                        <div className="flex-1 h-[1px]" style={{ background: `linear-gradient(90deg, ${accent}55, transparent)` }} />
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                        {actionCats.map(renderTile)}
+                      </div>
+                    </>
+                  )}
+                </>
+              );
+            })()}
           </div>
         )}
       </section>
