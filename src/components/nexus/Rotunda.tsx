@@ -275,11 +275,12 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
               key={z.id}
               onPointerDown={(e) => e.stopPropagation()}
               onClick={(e) => { e.stopPropagation(); dismissHint(); enterZone(z); }}
-              className="bay-hover-glow absolute top-1/2 group rounded-sm"
-              style={{ left: `${z.pos * 100}%`, transform: "translate(-50%, -50%)" }}
+              className="bay-hover-glow absolute top-1/2 group rounded-sm px-3 py-4 -m-3 touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
+              style={{ left: `${z.pos * 100}%`, transform: "translate(-50%, -50%)", minWidth: 56, minHeight: 88 }}
               aria-label={`${z.id === "vault" ? "Open" : "Enter"} ${z.label}`}
             >
               <div className="relative flex flex-col items-center pointer-events-auto">
+
                 <div
                   className={`w-3 h-3 rounded-full transition-all duration-200 ${
                     isLocked
