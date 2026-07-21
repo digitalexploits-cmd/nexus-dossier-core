@@ -7,6 +7,8 @@ interface Props {
   label: string;
   kind: TransitionKind;
   bgImage?: string;
+  /** Optional cinematic video — takes priority over bgImage when set. */
+  bgVideo?: string;
   /** Short destination code, e.g. "BAY 02" or "VAULT" */
   code?: string;
   onDone: () => void;
@@ -51,7 +53,7 @@ const FLAVORS: readonly Flavor[] = [
 ] as const;
 
 /** Cinematic multi-stage transit sequence with HUD, telemetry, and dual scans. */
-export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => {
+export const BayTransition = ({ label, kind, bgImage, bgVideo, code, onDone }: Props) => {
   const reduced = prefersReducedMotion();
 
   useEffect(() => {
@@ -113,24 +115,44 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
         }}
       />
 
-      {/* Cinematic still — big, bright, and in-your-face */}
-      {bgImage && !reduced && (
+      {/* Cinematic backdrop — video preferred, still image fallback */}
+      {(bgVideo || bgImage) && !reduced && (
         <>
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `url(${bgImage})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              filter: "saturate(1.15) contrast(1.15) brightness(1.15)",
-              transformOrigin: "50% 50%",
-              willChange: "transform, filter, opacity, clip-path",
-              animation:
-                flavor.overlay === "iris"
-                  ? `${flavorAnim}, iris-open ${dur} ${ease} forwards`
-                  : flavorAnim,
-            }}
-          />
+          {bgVideo ? (
+            <video
+              src={bgVideo}
+              autoPlay
+              muted
+              playsInline
+              loop
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{
+                filter: "saturate(1.15) contrast(1.15) brightness(1.15)",
+                transformOrigin: "50% 50%",
+                willChange: "transform, filter, opacity, clip-path",
+                animation:
+                  flavor.overlay === "iris"
+                    ? `${flavorAnim}, iris-open ${dur} ${ease} forwards`
+                    : flavorAnim,
+              }}
+            />
+          ) : (
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: `url(${bgImage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                filter: "saturate(1.15) contrast(1.15) brightness(1.15)",
+                transformOrigin: "50% 50%",
+                willChange: "transform, filter, opacity, clip-path",
+                animation:
+                  flavor.overlay === "iris"
+                    ? `${flavorAnim}, iris-open ${dur} ${ease} forwards`
+                    : flavorAnim,
+              }}
+            />
+          )}
           {/* Gentle vignette — keeps focus without swallowing the frame */}
           <div
             className="absolute inset-0"
