@@ -5,6 +5,7 @@ import { ProposalWalkthrough, type ProposalSection, type ProposalStat } from "./
 import { CanonReference, type CanonTerm } from "./CanonReference";
 import { PatchDiagram, type PatchRule } from "./PatchDiagram";
 import { HeroImage, HoverVideo, InstrumentFrame } from "./MediaPanel";
+import { TechnicalCanonHeader } from "./TechnicalCanonHeader";
 import type { BayId } from "@/data/content";
 
 const MEDIA = {
