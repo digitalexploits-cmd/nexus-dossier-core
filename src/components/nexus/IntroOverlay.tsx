@@ -5,8 +5,8 @@ interface Props {
   onComplete: () => void;
 }
 
-// Stadium fireworks flyby — cold-open intro.
-const INTRO_SRC = "/__l5e/assets-v1/df935555-91eb-4b14-96e9-695bf71e9c43/Best_July_4_Vid.mp4";
+// Busch Stadium flyby — cold-open intro.
+const INTRO_SRC = "/__l5e/assets-v1/ac49459b-d2ac-4185-bfe0-201972bf168f/intro-stadium-flyby.mp4";
 
 const HARD_TIMEOUT_MS = 20000;
 const STALL_TIMEOUT_MS = 6000;
