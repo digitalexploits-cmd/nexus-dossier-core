@@ -176,6 +176,7 @@ export const BayShell = ({
           <div className="pl-rays" />
           <div className="pl-rim" />
           <div className="pl-bloom" />
+          <div className="pl-flare" />
           <div className="pl-grade" />
         </div>
 
