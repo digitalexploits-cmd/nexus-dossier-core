@@ -293,7 +293,9 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           </div>
         </div>
 
-        {/* Zone markers */}
+        {/* Zone markers — kiosk labels with strict 3-tier hierarchy:
+            (1) index chip · (2) title · (3) sub. Label block is width-capped
+            so adjacent zones never overlap on any breakpoint. */}
         {ZONES.map((z) => {
           const isLocked = lockedZone?.id === z.id;
           return (
@@ -306,7 +308,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
               aria-label={`${z.id === "vault" ? "Open" : "Enter"} ${z.label}`}
             >
               <div className="relative flex flex-col items-center pointer-events-auto">
-
+                {/* Beacon */}
                 <div
                   className={`w-3 h-3 rounded-full transition-all duration-200 ${
                     isLocked
@@ -314,21 +316,51 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
                       : "bg-primary/70 shadow-[0_0_10px_rgba(70,150,255,0.9)] anim-flicker"
                   }`}
                 />
-                <div className={`mt-2 w-px transition-all ${isLocked ? "h-16 sm:h-24 bg-primary/60" : "h-8 sm:h-12 bg-primary/30"}`} />
-                <div
-                  className={`mt-2 mono uppercase whitespace-nowrap transition-all ${
-                    isLocked
-                      ? "text-primary text-xs sm:text-sm tracking-[0.28em] sm:tracking-[0.32em]"
-                      : "text-primary/70 text-[0.55rem] sm:text-[0.6rem] tracking-[0.24em] sm:tracking-[0.28em] group-hover:text-primary"
-                  }`}
-                  style={isLocked ? { textShadow: "0 0 18px hsl(var(--primary) / 0.7)" } : undefined}
+                {/* Stem */}
+                <div className={`mt-2 w-px transition-all ${isLocked ? "h-14 sm:h-20 bg-primary/60" : "h-8 sm:h-12 bg-primary/30"}`} />
+
+                {/* Label stack — capped width, centered, tiered typography */}
+                <div className={`mt-2 flex flex-col items-center gap-1 transition-opacity ${
+                  isLocked ? "opacity-100" : "opacity-90 group-hover:opacity-100"
+                }`}
+                  style={{ width: isLocked ? "min(11rem, 40vw)" : "min(8.5rem, 32vw)" }}
                 >
-                  {z.index} · {z.label}
-                </div>
-                <div className={`mono text-[0.5rem] sm:text-[0.55rem] tracking-[0.24em] sm:tracking-[0.28em] uppercase mt-1 transition-opacity ${
-                  isLocked ? "text-primary/80 opacity-100" : "text-muted-foreground opacity-0 group-hover:opacity-70"
-                }`}>
-                  {z.sub}
+                  {/* Tier 1 — index chip */}
+                  <div className={`mono tracking-[0.32em] px-1.5 py-[1px] border transition-colors ${
+                    isLocked
+                      ? "text-primary border-primary/70 bg-primary/10 text-[0.55rem] sm:text-[0.6rem]"
+                      : "text-primary/70 border-primary/25 bg-background/40 text-[0.5rem] sm:text-[0.55rem] group-hover:text-primary group-hover:border-primary/60"
+                  }`}>
+                    {z.index}
+                  </div>
+
+                  {/* Tier 2 — title */}
+                  <div
+                    className={`mono uppercase text-center leading-tight transition-all ${
+                      isLocked
+                        ? "text-primary text-[0.72rem] sm:text-sm tracking-[0.22em] sm:tracking-[0.28em]"
+                        : "text-primary/85 text-[0.6rem] sm:text-[0.68rem] tracking-[0.18em] sm:tracking-[0.24em] group-hover:text-primary"
+                    }`}
+                    style={isLocked ? { textShadow: "0 0 18px hsl(var(--primary) / 0.7)" } : undefined}
+                  >
+                    {z.label}
+                  </div>
+
+                  {/* Tier 3 — sub (only on lock or hover, never wraps to more than 2 lines) */}
+                  <div className={`mono uppercase text-center leading-tight tracking-[0.2em] sm:tracking-[0.24em] transition-opacity ${
+                    isLocked
+                      ? "text-primary/70 opacity-100 text-[0.5rem] sm:text-[0.55rem]"
+                      : "text-muted-foreground opacity-0 group-hover:opacity-70 text-[0.5rem] sm:text-[0.55rem]"
+                  }`}
+                    style={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {z.sub}
+                  </div>
                 </div>
               </div>
             </button>
@@ -420,15 +452,23 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         className="absolute left-1/2 -translate-x-1/2 bottom-6 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-11 flex items-center justify-center touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
       >▼</button>
 
-      {/* Lock-on ENTER prompt (keyboard/drag flow) */}
+      {/* Lock-on ENTER prompt — 2-tier hierarchy: verb + destination.
+          Uses whitespace-nowrap with responsive sizing; the outer wrapper
+          caps width so it never bleeds past the viewport. */}
       {lockedZone && (
         <div className="absolute inset-x-0 bottom-20 z-20 flex justify-center pointer-events-none px-4">
           <button
             onPointerDown={(e) => e.stopPropagation()}
             onClick={(e) => { e.stopPropagation(); enterZone(lockedZone); }}
-            className="pointer-events-auto mono uppercase text-primary border border-primary/70 bg-primary/10 hover:bg-primary/20 backdrop-blur-sm px-6 py-3 tracking-[0.32em] text-xs sm:text-sm shadow-[0_0_40px_rgba(70,150,255,0.35)] transition-colors touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 max-w-[calc(100vw-2rem)] truncate"
+            className="pointer-events-auto flex items-center gap-2 sm:gap-3 mono uppercase text-primary border border-primary/70 bg-primary/10 hover:bg-primary/20 backdrop-blur-sm px-4 sm:px-6 py-2.5 sm:py-3 shadow-[0_0_40px_rgba(70,150,255,0.35)] transition-colors touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 max-w-[calc(100vw-2rem)]"
           >
-            ▶ {lockedZone.id === "vault" ? "OPEN" : "ENTER"} — {lockedZone.label.toUpperCase()}
+            <span className="tracking-[0.32em] text-[0.65rem] sm:text-xs text-primary/80 whitespace-nowrap">
+              ▶ {lockedZone.id === "vault" ? "OPEN" : "ENTER"}
+            </span>
+            <span className="h-3 w-px bg-primary/40" aria-hidden />
+            <span className="tracking-[0.22em] sm:tracking-[0.28em] text-xs sm:text-sm truncate">
+              {lockedZone.label.toUpperCase()}
+            </span>
           </button>
         </div>
       )}
