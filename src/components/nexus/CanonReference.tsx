@@ -16,10 +16,11 @@ export const CanonReference = ({ terms }: Props) => {
   const [activeCat, setActiveCat] = useState<string | null>(null);
   const [open, setOpen] = useState<string | null>(null);
 
-  const categories = useMemo(
-    () => Array.from(new Set(terms.map((t) => t.category))),
-    [terms],
-  );
+  const categories = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const t of terms) counts.set(t.category, (counts.get(t.category) ?? 0) + 1);
+    return Array.from(counts.entries()).map(([label, count]) => ({ label, count }));
+  }, [terms]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -55,13 +56,14 @@ export const CanonReference = ({ terms }: Props) => {
           style={{ borderColor: "rgba(201,162,74,0.35)" }}
         />
         <div className="flex flex-wrap gap-1.5">
-          <FilterChip label="All" active={activeCat === null} onClick={() => setActiveCat(null)} />
+          <FilterChip label="All" count={terms.length} active={activeCat === null} onClick={() => setActiveCat(null)} />
           {categories.map((c) => (
             <FilterChip
-              key={c}
-              label={c}
-              active={activeCat === c}
-              onClick={() => setActiveCat(activeCat === c ? null : c)}
+              key={c.label}
+              label={c.label}
+              count={c.count}
+              active={activeCat === c.label}
+              onClick={() => setActiveCat(activeCat === c.label ? null : c.label)}
             />
           ))}
         </div>
