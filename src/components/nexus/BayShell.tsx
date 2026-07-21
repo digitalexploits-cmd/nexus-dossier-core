@@ -143,18 +143,11 @@ export const BayShell = ({
           onLoad={() => setHeroLoaded(true)}
           onError={() => setHeroLoaded(true)}
         />
-        {/* Living outside environment — clouds, shadows, lightning, drift, motes */}
-        <div aria-hidden className="bay-hero-clouds layer-b" />
-        <div aria-hidden className="bay-hero-clouds" />
-        <div aria-hidden className="bay-hero-shadow" />
-        <div aria-hidden className="bay-hero-lightning" />
-        <div aria-hidden className="bay-hero-lightning layer-b" />
+        {/* Subtle interior atmosphere only — no outdoor sky overlays */}
         <div aria-hidden className="bay-hero-atmos" />
         <div aria-hidden className="bay-hero-shaft" />
         <div aria-hidden className="bay-hero-motes" />
         <div aria-hidden className="bay-hero-scan" />
-        <div aria-hidden className="bay-hero-branch left" />
-        <div aria-hidden className="bay-hero-branch right" />
         {/* Legibility overlays — quiet, do not clutter */}
         <div className="absolute inset-x-0 top-0 h-[45%] pointer-events-none bg-[linear-gradient(180deg,rgba(4,8,16,0.55)_0%,rgba(4,8,16,0.15)_60%,transparent_100%)]" />
         <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/50 to-transparent" />
