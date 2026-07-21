@@ -5,10 +5,11 @@ import { EvidenceVault } from "@/components/nexus/EvidenceVault";
 import { Contact } from "@/components/nexus/Contact";
 import { TopBar, BottomBar } from "@/components/nexus/Chrome";
 import { IntroOverlay } from "@/components/nexus/IntroOverlay";
-import { BayTransition, TRANSITION_SWAP_MS, type TransitionKind } from "@/components/nexus/BayTransition";
+import { BayTransition, type TransitionKind } from "@/components/nexus/BayTransition";
 import { Button } from "@/components/ui/button";
 import { BAYS, type BayId } from "@/data/content";
-import { pickTransition } from "@/data/transitions";
+import { pickTransition, transitionDuration, transitionSwapMs } from "@/data/transitions";
+
 import { prefersReducedMotion } from "@/lib/audio";
 
 // Hero image per bay — the stable landing state after transition.
@@ -73,7 +74,7 @@ const Index = () => {
   const [view, setView] = useState<View>(() => hashToView(window.location.hash));
   const [vaultOpen, setVaultOpen] = useState(false);
   const [introDone, setIntroDone] = useState(false);
-  const [transition, setTransition] = useState<{ label: string; kind: TransitionKind; bgImage?: string; bgVideo?: string; code?: string } | null>(null);
+  const [transition, setTransition] = useState<{ label: string; kind: TransitionKind; bgImage?: string; bgVideo?: string; code?: string; tag?: string; durationMs?: number } | null>(null);
 
 
   const syncFromHash = useCallback(() => {
@@ -107,12 +108,12 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: "auto" });
   }, []);
 
-  // Curtain covers the underlying swap; TRANSITION_SWAP_MS lines up with its peak.
+  // Curtain covers the underlying swap; swap time is derived per-piece from its runtime.
   const runTransition = useCallback((label: string, kind: TransitionKind, next: View, code?: string) => {
     if (prefersReducedMotion()) { commitView(next); return; }
     const piece = pickTransition();
-    setTransition({ label, kind, bgImage: piece.image, bgVideo: piece.video, code });
-    window.setTimeout(() => { commitView(next); }, TRANSITION_SWAP_MS);
+    setTransition({ label, kind, bgImage: piece.image, bgVideo: piece.video, code, tag: piece.tag, durationMs: transitionDuration(piece) });
+    window.setTimeout(() => { commitView(next); }, transitionSwapMs(piece));
   }, [commitView]);
 
   const goHome = useCallback(() => {
@@ -129,8 +130,8 @@ const Index = () => {
   const openVault = useCallback(() => {
     if (prefersReducedMotion()) { setVaultOpen(true); return; }
     const piece = pickTransition();
-    setTransition({ label: "EVIDENCE VAULT", kind: "advance", bgImage: piece.image, bgVideo: piece.video, code: "SUB-LEVEL · V" });
-    window.setTimeout(() => { setVaultOpen(true); }, TRANSITION_SWAP_MS);
+    setTransition({ label: "EVIDENCE VAULT", kind: "advance", bgImage: piece.image, bgVideo: piece.video, code: "SUB-LEVEL · V", tag: piece.tag, durationMs: transitionDuration(piece) });
+    window.setTimeout(() => { setVaultOpen(true); }, transitionSwapMs(piece));
   }, []);
 
   const closeVault = useCallback((open: boolean) => {
@@ -140,9 +141,10 @@ const Index = () => {
     const bay = view !== "home" ? BAYS.find((b) => b.id === view) : undefined;
     const code = view === "home" ? "ATRIUM · 00" : bay?.code;
     const piece = pickTransition();
-    setTransition({ label, kind: "retreat", bgImage: piece.image, bgVideo: piece.video, code });
-    window.setTimeout(() => { setVaultOpen(false); }, TRANSITION_SWAP_MS);
+    setTransition({ label, kind: "retreat", bgImage: piece.image, bgVideo: piece.video, code, tag: piece.tag, durationMs: transitionDuration(piece) });
+    window.setTimeout(() => { setVaultOpen(false); }, transitionSwapMs(piece));
   }, [view]);
+
 
   const goContact = useCallback(() => {
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -223,9 +225,12 @@ const Index = () => {
           bgImage={transition.bgImage}
           bgVideo={transition.bgVideo}
           code={transition.code}
+          tag={transition.tag}
+          durationMs={transition.durationMs}
           onDone={() => setTransition(null)}
         />
       )}
+
 
       {!introDone && <IntroOverlay onComplete={handleIntroComplete} />}
     </div>

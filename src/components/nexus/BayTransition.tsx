@@ -11,13 +11,19 @@ interface Props {
   bgVideo?: string;
   /** Short destination code, e.g. "BAY 02" or "VAULT" */
   code?: string;
+  /** Optional flavor tag rendered in the bottom HUD. */
+  tag?: string;
+  /** Total runtime of this transit in ms. Defaults to 5000. */
+  durationMs?: number;
   onDone: () => void;
 }
 
-// Full cinematic run. Curtain (bay-curtain keyframes: peak at 35%) covers
-// the underlying view swap. Consumers should swap at ~35% of DURATION.
-const DURATION = 5000;
-export const TRANSITION_SWAP_MS = Math.round(DURATION * 0.35); // 1750ms
+// Default transit length. Individual pieces can override via durationMs
+// so each clip plays through as its own immersive experience.
+const DEFAULT_DURATION = 5000;
+/** @deprecated — swap time is now per-transit; use transitionSwapMs() from data/transitions. */
+export const TRANSITION_SWAP_MS = Math.round(DEFAULT_DURATION * 0.35);
+
 
 const TELEMETRY_LINES = [
   "AUTH · REVIEW-SAFE",
@@ -53,8 +59,10 @@ const FLAVORS: readonly Flavor[] = [
 ] as const;
 
 /** Cinematic multi-stage transit sequence with HUD, telemetry, and dual scans. */
-export const BayTransition = ({ label, kind, bgImage, bgVideo, code, onDone }: Props) => {
+export const BayTransition = ({ label, kind, bgImage, bgVideo, code, tag, durationMs, onDone }: Props) => {
   const reduced = prefersReducedMotion();
+  const DURATION = Math.max(2400, Math.min(30000, durationMs ?? DEFAULT_DURATION));
+
 
   useEffect(() => {
     const t = setTimeout(onDone, reduced ? 320 : DURATION);
@@ -344,6 +352,8 @@ export const BayTransition = ({ label, kind, bgImage, bgVideo, code, onDone }: P
           <div className="opacity-70">// NEXUS TRANSIT · {kind === "advance" ? "OUTBOUND" : "INBOUND"}</div>
           <div className="mt-1 text-primary">DEST · {code ?? label.toUpperCase()}</div>
           <div className="mt-0.5 opacity-60">{coord}</div>
+          {tag && <div className="mt-1 text-primary/70">◇ {tag}</div>}
+
         </div>
       )}
 
