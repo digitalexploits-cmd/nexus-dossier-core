@@ -28,15 +28,26 @@ const TELEMETRY_LINES = [
 
 // Cinematic camera flavors — one is chosen at random per transit so no two
 // feel the same. Each flavor is a CSS keyframe defined in index.css.
-const FLAVORS = [
-  { name: "flavor-fall",         phase: "FREEFALL VECTOR" },
-  { name: "flavor-dolly-in",     phase: "DOLLY ADVANCE" },
-  { name: "flavor-reverse-out",  phase: "REVERSE PULL" },
-  { name: "flavor-warp",         phase: "WARP ALIGNMENT" },
-  { name: "flavor-spin-in",      phase: "ORBITAL LOCK" },
-  { name: "flavor-tilt-pan",     phase: "LATERAL SWEEP" },
-  { name: "flavor-rise",         phase: "ASCENT VECTOR" },
-  { name: "flavor-glitch-slice", phase: "SIGNAL RECONSTRUCT" },
+// Some flavors carry an `overlay` id that renders a narrative prop
+// (secret door, iris, warp streaks, elevator slats, film gate, etc.).
+type FlavorOverlay = "doors" | "iris" | "warp" | "elevator" | "film" | "coincidence";
+type Flavor = { name: string; phase: string; overlay?: FlavorOverlay };
+const FLAVORS: readonly Flavor[] = [
+  { name: "flavor-fall",              phase: "FREEFALL VECTOR" },
+  { name: "flavor-dolly-in",          phase: "DOLLY ADVANCE" },
+  { name: "flavor-reverse-out",       phase: "REVERSE PULL" },
+  { name: "flavor-warp",              phase: "WARP ALIGNMENT" },
+  { name: "flavor-spin-in",           phase: "ORBITAL LOCK" },
+  { name: "flavor-tilt-pan",          phase: "LATERAL SWEEP" },
+  { name: "flavor-rise",              phase: "ASCENT VECTOR" },
+  { name: "flavor-glitch-slice",      phase: "SIGNAL RECONSTRUCT" },
+  { name: "flavor-secret-door-hold",  phase: "CONCEALED ENTRY",  overlay: "doors" },
+  { name: "flavor-coincidence",       phase: "PASSING COINCIDENCE", overlay: "coincidence" },
+  { name: "flavor-warp-drive",        phase: "WARP DRIVE · ENGAGED", overlay: "warp" },
+  { name: "flavor-coaster",           phase: "GRAVITY COASTER" },
+  { name: "flavor-iris",              phase: "IRIS OPEN",         overlay: "iris" },
+  { name: "flavor-elevator",          phase: "SERVICE ELEVATOR",  overlay: "elevator" },
+  { name: "flavor-film",              phase: "PROJECTION GATE",   overlay: "film" },
 ] as const;
 
 /** Cinematic multi-stage transit sequence with HUD, telemetry, and dual scans. */
