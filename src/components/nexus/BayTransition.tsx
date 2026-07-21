@@ -14,15 +14,30 @@ interface Props {
 
 // Full cinematic run. Curtain (bay-curtain keyframes: peak at 35%) covers
 // the underlying view swap. Consumers should swap at ~35% of DURATION.
-const DURATION = 2600;
-export const TRANSITION_SWAP_MS = Math.round(DURATION * 0.35); // 910ms
+const DURATION = 5000;
+export const TRANSITION_SWAP_MS = Math.round(DURATION * 0.35); // 1750ms
 
 const TELEMETRY_LINES = [
   "AUTH · REVIEW-SAFE",
   "LINK · SECURE",
   "CANON · SYNCED",
   "MANIFEST · SIGNED",
+  "TELEMETRY · NOMINAL",
+  "PAYLOAD · VERIFIED",
 ];
+
+// Cinematic camera flavors — one is chosen at random per transit so no two
+// feel the same. Each flavor is a CSS keyframe defined in index.css.
+const FLAVORS = [
+  { name: "flavor-fall",         phase: "FREEFALL VECTOR" },
+  { name: "flavor-dolly-in",     phase: "DOLLY ADVANCE" },
+  { name: "flavor-reverse-out",  phase: "REVERSE PULL" },
+  { name: "flavor-warp",         phase: "WARP ALIGNMENT" },
+  { name: "flavor-spin-in",      phase: "ORBITAL LOCK" },
+  { name: "flavor-tilt-pan",     phase: "LATERAL SWEEP" },
+  { name: "flavor-rise",         phase: "ASCENT VECTOR" },
+  { name: "flavor-glitch-slice", phase: "SIGNAL RECONSTRUCT" },
+] as const;
 
 /** Cinematic multi-stage transit sequence with HUD, telemetry, and dual scans. */
 export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => {
@@ -65,8 +80,12 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
     return `${r()} · ${r()} · ${r()}`;
   }, []);
 
+  // Pick a random cinematic flavor per mount so no two transits feel the same.
+  const flavor = useMemo(() => FLAVORS[Math.floor(Math.random() * FLAVORS.length)], []);
+
   const dur = `${DURATION}ms`;
   const ease = "cubic-bezier(0.22,1,0.36,1)";
+  const flavorAnim = `${flavor.name} ${dur} ${ease} forwards`;
 
   return (
     <div
@@ -83,7 +102,7 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
         }}
       />
 
-      {/* Cinematic still with slow parallax push */}
+      {/* Cinematic still — camera flavor drives motion (fall/dolly/reverse/warp/…) */}
       {bgImage && !reduced && (
         <>
           <div
@@ -92,11 +111,13 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
               backgroundImage: `url(${bgImage})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
-              filter: "saturate(0.85) contrast(1.08)",
-              animation: `bay-still-kenburns ${dur} ${ease} forwards`,
+              filter: "saturate(0.9) contrast(1.08)",
+              transformOrigin: "50% 50%",
+              willChange: "transform, filter, opacity",
+              animation: flavorAnim,
             }}
           />
-          {/* Deep vignette */}
+          {/* Deep vignette rides with the camera */}
           <div
             className="absolute inset-0"
             style={{
@@ -115,6 +136,22 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
               filter: "blur(24px)",
             }}
           />
+          {/* Anamorphic flare sweep across the frame */}
+          <div
+            className="absolute inset-0 overflow-hidden mix-blend-screen"
+            style={{ animation: `bay-label ${dur} ${ease} forwards` }}
+          >
+            <div
+              className="absolute top-0 bottom-0 w-1/3"
+              style={{
+                left: 0,
+                background:
+                  "linear-gradient(90deg, transparent, hsl(var(--primary)/0.35), hsl(var(--primary)/0.6), hsl(var(--primary)/0.35), transparent)",
+                filter: "blur(28px)",
+                animation: `flavor-flare-sweep ${DURATION - 400}ms ${ease} 300ms forwards`,
+              }}
+            />
+          </div>
           {/* Scanline texture */}
           <div
             className="absolute inset-0 opacity-25 mix-blend-overlay"
@@ -127,7 +164,7 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
         </>
       )}
 
-      {/* Dual scan beams */}
+      {/* Dual scan beams — longer travel for the extended sequence */}
       {!reduced && (
         <>
           <div
@@ -137,7 +174,7 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
               background:
                 "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.95), transparent)",
               boxShadow: "0 0 32px hsl(var(--primary) / 0.7)",
-              animation: `${kind === "advance" ? "bay-scan-down" : "bay-scan-up"} 1600ms ${ease} forwards`,
+              animation: `${kind === "advance" ? "bay-scan-down" : "bay-scan-up"} 2600ms ${ease} forwards`,
             }}
           />
           <div
@@ -146,7 +183,7 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
               top: kind === "advance" ? "100%" : "-3px",
               background:
                 "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.6), transparent)",
-              animation: `${kind === "advance" ? "bay-scan-up" : "bay-scan-down"} 1800ms ${ease} 400ms forwards`,
+              animation: `${kind === "advance" ? "bay-scan-up" : "bay-scan-down"} 3000ms ${ease} 900ms forwards`,
             }}
           />
         </>
@@ -242,8 +279,9 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
         >
           <div className="flex items-end justify-between text-[0.58rem] tracking-[0.3em] mb-2">
             <span className="opacity-70">TRANSIT · {Math.floor(pct)}%</span>
-            <span className="opacity-70">
-              {pct < 45 ? "SEALING PERIMETER" : pct < 80 ? "ROUTING CHANNEL" : "HANDSHAKE"}
+            <span className="opacity-80 text-primary">{flavor.phase}</span>
+            <span className="opacity-70 hidden md:inline">
+              {pct < 30 ? "SEALING PERIMETER" : pct < 65 ? "ROUTING CHANNEL" : pct < 90 ? "HANDSHAKE" : "LOCK"}
             </span>
           </div>
           <div className="relative h-[3px] w-full bg-primary/15 overflow-hidden">
