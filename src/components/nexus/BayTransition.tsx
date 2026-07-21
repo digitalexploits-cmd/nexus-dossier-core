@@ -80,8 +80,12 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
     return `${r()} · ${r()} · ${r()}`;
   }, []);
 
+  // Pick a random cinematic flavor per mount so no two transits feel the same.
+  const flavor = useMemo(() => FLAVORS[Math.floor(Math.random() * FLAVORS.length)], []);
+
   const dur = `${DURATION}ms`;
   const ease = "cubic-bezier(0.22,1,0.36,1)";
+  const flavorAnim = `${flavor.name} ${dur} ${ease} forwards`;
 
   return (
     <div
