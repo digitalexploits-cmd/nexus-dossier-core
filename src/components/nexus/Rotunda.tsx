@@ -279,17 +279,17 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           }}
         />
 
-        {/* Synthetic Vault doorway */}
+        {/* Synthetic Vault doorway — scales down on mobile so it never crops */}
         <div
-          className="absolute top-1/2 pointer-events-none"
+          className="absolute top-[46%] pointer-events-none"
           style={{ left: `${ZONES[4].pos * 100}%`, transform: "translate(-50%, -50%)" }}
         >
-          <div className="relative w-[220px] h-[360px] border border-primary/50 bg-gradient-to-b from-primary/15 via-background/60 to-background/90 backdrop-blur-[2px] shadow-[0_0_60px_rgba(70,150,255,0.35)]">
+          <div className="relative w-[150px] h-[240px] sm:w-[220px] sm:h-[360px] border border-primary/50 bg-gradient-to-b from-primary/15 via-background/60 to-background/90 backdrop-blur-[2px] shadow-[0_0_60px_rgba(70,150,255,0.35)]">
             <div className="absolute inset-2 border border-primary/30" />
-            <div className="absolute inset-x-0 top-4 text-center mono text-[0.55rem] tracking-[0.32em] text-primary/80">EVIDENCE</div>
-            <div className="absolute inset-x-0 top-9 text-center mono text-[0.55rem] tracking-[0.32em] text-primary/80">VAULT</div>
-            <div className="absolute inset-x-6 top-16 h-px bg-primary/40" />
-            <div className="absolute inset-x-0 bottom-6 text-center mono text-[0.5rem] tracking-[0.32em] text-primary/70">◆ SECURED ◆</div>
+            <div className="absolute inset-x-0 top-3 sm:top-4 text-center mono text-[0.5rem] sm:text-[0.55rem] tracking-[0.32em] text-primary/80">EVIDENCE</div>
+            <div className="absolute inset-x-0 top-7 sm:top-9 text-center mono text-[0.5rem] sm:text-[0.55rem] tracking-[0.32em] text-primary/80">VAULT</div>
+            <div className="absolute inset-x-6 top-12 sm:top-16 h-px bg-primary/40" />
+            <div className="absolute inset-x-0 bottom-4 sm:bottom-6 text-center mono text-[0.45rem] sm:text-[0.5rem] tracking-[0.32em] text-primary/70">◆ SECURED ◆</div>
           </div>
         </div>
 
@@ -301,7 +301,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
               key={z.id}
               onPointerDown={(e) => e.stopPropagation()}
               onClick={(e) => { e.stopPropagation(); dismissHint(); enterZone(z); }}
-              className="bay-hover-glow absolute top-1/2 group rounded-sm px-3 py-4 -m-3 touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
+              className="bay-hover-glow absolute top-[46%] group rounded-sm px-3 py-4 -m-3 touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
               style={{ left: `${z.pos * 100}%`, transform: "translate(-50%, -50%)", minWidth: 56, minHeight: 88 }}
               aria-label={`${z.id === "vault" ? "Open" : "Enter"} ${z.label}`}
             >
@@ -314,18 +314,18 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
                       : "bg-primary/70 shadow-[0_0_10px_rgba(70,150,255,0.9)] anim-flicker"
                   }`}
                 />
-                <div className={`mt-2 w-px transition-all ${isLocked ? "h-24 bg-primary/60" : "h-12 bg-primary/30"}`} />
+                <div className={`mt-2 w-px transition-all ${isLocked ? "h-16 sm:h-24 bg-primary/60" : "h-8 sm:h-12 bg-primary/30"}`} />
                 <div
                   className={`mt-2 mono uppercase whitespace-nowrap transition-all ${
                     isLocked
-                      ? "text-primary text-sm tracking-[0.32em]"
-                      : "text-primary/70 text-[0.6rem] tracking-[0.28em] group-hover:text-primary"
+                      ? "text-primary text-xs sm:text-sm tracking-[0.28em] sm:tracking-[0.32em]"
+                      : "text-primary/70 text-[0.55rem] sm:text-[0.6rem] tracking-[0.24em] sm:tracking-[0.28em] group-hover:text-primary"
                   }`}
                   style={isLocked ? { textShadow: "0 0 18px hsl(var(--primary) / 0.7)" } : undefined}
                 >
                   {z.index} · {z.label}
                 </div>
-                <div className={`mono text-[0.55rem] tracking-[0.28em] uppercase mt-1 transition-opacity ${
+                <div className={`mono text-[0.5rem] sm:text-[0.55rem] tracking-[0.24em] sm:tracking-[0.28em] uppercase mt-1 transition-opacity ${
                   isLocked ? "text-primary/80 opacity-100" : "text-muted-foreground opacity-0 group-hover:opacity-70"
                 }`}>
                   {z.sub}
@@ -355,6 +355,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         <div className="pl-rays" />
         <div className="pl-rim" />
         <div className="pl-bloom" />
+        <div className="pl-flare" />
         <div className="pl-grade" />
       </div>
 
