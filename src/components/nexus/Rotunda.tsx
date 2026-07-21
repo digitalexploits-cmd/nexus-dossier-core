@@ -258,82 +258,27 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
         <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.18)_0%,transparent_65%)]" />
 
-        {/* Concrete rotunda floor — replaces the baked kiosk gibberish with a
-            real receding polished-concrete plane. Layered: base slab tone,
-            radial pool of light under the oculus, subtle aggregate speckle,
-            perspective seam grid, and a soft horizon shadow where the floor
-            meets the room. */}
-        {/* Base slab — warm charcoal concrete, no pure black */}
+        {/* Rotunda floor — kept off the view. Just a soft feathered concrete
+            wash across the very bottom of the image so the etched crest has
+            somewhere to sit, without blocking the architecture above. */}
         <div
           aria-hidden
           className="absolute inset-x-0 bottom-0 pointer-events-none"
           style={{
-            height: "42%",
+            height: "22%",
             background:
-              "linear-gradient(to bottom, #1a1f28 0%, #1e242e 22%, #232935 55%, #2a3140 100%)",
+              "linear-gradient(to top, rgba(26,31,40,0.85) 0%, rgba(30,36,46,0.55) 45%, rgba(35,41,53,0.25) 80%, transparent 100%)",
           }}
         />
-        {/* Ambient pool of light under the dome — sells it as a lit floor */}
+        {/* Ambient pool of light under the dome */}
         <div
           aria-hidden
           className="absolute inset-x-0 bottom-0 pointer-events-none"
           style={{
-            height: "42%",
+            height: "22%",
             background:
-              "radial-gradient(ellipse 70% 90% at 50% 20%, rgba(120,170,220,0.22) 0%, rgba(80,120,170,0.10) 40%, transparent 75%)",
+              "radial-gradient(ellipse 60% 100% at 50% 30%, rgba(120,170,220,0.18) 0%, transparent 70%)",
             mixBlendMode: "screen",
-          }}
-        />
-        {/* Fine aggregate speckle — reads as polished concrete grain */}
-        <div
-          aria-hidden
-          className="absolute inset-x-0 bottom-0 pointer-events-none opacity-[0.18]"
-          style={{
-            height: "42%",
-            backgroundImage:
-              "radial-gradient(rgba(255,255,255,0.35) 0.5px, transparent 0.6px), radial-gradient(rgba(0,0,0,0.4) 0.5px, transparent 0.6px)",
-            backgroundSize: "3px 3px, 5px 5px",
-            backgroundPosition: "0 0, 1px 2px",
-            mixBlendMode: "overlay",
-          }}
-        />
-        {/* Perspective seam grid — expansion joints receding toward the room */}
-        <div
-          aria-hidden
-          className="absolute inset-x-0 bottom-0 pointer-events-none"
-          style={{
-            height: "42%",
-            background:
-              "repeating-linear-gradient(90deg, transparent 0, transparent calc(12.5% - 1px), rgba(0,0,0,0.35) calc(12.5% - 1px), rgba(0,0,0,0.35) 12.5%), repeating-linear-gradient(0deg, transparent 0, transparent calc(20% - 1px), rgba(0,0,0,0.28) calc(20% - 1px), rgba(0,0,0,0.28) 20%)",
-            maskImage:
-              "linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 45%, rgba(0,0,0,0.15) 85%, transparent 100%)",
-            WebkitMaskImage:
-              "linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 45%, rgba(0,0,0,0.15) 85%, transparent 100%)",
-            transform: "perspective(700px) rotateX(72deg)",
-            transformOrigin: "50% 0%",
-            opacity: 0.55,
-          }}
-        />
-        {/* Soft horizon shadow — where the floor meets the far wall/room */}
-        <div
-          aria-hidden
-          className="absolute inset-x-0 pointer-events-none"
-          style={{
-            bottom: "42%",
-            height: "8%",
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 55%, transparent 100%)",
-          }}
-        />
-        {/* Gold hairline at the floor/room seam */}
-        <div
-          aria-hidden
-          className="absolute inset-x-0 pointer-events-none"
-          style={{
-            bottom: "42%",
-            height: "1px",
-            background:
-              "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.18) 20%, rgba(212,175,55,0.55) 50%, rgba(212,175,55,0.18) 80%, transparent 100%)",
           }}
         />
 
