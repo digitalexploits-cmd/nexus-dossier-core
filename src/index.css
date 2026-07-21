@@ -1018,6 +1018,18 @@
   .bay-hero-storm { animation: none !important; opacity: 0 !important; }
 }
 
+/* Sky band — clips storm clouds to the upper sky portion of the hero
+   so cumulonimbus rolls through the actual sky, not the building. */
+.sky-storm-band {
+  position: absolute; inset: 0 0 auto 0;
+  height: 42%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 68%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 0%, #000 68%, transparent 100%);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bay-hero-img,
   .bay-hero-atmos,
