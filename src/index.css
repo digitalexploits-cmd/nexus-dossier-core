@@ -918,6 +918,7 @@
   .bay-hero-scan,
   .bay-hero-clouds,
   .bay-hero-shadow,
+  .bay-hero-branch,
   .bay-hero-lightning { animation: none !important; }
   .bay-hero-lightning { opacity: 0 !important; }
 }
