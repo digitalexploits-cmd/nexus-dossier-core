@@ -309,10 +309,10 @@
     100%    { opacity: 0; }
   }
   @keyframes flavor-warp-drive {
-    0%   { opacity: 0; transform: scale(0.4); filter: blur(24px) brightness(0.4) saturate(1.6); }
-    20%  { opacity: 1; filter: blur(6px) brightness(0.9) saturate(1.4); }
-    72%  { opacity: 1; transform: scale(1.35); filter: blur(0) brightness(1.05) saturate(1.1); }
-    100% { opacity: 0; transform: scale(1.9); filter: blur(10px) brightness(0.6); }
+    0%   { opacity: 0; transform: scale(0.35); filter: blur(14px) brightness(1) saturate(1.6); }
+    18%  { opacity: 1; filter: blur(4px) brightness(1.15) saturate(1.4); }
+    72%  { opacity: 1; transform: scale(1.4); filter: blur(0) brightness(1.2) saturate(1.15); }
+    100% { opacity: 0; transform: scale(2); filter: blur(6px) brightness(1); }
   }
   @keyframes warp-streaks {
     0%   { opacity: 0; transform: scale(0.2); }
@@ -320,19 +320,19 @@
     100% { opacity: 0; transform: scale(4); }
   }
   @keyframes flavor-coaster {
-    0%   { opacity: 0; transform: translateY(-6%) rotate(-3deg) scale(1.1); filter: blur(10px) brightness(0.5); }
-    16%  { opacity: 1; transform: translateY(0) rotate(-1deg) scale(1.06); filter: blur(2px); }
-    32%  { transform: translateY(-4%) rotate(2deg) scale(1.08); }
-    50%  { transform: translateY(12%) rotate(-2.5deg) scale(1.12); filter: blur(3px) brightness(1.05); }
-    68%  { transform: translateY(-8%) rotate(3deg) scale(1.1); filter: blur(1px); }
-    84%  { opacity: 1; transform: translateY(2%) rotate(-0.6deg) scale(1.04); filter: blur(0) brightness(1); }
-    100% { opacity: 0; transform: translateY(-4%) rotate(1deg) scale(1.08); filter: blur(6px); }
+    0%   { opacity: 0; transform: translateY(-6%) rotate(-3deg) scale(1.12); filter: blur(6px) brightness(1); }
+    14%  { opacity: 1; transform: translateY(0) rotate(-1deg) scale(1.08); filter: blur(2px) brightness(1.1); }
+    32%  { transform: translateY(-5%) rotate(2deg) scale(1.1); }
+    50%  { transform: translateY(14%) rotate(-3deg) scale(1.14); filter: blur(2px) brightness(1.2); }
+    68%  { transform: translateY(-10%) rotate(3deg) scale(1.12); filter: blur(1px) brightness(1.15); }
+    84%  { opacity: 1; transform: translateY(2%) rotate(-0.6deg) scale(1.06); filter: blur(0) brightness(1.15); }
+    100% { opacity: 0; transform: translateY(-4%) rotate(1deg) scale(1.1); filter: blur(4px) brightness(1); }
   }
   @keyframes flavor-iris {
-    0%   { opacity: 0; transform: scale(1.05); filter: blur(4px) brightness(0.8); }
-    22%  { opacity: 1; filter: blur(0) brightness(1); }
-    82%  { opacity: 1; transform: scale(1.02); }
-    100% { opacity: 0; transform: scale(1.06); filter: blur(4px); }
+    0%   { opacity: 0; transform: scale(1.08); filter: blur(2px) brightness(1.05); }
+    18%  { opacity: 1; filter: blur(0) brightness(1.15); }
+    82%  { opacity: 1; transform: scale(1.03); }
+    100% { opacity: 0; transform: scale(1.08); filter: blur(3px); }
   }
   @keyframes iris-open {
     0%, 18% { clip-path: circle(0% at 50% 50%); }
@@ -341,10 +341,10 @@
     100%    { clip-path: circle(140% at 50% 50%); }
   }
   @keyframes flavor-elevator {
-    0%   { opacity: 0; transform: translateY(-8%) scale(1.08); filter: blur(6px) brightness(0.7); }
-    22%  { opacity: 1; transform: translateY(0) scale(1.06); filter: blur(0) brightness(1); }
+    0%   { opacity: 0; transform: translateY(-8%) scale(1.1); filter: blur(4px) brightness(1); }
+    22%  { opacity: 1; transform: translateY(0) scale(1.06); filter: blur(0) brightness(1.15); }
     82%  { opacity: 1; transform: translateY(2%) scale(1.04); }
-    100% { opacity: 0; transform: translateY(6%) scale(1.06); filter: blur(4px); }
+    100% { opacity: 0; transform: translateY(6%) scale(1.06); filter: blur(3px); }
   }
   @keyframes elevator-slat {
     0%, 20% { transform: translateY(-100%); }
@@ -353,13 +353,13 @@
     100%    { transform: translateY(100%); }
   }
   @keyframes flavor-film {
-    0%   { opacity: 0; transform: scale(1.08); filter: sepia(0.4) blur(6px) brightness(0.6); }
-    14%  { opacity: 1; filter: sepia(0.3) blur(2px) brightness(0.95); }
-    30%  { opacity: 0.6; }
+    0%   { opacity: 0; transform: scale(1.1); filter: sepia(0.35) blur(4px) brightness(1); }
+    14%  { opacity: 1; filter: sepia(0.25) blur(1px) brightness(1.1); }
+    30%  { opacity: 0.75; }
     36%  { opacity: 1; }
-    52%  { opacity: 0.75; }
-    82%  { opacity: 1; transform: scale(1.02); filter: sepia(0) blur(0) brightness(1); }
-    100% { opacity: 0; transform: scale(1.06); filter: blur(6px); }
+    52%  { opacity: 0.85; }
+    82%  { opacity: 1; transform: scale(1.03); filter: sepia(0) blur(0) brightness(1.15); }
+    100% { opacity: 0; transform: scale(1.08); filter: blur(4px); }
   }
   @keyframes film-gate {
     0%, 100% { opacity: 0; }
