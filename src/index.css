@@ -581,43 +581,23 @@
     linear-gradient(180deg, #04070d 0%, #070c15 22%, #060a12 55%, #030509 100%);
 }
 
-/* Top seam: precision gold hairline + accent bloom + traveling shimmer */
+/* Top seam: single precision gold hairline + soft accent bloom.
+   No traveling shimmer — reads as a real machined edge, not a HUD sweep. */
 .bay-depth-stage::before {
   content: "";
-  position: absolute; inset: 0 0 auto 0; height: 340px;
+  position: absolute; inset: 0 0 auto 0; height: 220px;
   pointer-events: none;
   background:
-    /* traveling gold shimmer */
-    linear-gradient(90deg,
-      transparent 0%,
-      transparent 30%,
-      rgba(255, 224, 138, 0.85) 48%,
-      rgba(255, 255, 255, 0.95) 50%,
-      rgba(255, 224, 138, 0.85) 52%,
-      transparent 70%,
-      transparent 100%) 0 0 / 260% 1px no-repeat,
-    /* base gold hairline */
     linear-gradient(180deg,
-      rgba(212, 175, 55, 0.65) 0px, rgba(212, 175, 55, 0.65) 1px,
+      rgba(212, 175, 55, 0.55) 0px, rgba(212, 175, 55, 0.55) 1px,
       rgba(212, 175, 55, 0) 2px),
-    /* faint secondary hairline for tooling feel */
-    linear-gradient(180deg,
-      transparent 5px,
-      rgba(212, 175, 55, 0.12) 5px, rgba(212, 175, 55, 0.12) 6px,
-      transparent 7px),
-    radial-gradient(ellipse 55% 100% at 50% 0%, color-mix(in srgb, var(--bay-accent, #4db7ff) 34%, transparent) 0%, transparent 72%),
-    radial-gradient(ellipse 22% 100% at 50% 0%, color-mix(in srgb, var(--bay-accent, #4db7ff) 58%, transparent) 0%, transparent 60%);
-  background-repeat: no-repeat, repeat-x, repeat-x, no-repeat, no-repeat;
-  background-position: -180% 0, 0 0, 0 0, 50% 0, 50% 0;
+    radial-gradient(ellipse 55% 100% at 50% 0%, color-mix(in srgb, var(--bay-accent, #4db7ff) 22%, transparent) 0%, transparent 75%);
+  background-repeat: repeat-x, no-repeat;
+  background-position: 0 0, 50% 0;
   mix-blend-mode: screen;
   z-index: 1;
-  animation: bay-hairline-shimmer 11s cubic-bezier(.6,.02,.4,1) infinite;
 }
-@keyframes bay-hairline-shimmer {
-  0%   { background-position: -180% 0, 0 0, 0 0, 50% 0, 50% 0; }
-  55%  { background-position:  280% 0, 0 0, 0 0, 50% 0, 50% 0; }
-  100% { background-position:  280% 0, 0 0, 0 0, 50% 0, 50% 0; }
-}
+@keyframes bay-hairline-shimmer { 0%,100% { opacity: 1; } }
 
 /* Bottom seam: matching gold hairline + floor bloom */
 .bay-depth-stage::after {
