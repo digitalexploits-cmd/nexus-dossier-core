@@ -279,17 +279,17 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           }}
         />
 
-        {/* Synthetic Vault doorway */}
+        {/* Synthetic Vault doorway — scales down on mobile so it never crops */}
         <div
-          className="absolute top-1/2 pointer-events-none"
+          className="absolute top-[46%] pointer-events-none"
           style={{ left: `${ZONES[4].pos * 100}%`, transform: "translate(-50%, -50%)" }}
         >
-          <div className="relative w-[220px] h-[360px] border border-primary/50 bg-gradient-to-b from-primary/15 via-background/60 to-background/90 backdrop-blur-[2px] shadow-[0_0_60px_rgba(70,150,255,0.35)]">
+          <div className="relative w-[150px] h-[240px] sm:w-[220px] sm:h-[360px] border border-primary/50 bg-gradient-to-b from-primary/15 via-background/60 to-background/90 backdrop-blur-[2px] shadow-[0_0_60px_rgba(70,150,255,0.35)]">
             <div className="absolute inset-2 border border-primary/30" />
-            <div className="absolute inset-x-0 top-4 text-center mono text-[0.55rem] tracking-[0.32em] text-primary/80">EVIDENCE</div>
-            <div className="absolute inset-x-0 top-9 text-center mono text-[0.55rem] tracking-[0.32em] text-primary/80">VAULT</div>
-            <div className="absolute inset-x-6 top-16 h-px bg-primary/40" />
-            <div className="absolute inset-x-0 bottom-6 text-center mono text-[0.5rem] tracking-[0.32em] text-primary/70">◆ SECURED ◆</div>
+            <div className="absolute inset-x-0 top-3 sm:top-4 text-center mono text-[0.5rem] sm:text-[0.55rem] tracking-[0.32em] text-primary/80">EVIDENCE</div>
+            <div className="absolute inset-x-0 top-7 sm:top-9 text-center mono text-[0.5rem] sm:text-[0.55rem] tracking-[0.32em] text-primary/80">VAULT</div>
+            <div className="absolute inset-x-6 top-12 sm:top-16 h-px bg-primary/40" />
+            <div className="absolute inset-x-0 bottom-4 sm:bottom-6 text-center mono text-[0.45rem] sm:text-[0.5rem] tracking-[0.32em] text-primary/70">◆ SECURED ◆</div>
           </div>
         </div>
 
