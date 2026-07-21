@@ -5,6 +5,7 @@ import { prefersReducedMotion } from "@/lib/audio";
 import rotundaAsset from "@/assets/rotunda-hero.png.asset.json";
 import { MediaConsole } from "@/components/nexus/MediaConsole";
 import { SkyWindow } from "@/components/nexus/SkyWindow";
+import sineWaivLogo from "@/assets/sine-waiv-logo.png.asset.json";
 
 const ROTUNDA_HERO = rotundaAsset.url;
 
