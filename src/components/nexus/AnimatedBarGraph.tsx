@@ -44,14 +44,23 @@ export const AnimatedBarGraph = ({ items, className = "" }: Props) => {
             <button
               type="button"
               onClick={() => setExpanded(isOpen ? null : i)}
-              className="w-full text-left group"
+              className="w-full text-left group interactive focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#c9a24a] rounded-sm"
               aria-expanded={isOpen}
+              aria-label={`${it.label} — ${it.status} at ${it.value}%. ${isOpen ? "Collapse" : "Expand"} details.`}
             >
               <div className="flex items-baseline justify-between mb-1.5 gap-3 flex-wrap">
-                <span className="mono text-[0.7rem] tracking-[0.16em] uppercase text-[#eef6ff]">{it.label}</span>
+                <span className="mono text-[0.7rem] tracking-[0.16em] uppercase text-[#eef6ff] flex items-center gap-2">
+                  <span
+                    className="mono text-[0.55rem] text-[#8fa3b8] tabular-nums"
+                    aria-hidden
+                  >{String(i + 1).padStart(2, "0")}</span>
+                  {it.label}
+                </span>
                 <span className="mono text-[0.55rem] tracking-[0.24em] uppercase flex items-center gap-2" style={{ color: gold }}>
                   <span className="w-1.5 h-1.5 rounded-full" style={{ background: gold, boxShadow: isActive ? `0 0 6px ${gold}` : undefined }} />
-                  {it.status} · {it.value}%
+                  {it.status}
+                  <span className="tabular-nums text-[#eef6ff] w-10 text-right">{it.value}%</span>
+                  <span aria-hidden className="text-[#8fa3b8] transition-transform" style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0)" }}>▾</span>
                 </span>
               </div>
               <div

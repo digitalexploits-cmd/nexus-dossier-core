@@ -16,10 +16,11 @@ export const CanonReference = ({ terms }: Props) => {
   const [activeCat, setActiveCat] = useState<string | null>(null);
   const [open, setOpen] = useState<string | null>(null);
 
-  const categories = useMemo(
-    () => Array.from(new Set(terms.map((t) => t.category))),
-    [terms],
-  );
+  const categories = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const t of terms) counts.set(t.category, (counts.get(t.category) ?? 0) + 1);
+    return Array.from(counts.entries()).map(([label, count]) => ({ label, count }));
+  }, [terms]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -55,13 +56,14 @@ export const CanonReference = ({ terms }: Props) => {
           style={{ borderColor: "rgba(201,162,74,0.35)" }}
         />
         <div className="flex flex-wrap gap-1.5">
-          <FilterChip label="All" active={activeCat === null} onClick={() => setActiveCat(null)} />
+          <FilterChip label="All" count={terms.length} active={activeCat === null} onClick={() => setActiveCat(null)} />
           {categories.map((c) => (
             <FilterChip
-              key={c}
-              label={c}
-              active={activeCat === c}
-              onClick={() => setActiveCat(activeCat === c ? null : c)}
+              key={c.label}
+              label={c.label}
+              count={c.count}
+              active={activeCat === c.label}
+              onClick={() => setActiveCat(activeCat === c.label ? null : c.label)}
             />
           ))}
         </div>
@@ -114,17 +116,20 @@ export const CanonReference = ({ terms }: Props) => {
   );
 };
 
-const FilterChip = ({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) => (
+const FilterChip = ({ label, count, active, onClick }: { label: string; count?: number; active: boolean; onClick: () => void }) => (
   <button
     type="button"
     onClick={onClick}
-    className="mono text-[0.55rem] tracking-[0.24em] uppercase px-2.5 py-1 rounded-sm border transition-all"
+    className="mono text-[0.55rem] tracking-[0.24em] uppercase px-2.5 py-1 rounded-sm border transition-all inline-flex items-center gap-1.5"
     style={{
       borderColor: active ? "#c9a24a" : "rgba(201,162,74,0.35)",
       background: active ? "rgba(201,162,74,0.15)" : "rgba(11,18,32,0.5)",
       color: active ? "#eed99a" : "#c8d4e2",
     }}
   >
-    {label}
+    <span>{label}</span>
+    {typeof count === "number" && (
+      <span className="tabular-nums text-[0.5rem] text-[#8fa3b8]">{String(count).padStart(2, "0")}</span>
+    )}
   </button>
 );
