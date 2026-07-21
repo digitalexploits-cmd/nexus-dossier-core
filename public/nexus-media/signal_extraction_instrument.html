@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SINE~WaiV — Signal Extraction Instrument</title>
+<style>
+  :root { --navy:#05080f; --panel:#0c1220; --gold:#d4af37; --dim:#1a2332; --text:#c5d0e0; --muted:#6b7c93; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--navy); color:var(--text); font-family: 'SF Mono', 'Fira Code', ui-monospace, monospace; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem; }
+  .instrument { width:100%; max-width:820px; background:var(--panel); border:1px solid #1e2a3a; border-radius:4px; overflow:hidden; box-shadow:0 0 40px rgba(0,0,0,0.6); }
+  .header { padding:0.9rem 1.2rem; border-bottom:1px solid #1e2a3a; display:flex; justify-content:space-between; align-items:center; }
+  .header h1 { font-size:0.95rem; color:var(--gold); letter-spacing:0.12em; font-weight:600; }
+  .status { font-size:0.7rem; color:var(--muted); }
+  .status span { color:#4ade80; }
+  .display { height:220px; background:#03050a; position:relative; overflow:hidden; }
+  canvas { width:100%; height:100%; display:block; }
+  .controls { padding:1.1rem 1.2rem; display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  .control-group label { display:block; font-size:0.65rem; color:var(--muted); letter-spacing:0.08em; margin-bottom:0.4rem; text-transform:uppercase; }
+  input[type=range] { width:100%; accent-color:var(--gold); height:4px; }
+  .readout { font-size:1.1rem; color:var(--gold); margin-top:0.3rem; }
+  .footer { padding:0.7rem 1.2rem; border-top:1px solid #1e2a3a; font-size:0.65rem; color:var(--muted); display:flex; justify-content:space-between; }
+  .lock-btn { background:transparent; border:1px solid var(--gold); color:var(--gold); padding:0.45rem 1rem; font-family:inherit; font-size:0.7rem; letter-spacing:0.1em; cursor:pointer; transition:all 0.2s; }
+  .lock-btn:hover, .lock-btn.active { background:var(--gold); color:#05080f; }
+</style>
+</head>
+<body>
+  <div class="instrument">
+    <div class="header">
+      <h1>SINE~WaiV EXTRACTION INSTRUMENT</h1>
+      <div class="status">STATUS: <span id="statusText">SCANNING</span></div>
+    </div>
+    <div class="display">
+      <canvas id="scope"></canvas>
+    </div>
+    <div class="controls">
+      <div class="control-group">
+        <label>Industrial Noise Floor</label>
+        <input type="range" id="noise" min="0" max="100" value="75">
+        <div class="readout" id="noiseVal">75%</div>
+      </div>
+      <div class="control-group">
+        <label>Extraction Focus</label>
+        <input type="range" id="focus" min="0" max="100" value="20">
+        <div class="readout" id="focusVal">20%</div>
+      </div>
+    </div>
+    <div class="footer">
+      <span>CURRENT-DOMAIN • SPECTRAL-STATE • UNDER VALIDATION</span>
+      <button class="lock-btn" id="lockBtn" onclick="toggleLock()">ATTEMPT LOCK</button>
+    </div>
+  </div>
+
+<script>
+const canvas = document.getElementById('scope');
+const ctx = canvas.getContext('2d');
+let w, h, animId;
+let noiseLevel = 0.75;
+let focus = 0.20;
+let locked = false;
+let phase = 0;
+
+function resize() {
+  w = canvas.width = canvas.offsetWidth * devicePixelRatio;
+  h = canvas.height = canvas.offsetHeight * devicePixelRatio;
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+}
+window.addEventListener('resize', resize);
+resize();
+
+document.getElementById('noise').oninput = e => {
+  noiseLevel = e.target.value / 100;
+  document.getElementById('noiseVal').textContent = e.target.value + '%';
+};
+document.getElementById('focus').oninput = e => {
+  focus = e.target.value / 100;
+  document.getElementById('focusVal').textContent = e.target.value + '%';
+};
+
+function toggleLock() {
+  locked = !locked;
+  const btn = document.getElementById('lockBtn');
+  const st = document.getElementById('statusText');
+  if (locked) {
+    btn.textContent = 'LOCKED';
+    btn.classList.add('active');
+    st.textContent = 'STRUCTURE EXTRACTED';
+    st.style.color = '#d4af37';
+  } else {
+    btn.textContent = 'ATTEMPT LOCK';
+    btn.classList.remove('active');
+    st.textContent = 'SCANNING';
+    st.style.color = '#4ade80';
+  }
+}
+
+function draw() {
+  const width = canvas.offsetWidth;
+  const height = canvas.offsetHeight;
+  ctx.fillStyle = '#03050a';
+  ctx.fillRect(0, 0, width, height);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(30,42,58,0.6)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < width; x += 40) {
+    ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,height); ctx.stroke();
+  }
+  for (let y = 0; y < height; y += 30) {
+    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(width,y); ctx.stroke();
+  }
+
+  phase += 0.04;
+  ctx.beginPath();
+  for (let x = 0; x < width; x++) {
+    const t = x / width;
+    let y = height/2;
+    
+    // Base carrier
+    y += Math.sin(x * 0.04 + phase) * 18;
+    
+    // Fault modulation that becomes clearer with focus
+    const modStrength = 0.15 + focus * 0.7;
+    y += Math.sin(x * 0.11 + phase * 1.7) * 22 * modStrength;
+    y += Math.sin(x * 0.23 + phase * 0.6) * 9 * modStrength;
+    
+    // Industrial noise that decreases with lock + focus
+    const noiseAmt = noiseLevel * (locked ? 0.15 : 1.0) * (1 - focus * 0.6);
+    y += (Math.random() - 0.5) * 50 * noiseAmt;
+    
+    if (x === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  
+  // Color shifts toward gold as we lock and focus
+  const r = Math.floor(70 + focus * 140 + (locked ? 40 : 0));
+  const g = Math.floor(90 + focus * 80);
+  const b = Math.floor(140 - focus * 80);
+  ctx.strokeStyle = `rgb(${r},${g},${b})`;
+  ctx.lineWidth = locked ? 2.2 : 1.4;
+  ctx.stroke();
+
+  // Lock indicator line
+  if (locked) {
+    ctx.strokeStyle = 'rgba(212,175,55,0.35)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([6,4]);
+    ctx.beginPath();
+    ctx.moveTo(0, height/2);
+    ctx.lineTo(width, height/2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  animId = requestAnimationFrame(draw);
+}
+draw();
+</script>
+</body>
+</html>
