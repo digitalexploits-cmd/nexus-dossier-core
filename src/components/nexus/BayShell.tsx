@@ -151,10 +151,8 @@ export const BayShell = ({
         />
         {/* Living exterior — subtle sky-life ambient, never paints clouds through the room */}
         <div aria-hidden className="bay-exterior-life" />
-        {/* Storm clouds + wind-swayed tree branches — always alive outside */}
-        <div aria-hidden className="sky-storm-band">
-          <div className="bay-hero-storm" />
-          <div className="bay-hero-storm layer-b" />
+        {/* Wind-swayed tree branches — clipped to a thin outer sliver so they never bleed into the interior */}
+        <div aria-hidden className="sky-storm-band branches-only">
           <div className="bay-hero-branch left" />
           <div className="bay-hero-branch right" />
         </div>
