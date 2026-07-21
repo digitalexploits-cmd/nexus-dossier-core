@@ -76,7 +76,7 @@ export const TopBar = ({ view, currentBay = "home", onHome, onBay, onOpenVault }
                 <div className="h-8 w-px bg-primary/25 mx-0.5" aria-hidden />
               </>
             )}
-
+            {onBay && BAYS.map((b) => {
               const Icon = BAY_ICONS[b.id];
               const active = currentBay === b.id;
               return (
