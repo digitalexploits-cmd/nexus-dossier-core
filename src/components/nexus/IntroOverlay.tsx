@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { prefersReducedMotion } from "@/lib/audio";
-import introAsset from "@/assets/nexus-intro.mp4.asset.json";
+import introAsset from "@/assets/videos/Best_July_4_Vid.mp4.asset.json";
 
 interface Props {
   onComplete: () => void;
