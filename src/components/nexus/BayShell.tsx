@@ -317,9 +317,17 @@ export const BayShell = ({
       {/* ============ FILES ON RECORD ============ */}
       <DocumentShelf bay={bayId} />
 
-
+        </div>
+        {/* bottom seam */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-32 z-[1]"
+          style={{ background: `linear-gradient(180deg, transparent 0%, rgba(3,6,12,0.95) 100%)` }}
+        />
+      </div>
 
       {/* Credentials gallery — modal-like overlay when opened */}
+
       {certsOpen && (
         <div className="fixed inset-0 z-[70] overflow-y-auto bg-[rgba(3,6,12,0.94)] backdrop-blur-lg">
           <div className="min-h-screen">
