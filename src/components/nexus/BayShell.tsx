@@ -64,6 +64,7 @@ export const BayShell = ({
   ambient = "ON RECORD",
   accent = DEFAULT_ACCENT,
   lightingControls = false,
+  windowRect,
   onOpenVault,
   onContact,
 }: Props) => {
