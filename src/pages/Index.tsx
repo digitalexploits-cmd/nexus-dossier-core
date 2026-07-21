@@ -74,7 +74,7 @@ const Index = () => {
   const [introDone, setIntroDone] = useState(() => {
     try { return sessionStorage.getItem("nexus:intro") === "done"; } catch { return false; }
   });
-  const [transition, setTransition] = useState<{ label: string; kind: TransitionKind; bgImage?: string } | null>(null);
+  const [transition, setTransition] = useState<{ label: string; kind: TransitionKind; bgImage?: string; code?: string } | null>(null);
 
 
   const syncFromHash = useCallback(() => {
