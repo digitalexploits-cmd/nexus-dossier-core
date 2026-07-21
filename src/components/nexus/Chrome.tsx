@@ -16,10 +16,19 @@ const BAY_ICONS: Record<BayId, typeof Target> = {
   operations: Radar,
 };
 
+// Short nav labels shown under each icon.
+const BAY_LABELS: Record<BayId, string> = {
+  mission: "MISSION",
+  technical: "SINE WAVE",
+  capability: "CAPABILITY",
+  operations: "OPS",
+};
+
+
 export const TopBar = ({ view, currentBay = "home", onHome, onBay, onOpenVault }: TopBarProps) => {
   return (
     <header className="fixed top-0 inset-x-0 z-40 border-b border-primary/25 bg-background/85 backdrop-blur-md">
-      <div className="container flex h-12 items-center justify-between gap-3">
+      <div className="container flex h-14 items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
           <button
             onClick={onHome}
@@ -57,34 +66,34 @@ export const TopBar = ({ view, currentBay = "home", onHome, onBay, onOpenVault }
                   aria-label={`${b.index} · ${b.title}`}
                   aria-current={active ? "page" : undefined}
                   title={`${b.index} · ${b.title}`}
-                  className={`bay-hover-glow relative w-9 h-9 flex items-center justify-center border transition-colors touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 ${
+                  className={`bay-hover-glow relative flex flex-col items-center justify-center gap-0.5 px-1.5 py-1 min-w-[3.25rem] border transition-colors touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 ${
                     active
                       ? "border-primary text-primary bg-primary/15 shadow-[0_0_16px_rgba(70,150,255,0.35)]"
                       : "border-border/50 text-muted-foreground hover:text-primary hover:border-primary/60"
                   }`}
                 >
                   <Icon size={16} strokeWidth={1.75} />
-                  <span className="sr-only">{b.title}</span>
+                  <span className="mono text-[0.5rem] tracking-[0.18em] leading-none">{BAY_LABELS[b.id]}</span>
                 </button>
               );
             })}
             {onOpenVault && (
               <>
-                <div className="h-5 w-px bg-primary/25 mx-0.5" aria-hidden />
+                <div className="h-8 w-px bg-primary/25 mx-0.5" aria-hidden />
                 <button
                   onClick={onOpenVault}
                   aria-label="Open Evidence Vault"
-                  aria-current={currentBay === "home" && view?.toLowerCase().includes("vault") ? "page" : undefined}
                   title="Evidence Vault"
-                  className="bay-hover-glow w-9 h-9 flex items-center justify-center border border-primary/40 text-primary/90 hover:text-primary hover:border-primary/80 hover:bg-primary/10 transition-colors touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
+                  className="bay-hover-glow flex flex-col items-center justify-center gap-0.5 px-1.5 py-1 min-w-[3.25rem] border border-primary/40 text-primary/90 hover:text-primary hover:border-primary/80 hover:bg-primary/10 transition-colors touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
                 >
                   <Lock size={16} strokeWidth={1.75} />
-                  <span className="sr-only">Evidence Vault</span>
+                  <span className="mono text-[0.5rem] tracking-[0.18em] leading-none">VAULT</span>
                 </button>
               </>
             )}
           </nav>
         )}
+
 
         <div className="flex items-center gap-2 min-w-0">
           <div className="hidden md:flex items-center gap-2 tick">
