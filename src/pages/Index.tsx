@@ -220,6 +220,7 @@ const Index = () => {
           label={transition.label}
           kind={transition.kind}
           bgImage={transition.bgImage}
+          code={transition.code}
           onDone={() => setTransition(null)}
         />
       )}
