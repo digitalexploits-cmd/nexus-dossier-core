@@ -1029,6 +1029,12 @@
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 68%, transparent 100%);
           mask-image: linear-gradient(to bottom, #000 0%, #000 68%, transparent 100%);
 }
+/* Branches-only band — only paints in a thin sliver at the outer edges so
+   tree silhouettes stay outside the building and never bleed into interiors. */
+.sky-storm-band.branches-only {
+  -webkit-mask-image: linear-gradient(to right, #000 0, #000 12%, transparent 22%, transparent 78%, #000 88%, #000 100%);
+          mask-image: linear-gradient(to right, #000 0, #000 12%, transparent 22%, transparent 78%, #000 88%, #000 100%);
+}
 
 @media (prefers-reduced-motion: reduce) {
   .bay-hero-img,
