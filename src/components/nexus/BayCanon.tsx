@@ -319,19 +319,102 @@ const OperationsCanon = () => (
   <>
     <section className="container py-10 space-y-4">
       <SectionEyebrow>10 / OS PATCH 001 — DATASET BOUNDARY CONTROL</SectionEyebrow>
-      <PatchDiagram
-        status="OPERATIONAL PATCH · June 29, 2026"
-        purpose="Standing dataset-boundary rules governing how each source may be described in reviewer-facing material."
-        rules={PATCH_RULES}
-      />
+      <div className="grid lg:grid-cols-[1fr_1fr] gap-4 items-start">
+        <PatchDiagram
+          status="OPERATIONAL PATCH · June 29, 2026"
+          purpose="Standing dataset-boundary rules governing how each source may be described in reviewer-facing material."
+          rules={PATCH_RULES}
+        />
+        <HeroImage
+          src={MEDIA.claimRelease}
+          alt="Claim release boundary diagram"
+          eyebrow="FIG · 10A"
+          label="CLAIM RELEASE BOUNDARIES"
+          meta="INTERNAL ↔ PROPOSAL-SAFE ↔ PUBLIC"
+          aspect="aspect-[4/3]"
+        />
+      </div>
     </section>
-    <section className="container py-10">
+    <section className="container py-10 space-y-4">
       <SectionEyebrow>06 / DECISION LOG — STANDING DECISIONS</SectionEyebrow>
       <DecisionTimeline items={DECISIONS} />
+      <div className="grid md:grid-cols-2 gap-4 pt-2">
+        <InstrumentFrame
+          src={MEDIA.changeCtrl}
+          eyebrow="INSTR · 06A"
+          label="CHANGE CONTROL BOARD"
+          meta="CHANGE DISCIPLINE · LIVE"
+          height={440}
+        />
+        <InstrumentFrame
+          src={MEDIA.evidenceProm}
+          eyebrow="INSTR · 06B"
+          label="EVIDENCE PROMOTION GATE"
+          meta="MANIFEST GATE · LIVE"
+          height={440}
+        />
+      </div>
     </section>
     <section className="container py-10">
       <SectionEyebrow>04 / EVIDENCE MANIFEST — WALKTHROUGH</SectionEyebrow>
       <NarratedSlideshow slides={EVIDENCE_SLIDES} />
+    </section>
+  </>
+);
+
+// ============================================================
+// MISSION BAY — Operating Doctrine, Human-in-the-Loop, Multi-Agent
+// ============================================================
+const MissionCanon = () => (
+  <>
+    <section className="container py-10 space-y-4">
+      <SectionEyebrow>M1 / OPERATING DOCTRINE — PILLARS</SectionEyebrow>
+      <div className="grid lg:grid-cols-[1.05fr_1fr] gap-4 items-start">
+        <HeroImage
+          src={MEDIA.doctrinePill}
+          alt="Operating doctrine pillars"
+          eyebrow="FIG · M1A"
+          label="OPERATING DOCTRINE PILLARS"
+          meta="BRAND PHILOSOPHY · REFERENCE"
+          aspect="aspect-[4/3]"
+        />
+        <InstrumentFrame
+          src={MEDIA.doctrineTerm}
+          eyebrow="INSTR · M1B"
+          label="OPERATING DOCTRINE TERMINAL"
+          meta="DOCTRINE · READ-ONLY"
+          height={420}
+        />
+      </div>
+    </section>
+    <section className="container py-10 space-y-4">
+      <SectionEyebrow>M2 / HUMAN-IN-THE-LOOP · ACCOUNTABILITY</SectionEyebrow>
+      <div className="grid md:grid-cols-2 gap-4">
+        <InstrumentFrame
+          src={MEDIA.humanLoop}
+          eyebrow="INSTR · M2A"
+          label="HUMAN-IN-THE-LOOP REQUIREMENT"
+          height={380}
+        />
+        <InstrumentFrame
+          src={MEDIA.multiAgent}
+          eyebrow="INSTR · M2B"
+          label="MULTI-AGENT ROLES"
+          meta="NEXUS PLATFORM ARCHITECTURE"
+          height={380}
+        />
+      </div>
+    </section>
+    <section className="container py-10">
+      <SectionEyebrow>M3 / KNOWLEDGE LIFECYCLE — CORE</SectionEyebrow>
+      <HeroImage
+        src={MEDIA.knowledgeCore}
+        alt="Knowledge lifecycle core diagram"
+        eyebrow="FIG · M3A"
+        label="KNOWLEDGE LIFECYCLE CORE"
+        meta="CAPTURE → PROMOTE → GOVERN"
+        aspect="aspect-[21/9]"
+      />
     </section>
   </>
 );
