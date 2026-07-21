@@ -5,10 +5,11 @@ import { EvidenceVault } from "@/components/nexus/EvidenceVault";
 import { Contact } from "@/components/nexus/Contact";
 import { TopBar, BottomBar } from "@/components/nexus/Chrome";
 import { IntroOverlay } from "@/components/nexus/IntroOverlay";
-import { BayTransition, TRANSITION_SWAP_MS, type TransitionKind } from "@/components/nexus/BayTransition";
+import { BayTransition, type TransitionKind } from "@/components/nexus/BayTransition";
 import { Button } from "@/components/ui/button";
 import { BAYS, type BayId } from "@/data/content";
-import { pickTransition } from "@/data/transitions";
+import { pickTransition, transitionDuration, transitionSwapMs } from "@/data/transitions";
+
 import { prefersReducedMotion } from "@/lib/audio";
 
 // Hero image per bay — the stable landing state after transition.
