@@ -338,6 +338,8 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
       {/* Living exterior — subtle sky-life ambient over the whole scene */}
       <div aria-hidden className="bay-exterior-life" />
+      {/* Drifting clouds through the dome oculus / upper glass — clipped, never inside */}
+      <SkyWindow top={0} left={12} right={12} bottom={72} branchRight debugLabel="rotunda dome" />
 
 
 
