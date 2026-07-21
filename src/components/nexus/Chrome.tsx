@@ -28,7 +28,7 @@ const BAY_LABELS: Record<BayId, string> = {
 export const TopBar = ({ view, currentBay = "home", onHome, onBay, onOpenVault }: TopBarProps) => {
   return (
     <header className="fixed top-0 inset-x-0 z-40 border-b border-primary/25 bg-background/85 backdrop-blur-md">
-      <div className="container flex h-12 items-center justify-between gap-3">
+      <div className="container flex h-14 items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
           <button
             onClick={onHome}
