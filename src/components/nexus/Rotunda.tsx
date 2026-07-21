@@ -452,15 +452,23 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         className="absolute left-1/2 -translate-x-1/2 bottom-6 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-11 flex items-center justify-center touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
       >▼</button>
 
-      {/* Lock-on ENTER prompt (keyboard/drag flow) */}
+      {/* Lock-on ENTER prompt — 2-tier hierarchy: verb + destination.
+          Uses whitespace-nowrap with responsive sizing; the outer wrapper
+          caps width so it never bleeds past the viewport. */}
       {lockedZone && (
         <div className="absolute inset-x-0 bottom-20 z-20 flex justify-center pointer-events-none px-4">
           <button
             onPointerDown={(e) => e.stopPropagation()}
             onClick={(e) => { e.stopPropagation(); enterZone(lockedZone); }}
-            className="pointer-events-auto mono uppercase text-primary border border-primary/70 bg-primary/10 hover:bg-primary/20 backdrop-blur-sm px-6 py-3 tracking-[0.32em] text-xs sm:text-sm shadow-[0_0_40px_rgba(70,150,255,0.35)] transition-colors touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 max-w-[calc(100vw-2rem)] truncate"
+            className="pointer-events-auto flex items-center gap-2 sm:gap-3 mono uppercase text-primary border border-primary/70 bg-primary/10 hover:bg-primary/20 backdrop-blur-sm px-4 sm:px-6 py-2.5 sm:py-3 shadow-[0_0_40px_rgba(70,150,255,0.35)] transition-colors touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 max-w-[calc(100vw-2rem)]"
           >
-            ▶ {lockedZone.id === "vault" ? "OPEN" : "ENTER"} — {lockedZone.label.toUpperCase()}
+            <span className="tracking-[0.32em] text-[0.65rem] sm:text-xs text-primary/80 whitespace-nowrap">
+              ▶ {lockedZone.id === "vault" ? "OPEN" : "ENTER"}
+            </span>
+            <span className="h-3 w-px bg-primary/40" aria-hidden />
+            <span className="tracking-[0.22em] sm:tracking-[0.28em] text-xs sm:text-sm truncate">
+              {lockedZone.label.toUpperCase()}
+            </span>
           </button>
         </div>
       )}
