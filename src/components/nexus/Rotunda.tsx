@@ -488,8 +488,12 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
               Explore the four bays and the evidence vault. Press <span className="mono text-primary">ENTER</span> when a zone locks on.
             </div>
             <button
-              onClick={() => { interactedRef.current = true; setHintVisible(false); }}
-              className="mt-4 mono text-[0.6rem] tracking-[0.28em] uppercase text-primary/80 hover:text-primary border border-primary/40 px-3 py-1"
+              onClick={() => {
+                interactedRef.current = true;
+                setHintVisible(false);
+                try { window.localStorage.setItem("nexus.rotunda.hintSeen", "1"); } catch {}
+              }}
+              className="mt-4 mono text-[0.6rem] tracking-[0.28em] uppercase text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 px-3 py-1 transition-colors"
             >
               GOT IT
             </button>
