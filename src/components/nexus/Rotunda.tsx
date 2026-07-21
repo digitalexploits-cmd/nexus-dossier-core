@@ -453,7 +453,41 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
       {/* CAMERA-FIXED OVERLAYS */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_72%,rgba(5,7,10,0.55)_100%)]" />
       <div className="absolute inset-x-0 top-0 h-20 pointer-events-none bg-gradient-to-b from-background/50 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-32 pointer-events-none bg-gradient-to-t from-background/60 to-transparent" />
+
+      {/* KIOSK CONSOLE MASK — opaque strip that hides the baked-in
+          AI-hallucinated kiosk text ("SBLECT OIUFCTIVE", "MISCION BRIEF" tiles)
+          burned into the rotunda hero. Rendered as a real console counter
+          with a gold hairline cap so the room still feels grounded. */}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0 pointer-events-none z-10"
+        style={{
+          height: "clamp(200px, 34vh, 320px)",
+          background:
+            "linear-gradient(to top, #08101c 0%, #08101c 82%, rgba(8,16,28,0.96) 92%, rgba(8,16,28,0.6) 98%, transparent 100%)",
+        }}
+      >
+        {/* Gold hairline seam capping the console */}
+        <div
+          className="absolute inset-x-0"
+          style={{
+            top: "clamp(60px, 11vh, 100px)",
+            height: "1px",
+            background:
+              "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.55) 20%, rgba(212,175,55,0.85) 50%, rgba(212,175,55,0.55) 80%, transparent 100%)",
+            boxShadow: "0 0 12px rgba(212,175,55,0.35)",
+          }}
+        />
+        {/* Faint scanline detail on the console face */}
+        <div
+          className="absolute inset-x-0 bottom-0"
+          style={{
+            top: "clamp(61px, 11vh, 101px)",
+            backgroundImage:
+              "repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 3px)",
+          }}
+        />
+      </div>
 
 
       {/* Reticle */}
