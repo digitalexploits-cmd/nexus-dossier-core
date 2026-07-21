@@ -29,7 +29,7 @@ export const TopBar = ({ view, currentBay = "home", onHome, onBay, onOpenVault }
   return (
     <header className="fixed top-0 inset-x-0 z-40 border-b border-primary/25 bg-background/85 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between gap-2">
-        <div className="flex items-center gap-2 min-w-0">
+        <div className="hidden md:flex items-center gap-2 min-w-0">
           <button
             onClick={onHome}
             disabled={currentBay === "home"}
@@ -40,11 +40,11 @@ export const TopBar = ({ view, currentBay = "home", onHome, onBay, onOpenVault }
               <div className="absolute inset-0 border border-primary/80 rotate-45 group-hover:border-primary transition-colors" />
               <div className="absolute inset-1 bg-primary/40 group-hover:bg-primary/60 transition-colors" />
             </div>
-            <div className="mono text-[0.62rem] sm:text-[0.72rem] tracking-[0.24em] text-foreground/90 shrink-0">
+            <div className="mono text-[0.72rem] tracking-[0.24em] text-foreground/90 shrink-0">
               AI BASE<sup className="text-primary">3</sup>
             </div>
-            <div className="hidden md:block h-4 w-px bg-primary/30" />
-            <div className="hidden md:block font-display text-lg leading-none text-primary tracking-wide">
+            <div className="h-4 w-px bg-primary/30" />
+            <div className="font-display text-lg leading-none text-primary tracking-wide">
               SINE<span className="text-primary/70">~</span>WaiV
             </div>
           </button>
