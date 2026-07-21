@@ -121,8 +121,8 @@ const Index = () => {
 
   // 3-second cinematic video transit — shuffles the video/still pool and layers
   // the premium flavor stack (vault doors, warp, iris, elevator, etc.) on top.
-  const CINEMATIC_MS = 3000;
-  const CINEMATIC_SWAP = 1050;
+  const CINEMATIC_MS = 5000;
+  const CINEMATIC_SWAP = 1700;
 
   const bgFor = useCallback((v: View | "vault"): string => {
     if (v === "home") return "/nexus-rotunda-new.jpg";
