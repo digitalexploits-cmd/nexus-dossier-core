@@ -216,11 +216,25 @@ const MediaPreview = ({ item }: { item: MediaItem }) => {
           <img src={item.url} alt={item.title} className="max-w-full max-h-full object-contain" />
         )}
         {item.kind === "video" && (
-          <video src={item.url} controls className="max-w-full max-h-full" />
+          <video
+            src={item.url}
+            controls
+            autoPlay
+            muted
+            playsInline
+            loop
+            className="max-w-full max-h-full"
+            onLoadedMetadata={(e) => {
+              // Ensure the clip runs for at least ~60s by looping seamlessly.
+              const v = e.currentTarget;
+              v.dataset.minPlaySec = "60";
+            }}
+          />
         )}
         {item.kind === "audio" && (
-          <audio src={item.url} controls className="w-4/5" />
+          <audio src={item.url} controls autoPlay loop className="w-4/5" />
         )}
+
         {item.kind === "document" && (
           <iframe
             src={item.url}

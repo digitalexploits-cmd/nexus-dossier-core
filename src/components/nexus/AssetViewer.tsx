@@ -50,14 +50,23 @@ export const AssetViewer = ({ asset, onClose, resolveHref }: Props) => {
               )}
               {asset.kind === "video" && (
                 <div className="w-full bg-black flex items-center justify-center">
-                  <video src={href} controls className="max-h-[75vh] w-full" />
+                  <video
+                    src={href}
+                    controls
+                    autoPlay
+                    muted
+                    playsInline
+                    loop
+                    className="max-h-[75vh] w-full"
+                  />
                 </div>
               )}
               {asset.kind === "audio" && (
                 <div className="w-full bg-[#0b1220] flex items-center justify-center p-6">
-                  <audio src={href} controls className="w-full" />
+                  <audio src={href} controls autoPlay loop className="w-full" />
                 </div>
               )}
+
             </div>
 
             <div className="p-3 border-t border-[rgba(130,205,255,0.28)] flex flex-wrap items-center justify-end gap-2">
