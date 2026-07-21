@@ -79,7 +79,11 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   const [headingV, setHeadingV] = useState(isMobileInitial ? 0.50 : 0.58);
   const [dragging, setDragging] = useState(false);
   const [snapping, setSnapping] = useState(false);
-  const [hintVisible, setHintVisible] = useState(true);
+  const [hintVisible, setHintVisible] = useState(() => {
+    if (typeof window === "undefined") return true;
+    try { return window.localStorage.getItem("nexus.rotunda.hintSeen") !== "1"; }
+    catch { return true; }
+  });
   const [vaultPanelOpen, setVaultPanelOpen] = useState(false);
   const [mediaPanelOpen, setMediaPanelOpen] = useState(false);
   const [mediaConsoleOpen, setMediaConsoleOpen] = useState(false);
