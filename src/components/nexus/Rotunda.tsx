@@ -462,9 +462,9 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         aria-hidden
         className="absolute inset-x-0 bottom-0 pointer-events-none z-10"
         style={{
-          height: "clamp(140px, 26vh, 220px)",
+          height: "clamp(200px, 34vh, 320px)",
           background:
-            "linear-gradient(to top, #0a1220 0%, #0a1220 55%, rgba(10,18,32,0.92) 75%, rgba(10,18,32,0.55) 92%, transparent 100%)",
+            "linear-gradient(to top, #08101c 0%, #08101c 82%, rgba(8,16,28,0.96) 92%, rgba(8,16,28,0.6) 98%, transparent 100%)",
         }}
       >
         {/* Gold hairline seam capping the console */}
