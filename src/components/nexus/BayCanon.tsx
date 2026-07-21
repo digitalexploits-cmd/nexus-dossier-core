@@ -176,13 +176,27 @@ const SectionEyebrow = ({ children }: { children: React.ReactNode }) => (
   <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#c9a24a] mb-3">{children}</div>
 );
 
+const TECHNICAL_ANCHORS = [
+  { id: "tech-validation", code: "07", label: "Validation Status" },
+  { id: "tech-pipeline",   code: "08", label: "Signal Pipeline" },
+  { id: "tech-reference",  code: "09", label: "Canon Reference" },
+];
+
 const TechnicalCanon = () => (
   <>
-    <section className="container py-10 space-y-4">
-      <SectionEyebrow>07 / VALIDATION STATUS — LIVE EVIDENCE GRAPH</SectionEyebrow>
+    <TechnicalCanonHeader bars={VALIDATION_BARS} anchors={TECHNICAL_ANCHORS} />
+
+    {/* ================== 07 / VALIDATION STATUS ================== */}
+    <section id="tech-validation" className="container py-10 space-y-5 scroll-mt-24">
+      <div className="flex items-baseline justify-between flex-wrap gap-3">
+        <SectionEyebrow>07 / VALIDATION STATUS — LIVE EVIDENCE GRAPH</SectionEyebrow>
+        <span className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
+          BOUNDED CLAIMS · REVIEWER-SAFE
+        </span>
+      </div>
       <p className="text-xs md:text-sm text-[#c8d4e2] leading-relaxed max-w-3xl">
         Validation controls credibility — the goal is a technically defensible bounded claim, not an
-        impressive-sounding one.
+        impressive-sounding one. Tap any bar for the scoped evidence required to advance it.
       </p>
 
       <HeroImage
@@ -204,55 +218,61 @@ const TechnicalCanon = () => (
         <AnimatedBarGraph items={VALIDATION_BARS} />
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-2">
-        {DATASET_CHIPS.map((c) => {
-          const s = chipStyle(c.tone);
-          return (
-            <div
-              key={c.label}
-              className="mono text-[0.6rem] tracking-[0.24em] uppercase px-3 py-1.5 rounded-sm border flex items-center gap-2"
-              style={{ borderColor: s.border, background: "rgba(11,18,32,0.7)", color: s.color }}
-            >
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: s.dot, boxShadow: `0 0 6px ${s.dot}` }} />
-              <span>{c.label}</span>
-              <span className="text-[#8fa3b8] normal-case tracking-normal font-normal">— {c.note}</span>
-            </div>
-          );
-        })}
+      {/* Dataset boundary chips */}
+      <div>
+        <div className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8] mb-2">
+          DATASET BOUNDARIES · ENFORCED
+        </div>
+        <div className="grid md:grid-cols-3 gap-2">
+          {DATASET_CHIPS.map((c) => {
+            const s = chipStyle(c.tone);
+            return (
+              <div
+                key={c.label}
+                className="rounded-sm border px-3 py-2 flex items-start gap-2"
+                style={{ borderColor: s.border, background: "rgba(11,18,32,0.7)" }}
+              >
+                <span
+                  className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0"
+                  style={{ background: s.dot, boxShadow: `0 0 6px ${s.dot}` }}
+                />
+                <div className="min-w-0">
+                  <div
+                    className="mono text-[0.6rem] tracking-[0.24em] uppercase leading-tight"
+                    style={{ color: s.color }}
+                  >
+                    {c.label}
+                  </div>
+                  <div className="text-[0.7rem] text-[#8fa3b8] leading-snug mt-0.5">{c.note}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4 pt-2">
-        <InstrumentFrame
-          src={MEDIA.claimStr}
-          eyebrow="INSTR · 07B"
-          label="CLAIM STRENGTH INSTRUMENT"
-          height={480}
-        />
-        <InstrumentFrame
-          src={MEDIA.reproGate}
-          eyebrow="INSTR · 07C"
-          label="REPRODUCIBILITY GATE"
-          height={480}
-        />
-        <InstrumentFrame
-          src={MEDIA.phaseBound}
-          eyebrow="INSTR · 07D"
-          label="PHASE BOUNDARY TERMINAL"
-          meta="PHASE FRAMING · REVIEW-SAFE"
-          height={420}
-        />
-        <InstrumentFrame
-          src={MEDIA.evidenceProm}
-          eyebrow="INSTR · 07E"
-          label="EVIDENCE PROMOTION GATE"
-          meta="CLAIM DISCIPLINE · CATEGORY MATCH"
-          height={420}
-        />
+      {/* Claim discipline instruments */}
+      <div className="pt-3">
+        <div className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8] mb-2">
+          CLAIM DISCIPLINE INSTRUMENTS
+        </div>
+        <div className="grid md:grid-cols-2 gap-4">
+          <InstrumentFrame src={MEDIA.claimStr}    eyebrow="INSTR · 07B" label="CLAIM STRENGTH INSTRUMENT" height={480} />
+          <InstrumentFrame src={MEDIA.reproGate}   eyebrow="INSTR · 07C" label="REPRODUCIBILITY GATE" height={480} />
+          <InstrumentFrame src={MEDIA.phaseBound}  eyebrow="INSTR · 07D" label="PHASE BOUNDARY TERMINAL" meta="PHASE FRAMING · REVIEW-SAFE" height={420} />
+          <InstrumentFrame src={MEDIA.evidenceProm} eyebrow="INSTR · 07E" label="EVIDENCE PROMOTION GATE" meta="CLAIM DISCIPLINE · CATEGORY MATCH" height={420} />
+        </div>
       </div>
     </section>
 
-    <section className="container py-10 space-y-4">
-      <SectionEyebrow>08 / LIVING TECHNICAL CANON — SIGNAL PIPELINE</SectionEyebrow>
+    {/* ================== 08 / SIGNAL PIPELINE ================== */}
+    <section id="tech-pipeline" className="container py-10 space-y-5 scroll-mt-24">
+      <div className="flex items-baseline justify-between flex-wrap gap-3">
+        <SectionEyebrow>08 / LIVING TECHNICAL CANON — SIGNAL PIPELINE</SectionEyebrow>
+        <span className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
+          CURRENT-DOMAIN · MIXED-RADIX
+        </span>
+      </div>
 
       <HeroImage
         src={MEDIA.spectral}
@@ -262,39 +282,35 @@ const TechnicalCanon = () => (
         meta="MIXED-RADIX SUB-WINDOW · REFERENCE"
       />
 
-      <div className="grid md:grid-cols-2 gap-4">
-        <HoverVideo
-          src={MEDIA.signalLock}
-          eyebrow="MOTION · 08B"
-          label="SIGNAL LOCK — GLITCH-TO-LOCK"
-          meta="HERO MOTION"
-        />
-        <InstrumentFrame
-          src={MEDIA.boundedTerm}
-          eyebrow="INSTR · 08C"
-          label="BOUNDED THESIS TERMINAL"
-          height={360}
-        />
+      <div>
+        <div className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8] mb-2">
+          LOCK BEHAVIOR & FRAMING
+        </div>
+        <div className="grid md:grid-cols-2 gap-4">
+          <HoverVideo src={MEDIA.signalLock}    eyebrow="MOTION · 08B" label="SIGNAL LOCK — GLITCH-TO-LOCK" meta="HERO MOTION" />
+          <InstrumentFrame src={MEDIA.boundedTerm} eyebrow="INSTR · 08C" label="BOUNDED THESIS TERMINAL" height={360} />
+        </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
-        <InstrumentFrame
-          src={MEDIA.faultInject}
-          eyebrow="INSTR · 08D"
-          label="FAULT SIGNATURE INJECTOR"
-          height={520}
-        />
-        <InstrumentFrame
-          src={MEDIA.signalExtr}
-          eyebrow="INSTR · 08E"
-          label="SIGNAL EXTRACTION INSTRUMENT"
-          height={520}
-        />
+      <div>
+        <div className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8] mb-2">
+          EXTRACTION INSTRUMENTS
+        </div>
+        <div className="grid md:grid-cols-2 gap-4">
+          <InstrumentFrame src={MEDIA.faultInject} eyebrow="INSTR · 08D" label="FAULT SIGNATURE INJECTOR" height={520} />
+          <InstrumentFrame src={MEDIA.signalExtr}  eyebrow="INSTR · 08E" label="SIGNAL EXTRACTION INSTRUMENT" height={520} />
+        </div>
       </div>
     </section>
 
-    <section className="container py-10">
-      <SectionEyebrow>09 / LIVING TECHNICAL CANON — REFERENCE</SectionEyebrow>
+    {/* ================== 09 / REFERENCE ================== */}
+    <section id="tech-reference" className="container py-10 space-y-4 scroll-mt-24">
+      <div className="flex items-baseline justify-between flex-wrap gap-3">
+        <SectionEyebrow>09 / LIVING TECHNICAL CANON — REFERENCE</SectionEyebrow>
+        <span className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
+          {String(CANON_TERMS.length).padStart(2, "0")} TERMS · SEARCHABLE
+        </span>
+      </div>
       <CanonReference terms={CANON_TERMS} />
     </section>
   </>
