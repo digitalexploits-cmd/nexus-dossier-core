@@ -1071,3 +1071,54 @@
   40%  { opacity: 1; transform: translate(-50%, -50%) scale(1);   letter-spacing: 0.42em; }
   100% { opacity: 0; transform: translate(-50%, -50%) scale(1.05);letter-spacing: 0.42em; }
 }
+
+/* ============================================================
+   PREMIUM POLISH — global micro-refinements
+   Non-destructive. Smooths every interactive element, adds
+   depth cues on panels, and unifies motion easing site-wide.
+   ============================================================ */
+
+/* Unified premium easing on interactive controls */
+button, [role="button"], a, .panel {
+  transition-timing-function: cubic-bezier(.2,.7,.2,1);
+}
+
+/* Ambient depth on any element carrying .panel — a whisper of gold
+   above and vignette below, blending with the existing shadow. */
+.panel {
+  backdrop-filter: saturate(1.05);
+}
+
+/* Fine cross-fade helper: use for content swaps inside bays */
+.premium-fade-in {
+  animation: premium-fade-in 520ms cubic-bezier(.2,.7,.2,1) both;
+}
+@keyframes premium-fade-in {
+  0%   { opacity: 0; transform: translate3d(0, 6px, 0); filter: blur(2px); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0);   filter: blur(0); }
+}
+
+/* Silky panel hover-lift — a hair of parallax without moving assets */
+.panel:hover {
+  transform: translateY(-1px);
+}
+
+/* Refined section hairlines — replace flat borders with a lit seam
+   whenever a panel is nested inside the depth stage. */
+.bay-depth-stage .panel {
+  border-color: hsl(220 25% 22% / 0.9);
+}
+.bay-depth-stage .panel::after {
+  content: "";
+  position: absolute; left: 8%; right: 8%; top: -1px; height: 1px;
+  background: linear-gradient(90deg, transparent, hsl(41 65% 56% / 0.55), transparent);
+  pointer-events: none;
+  opacity: 0.55;
+  transition: opacity 420ms ease;
+}
+.bay-depth-stage .panel:hover::after { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .panel:hover { transform: none; }
+  .premium-fade-in { animation: none; }
+}
