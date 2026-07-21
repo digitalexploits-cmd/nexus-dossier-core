@@ -62,6 +62,8 @@ export const SkyWindow = ({
     <div aria-hidden style={style} data-sky-window={debugLabel ?? ""}>
       <div className="bay-hero-clouds layer-b" />
       <div className="bay-hero-clouds" />
+      <div className="bay-hero-storm" />
+      <div className="bay-hero-storm layer-b" />
       <div className="bay-hero-lightning" />
       <div className="bay-hero-lightning layer-b" />
       <div className="bay-hero-shadow" />
