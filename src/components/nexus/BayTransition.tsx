@@ -14,15 +14,30 @@ interface Props {
 
 // Full cinematic run. Curtain (bay-curtain keyframes: peak at 35%) covers
 // the underlying view swap. Consumers should swap at ~35% of DURATION.
-const DURATION = 2600;
-export const TRANSITION_SWAP_MS = Math.round(DURATION * 0.35); // 910ms
+const DURATION = 5000;
+export const TRANSITION_SWAP_MS = Math.round(DURATION * 0.35); // 1750ms
 
 const TELEMETRY_LINES = [
   "AUTH · REVIEW-SAFE",
   "LINK · SECURE",
   "CANON · SYNCED",
   "MANIFEST · SIGNED",
+  "TELEMETRY · NOMINAL",
+  "PAYLOAD · VERIFIED",
 ];
+
+// Cinematic camera flavors — one is chosen at random per transit so no two
+// feel the same. Each flavor is a CSS keyframe defined in index.css.
+const FLAVORS = [
+  { name: "flavor-fall",         phase: "FREEFALL VECTOR" },
+  { name: "flavor-dolly-in",     phase: "DOLLY ADVANCE" },
+  { name: "flavor-reverse-out",  phase: "REVERSE PULL" },
+  { name: "flavor-warp",         phase: "WARP ALIGNMENT" },
+  { name: "flavor-spin-in",      phase: "ORBITAL LOCK" },
+  { name: "flavor-tilt-pan",     phase: "LATERAL SWEEP" },
+  { name: "flavor-rise",         phase: "ASCENT VECTOR" },
+  { name: "flavor-glitch-slice", phase: "SIGNAL RECONSTRUCT" },
+] as const;
 
 /** Cinematic multi-stage transit sequence with HUD, telemetry, and dual scans. */
 export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => {
