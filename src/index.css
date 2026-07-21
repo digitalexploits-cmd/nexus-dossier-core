@@ -505,3 +505,77 @@
     }
   }
 }
+
+/* ============ BAY DEPTH STAGE ============
+   Cinematic depth for the content below each bay's hero. Layered gradients,
+   precision grid, vignette, and lifted card treatments — echoes the transition
+   pieces without competing with them. */
+.bay-depth-stage {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse 120% 70% at 50% 0%, rgba(20, 34, 56, 0.55) 0%, rgba(6, 10, 18, 0) 55%),
+    linear-gradient(180deg, #05080f 0%, #070b14 45%, #04070d 100%);
+}
+.bay-depth-stage::before {
+  /* faint horizon key light using the bay accent */
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 40% 22% at 50% 4%, color-mix(in srgb, var(--bay-accent, #4db7ff) 22%, transparent) 0%, transparent 70%);
+  mix-blend-mode: screen;
+  opacity: 0.9;
+  z-index: 0;
+}
+.bay-depth-stage::after {
+  /* soft floor-light bloom */
+  content: "";
+  position: absolute; inset: auto 0 -1px 0; height: 55%;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 100% at 50% 100%, color-mix(in srgb, var(--bay-accent, #4db7ff) 10%, transparent) 0%, transparent 70%);
+  mix-blend-mode: screen;
+  z-index: 0;
+}
+.bay-depth-grid {
+  background-image:
+    linear-gradient(rgba(180, 210, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180, 210, 255, 0.035) 1px, transparent 1px);
+  background-size: 42px 42px, 42px 42px;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, #000 30%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, #000 30%, transparent 85%);
+  opacity: 0.55;
+}
+.bay-depth-vignette {
+  background:
+    radial-gradient(ellipse 130% 90% at 50% 50%, transparent 55%, rgba(2, 4, 8, 0.75) 100%);
+}
+.bay-depth-ambient {
+  animation: bay-depth-drift 22s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+@keyframes bay-depth-drift {
+  0%   { transform: translate3d(-1.2%, 0.6%, 0) scale(1.02); opacity: 0.9; }
+  100% { transform: translate3d(1.2%, -0.6%, 0) scale(1.05); opacity: 1; }
+}
+
+/* Lift cards / panels sitting on the stage so they feel elevated */
+.bay-depth-stage button,
+.bay-depth-stage [role="button"],
+.bay-depth-stage .rounded-sm,
+.bay-depth-stage .rounded-md,
+.bay-depth-stage .rounded-lg {
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.04) inset,
+    0 22px 40px -28px rgba(0,0,0,0.85),
+    0 6px 14px -10px rgba(0,0,0,0.6);
+}
+.bay-depth-stage button:hover {
+  transform: translateY(-1px);
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bay-depth-ambient { animation: none !important; }
+}
