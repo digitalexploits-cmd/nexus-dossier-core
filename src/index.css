@@ -672,44 +672,45 @@
   100% { transform: translate3d(1.2%, -0.6%, 0) scale(1.06) rotate(0.4deg);  opacity: 1;    filter: blur(32px) saturate(1.22); }
 }
 
-/* Elevated panel treatment — lifted, glassy, edge-lit */
+/* Elevated panel treatment — lifted, glassy, edge-lit, with spotlight sheen */
 .bay-depth-stage button,
 .bay-depth-stage [role="button"],
 .bay-depth-stage .rounded-sm,
 .bay-depth-stage .rounded-md,
 .bay-depth-stage .rounded-lg {
+  position: relative;
   box-shadow:
-    /* top inner highlight — glass sheen */
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    /* bottom inner shadow — depth cavity */
-    inset 0 -1px 0 rgba(0, 0, 0, 0.55),
-    /* contact shadow — sits on surface */
-    0 2px 4px -2px rgba(0, 0, 0, 0.75),
-    /* mid drop — separation */
-    0 12px 22px -14px rgba(0, 0, 0, 0.85),
-    /* deep drop — floats above stage */
-    0 32px 56px -32px rgba(0, 0, 0, 0.95),
-    /* accent rim glow — bay identity */
-    0 0 0 1px color-mix(in srgb, var(--bay-accent, #4db7ff) 6%, transparent),
-    0 24px 60px -40px color-mix(in srgb, var(--bay-accent, #4db7ff) 55%, transparent);
-  transition: transform 320ms cubic-bezier(.2,.7,.2,1), box-shadow 320ms cubic-bezier(.2,.7,.2,1), border-color 320ms ease;
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.6),
+    0 2px 4px -2px rgba(0, 0, 0, 0.8),
+    0 12px 22px -14px rgba(0, 0, 0, 0.9),
+    0 32px 56px -32px rgba(0, 0, 0, 0.98),
+    0 0 0 1px color-mix(in srgb, var(--bay-accent, #4db7ff) 7%, transparent),
+    0 24px 60px -40px color-mix(in srgb, var(--bay-accent, #4db7ff) 60%, transparent);
+  transition: transform 340ms cubic-bezier(.2,.7,.2,1),
+              box-shadow 340ms cubic-bezier(.2,.7,.2,1),
+              border-color 340ms ease;
 }
 .bay-depth-stage button:hover,
 .bay-depth-stage [role="button"]:hover {
   transform: translateY(-2px);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.10),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.55),
-    0 2px 4px -2px rgba(0, 0, 0, 0.85),
-    0 18px 32px -18px rgba(0, 0, 0, 0.9),
-    0 42px 72px -34px rgba(0, 0, 0, 1),
-    0 0 0 1px color-mix(in srgb, var(--bay-accent, #4db7ff) 22%, transparent),
-    0 30px 80px -36px color-mix(in srgb, var(--bay-accent, #4db7ff) 85%, transparent);
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.6),
+    0 2px 4px -2px rgba(0, 0, 0, 0.9),
+    0 18px 32px -18px rgba(0, 0, 0, 0.95),
+    0 46px 78px -34px rgba(0, 0, 0, 1),
+    0 0 0 1px color-mix(in srgb, var(--bay-accent, #4db7ff) 30%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--bay-accent, #4db7ff) 8%, transparent),
+    0 34px 90px -34px color-mix(in srgb, var(--bay-accent, #4db7ff) 95%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bay-depth-ambient { animation: none !important; }
+  .bay-depth-ambient,
+  .bay-depth-orb,
+  .bay-depth-stage::before { animation: none !important; }
   .bay-depth-stage button:hover,
   .bay-depth-stage [role="button"]:hover { transform: none; }
 }
+
 
