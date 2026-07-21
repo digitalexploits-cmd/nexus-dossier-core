@@ -1,5 +1,5 @@
 import { BRAND, BAYS, type BayId } from "@/data/content";
-import { Target, Waves, LayoutGrid, Radar, Lock } from "lucide-react";
+import { Target, Waves, LayoutGrid, Radar, Lock, Compass } from "lucide-react";
 
 interface TopBarProps {
   view: string;
