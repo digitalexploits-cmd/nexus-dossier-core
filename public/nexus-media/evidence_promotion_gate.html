@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Evidence Promotion Gate</title>
+<style>
+  :root { --bg:#03070e; --panel:#0a101c; --gold:#d4af37; --text:#cdd6e4; --muted:#6d7d93; --line:#1a2638; --ok:#3dba7c; --bad:#c45c5c; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--text); font-family:ui-monospace,SFMono-Regular,Menlo,monospace; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:1.2rem; }
+  .gate { width:100%; max-width:680px; background:var(--panel); border:1px solid var(--line); border-radius:3px; overflow:hidden; }
+  header { padding:0.9rem 1.2rem; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; }
+  header h1 { font-size:0.85rem; color:var(--gold); letter-spacing:0.12em; }
+  .body { padding:1.4rem 1.25rem; }
+  .row { margin-bottom:1.2rem; }
+  label { display:block; font-size:0.65rem; color:var(--muted); letter-spacing:0.09em; margin-bottom:0.4rem; text-transform:uppercase; }
+  select { width:100%; background:#060c16; border:1px solid #243044; color:var(--text); padding:0.65rem; font-family:inherit; font-size:0.85rem; border-radius:2px; }
+  .result { margin-top:1.5rem; padding:1.1rem; border-left:3px solid var(--gold); background:rgba(212,175,55,0.05); font-size:0.85rem; line-height:1.55; min-height:80px; }
+  .result.ok { border-color:var(--ok); background:rgba(61,186,124,0.06); }
+  .result.bad { border-color:var(--bad); background:rgba(196,92,92,0.06); }
+  footer { padding:0.65rem 1.2rem; border-top:1px solid var(--line); font-size:0.65rem; color:var(--muted); display:flex; justify-content:space-between; }
+</style>
+</head>
+<body>
+  <div class="gate">
+    <header>
+      <h1>EVIDENCE PROMOTION GATE</h1>
+      <span style="font-size:0.7rem;color:var(--muted)">CAN THIS CLAIM BE RAISED?</span>
+    </header>
+    <div class="body">
+      <div class="row">
+        <label>Current Evidence Category</label>
+        <select id="current">
+          <option value="5">5 — Speculation</option>
+          <option value="4">4 — Working Hypothesis</option>
+          <option value="3">3 — Engineering Observation</option>
+          <option value="2">2 — Experimental Result</option>
+          <option value="1">1 — Validated Result</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>Desired Promotion Level</label>
+        <select id="desired">
+          <option value="4">Raise to Working Hypothesis</option>
+          <option value="3">Raise to Engineering Observation</option>
+          <option value="2">Raise to Experimental Result</option>
+          <option value="1">Raise to Validated Result</option>
+        </select>
+      </div>
+      <div class="result" id="result">Select current and desired levels to evaluate promotion eligibility.</div>
+    </div>
+    <footer>
+      <span>AI Base³ • NEXUS</span>
+      <span>Promotion requires matching evidence</span>
+    </footer>
+  </div>
+<script>
+const current = document.getElementById('current');
+const desired = document.getElementById('desired');
+const result = document.getElementById('result');
+
+function evaluate() {
+  const cur = parseInt(current.value);
+  const des = parseInt(desired.value);
+  if (des >= cur) {
+    result.className = 'result bad';
+    result.innerHTML = '<strong>Promotion denied.</strong> You cannot raise a claim to a higher evidence category than the evidence you currently possess. Strengthen the underlying evidence first.';
+  } else if (cur - des === 1) {
+    result.className = 'result';
+    result.innerHTML = '<strong>Conditional.</strong> One-step promotion may be considered only after a formal Decision Log entry and explicit human review.';
+  } else {
+    result.className = 'result ok';
+    result.innerHTML = '<strong>Eligible for review.</strong> The requested level is within reach of the current evidence category. Proceed through Decision Log and human accountability check.';
+  }
+}
+current.onchange = evaluate;
+desired.onchange = evaluate;
+</script>
+</body>
+</html>

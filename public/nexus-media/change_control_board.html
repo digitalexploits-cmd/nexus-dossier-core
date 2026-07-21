@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Change Control Board</title>
+<style>
+  :root { --bg:#04070e; --panel:#0a101c; --gold:#d4af37; --text:#cdd6e4; --muted:#6d7d93; --line:#1a2638; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--text); font-family:ui-monospace,SFMono-Regular,Menlo,monospace; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:1.2rem; }
+  .board { width:100%; max-width:700px; background:var(--panel); border:1px solid var(--line); border-radius:3px; overflow:hidden; }
+  header { padding:0.9rem 1.2rem; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; }
+  header h1 { font-size:0.85rem; color:var(--gold); letter-spacing:0.12em; }
+  .body { padding:1.3rem 1.2rem; }
+  .item { display:flex; gap:0.9rem; padding:0.85rem 0; border-bottom:1px solid #141e2c; align-items:flex-start; }
+  .item:last-child { border-bottom:none; }
+  .num { color:var(--gold); font-weight:600; min-width:1.4rem; }
+  .content h3 { font-size:0.88rem; margin-bottom:0.25rem; }
+  .content p { font-size:0.75rem; color:var(--muted); line-height:1.4; }
+  .status { margin-top:1.3rem; padding:0.9rem; background:#060c16; border-left:3px solid var(--gold); font-size:0.8rem; line-height:1.5; }
+  footer { padding:0.65rem 1.2rem; border-top:1px solid var(--line); font-size:0.65rem; color:var(--muted); display:flex; justify-content:space-between; }
+</style>
+</head>
+<body>
+  <div class="board">
+    <header>
+      <h1>CHANGE CONTROL BOARD</h1>
+      <span style="font-size:0.7rem;color:var(--muted)">DECISION LOG GOVERNANCE</span>
+    </header>
+    <div class="body">
+      <div class="item">
+        <div class="num">01</div>
+        <div class="content">
+          <h3>Material change detected</h3>
+          <p>Any modification to claims, scope, evidence level, or dataset status</p>
+        </div>
+      </div>
+      <div class="item">
+        <div class="num">02</div>
+        <div class="content">
+          <h3>Record in Decision Log</h3>
+          <p>Justification, previous state, new state, and responsible human</p>
+        </div>
+      </div>
+      <div class="item">
+        <div class="num">03</div>
+        <div class="content">
+          <h3>Evidence category check</h3>
+          <p>Confirm the new language still matches the strength of supporting evidence</p>
+        </div>
+      </div>
+      <div class="item">
+        <div class="num">04</div>
+        <div class="content">
+          <h3>Update Living Technical Canon</h3>
+          <p>Only after the Decision Log entry is complete</p>
+        </div>
+      </div>
+      <div class="status">
+        No silent updates. No claim drift. Every external statement must be traceable to a logged decision.
+      </div>
+    </div>
+    <footer>
+      <span>AI Base³ • NEXUS</span>
+      <span>Human accountability required</span>
+    </footer>
+  </div>
+</body>
+</html>

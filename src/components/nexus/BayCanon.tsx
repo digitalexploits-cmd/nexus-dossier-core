@@ -8,14 +8,23 @@ import { HeroImage, HoverVideo, InstrumentFrame } from "./MediaPanel";
 import type { BayId } from "@/data/content";
 
 const MEDIA = {
-  spectral:     "/nexus-media/spectral_structure_from_noise.png",
-  detection:    "/nexus-media/detection_horizon.png",
-  signalLock:   "/nexus-media/SignalLockGlitch.mp4",
-  faultInject:  "/nexus-media/fault_signature_injector.html",
-  signalExtr:   "/nexus-media/signal_extraction_instrument.html",
-  claimStr:     "/nexus-media/claim_strength_instrument.html",
-  reproGate:    "/nexus-media/reproducibility_gate.html",
-  boundedTerm:  "/nexus-media/bounded_thesis_terminal.html",
+  spectral:      "/nexus-media/spectral_structure_from_noise.png",
+  detection:     "/nexus-media/detection_horizon.png",
+  claimRelease:  "/nexus-media/claim_release_boundaries.png",
+  doctrinePill:  "/nexus-media/operating_doctrine_pillars.png",
+  knowledgeCore: "/nexus-media/knowledge_lifecycle_core.png",
+  signalLock:    "/nexus-media/SignalLockGlitch.mp4",
+  faultInject:   "/nexus-media/fault_signature_injector.html",
+  signalExtr:    "/nexus-media/signal_extraction_instrument.html",
+  claimStr:      "/nexus-media/claim_strength_instrument.html",
+  reproGate:     "/nexus-media/reproducibility_gate.html",
+  boundedTerm:   "/nexus-media/bounded_thesis_terminal.html",
+  phaseBound:    "/nexus-media/phase_boundary_terminal.html",
+  evidenceProm:  "/nexus-media/evidence_promotion_gate.html",
+  changeCtrl:    "/nexus-media/change_control_board.html",
+  doctrineTerm:  "/nexus-media/operating_doctrine_terminal.html",
+  humanLoop:     "/nexus-media/human_in_the_loop.html",
+  multiAgent:    "/nexus-media/multi_agent_roles.html",
 };
 
 // ============================================================
@@ -224,6 +233,20 @@ const TechnicalCanon = () => (
           label="REPRODUCIBILITY GATE"
           height={480}
         />
+        <InstrumentFrame
+          src={MEDIA.phaseBound}
+          eyebrow="INSTR · 07D"
+          label="PHASE BOUNDARY TERMINAL"
+          meta="PHASE FRAMING · REVIEW-SAFE"
+          height={420}
+        />
+        <InstrumentFrame
+          src={MEDIA.evidenceProm}
+          eyebrow="INSTR · 07E"
+          label="EVIDENCE PROMOTION GATE"
+          meta="CLAIM DISCIPLINE · CATEGORY MATCH"
+          height={420}
+        />
       </div>
     </section>
 
@@ -296,19 +319,102 @@ const OperationsCanon = () => (
   <>
     <section className="container py-10 space-y-4">
       <SectionEyebrow>10 / OS PATCH 001 — DATASET BOUNDARY CONTROL</SectionEyebrow>
-      <PatchDiagram
-        status="OPERATIONAL PATCH · June 29, 2026"
-        purpose="Standing dataset-boundary rules governing how each source may be described in reviewer-facing material."
-        rules={PATCH_RULES}
-      />
+      <div className="grid lg:grid-cols-[1fr_1fr] gap-4 items-start">
+        <PatchDiagram
+          status="OPERATIONAL PATCH · June 29, 2026"
+          purpose="Standing dataset-boundary rules governing how each source may be described in reviewer-facing material."
+          rules={PATCH_RULES}
+        />
+        <HeroImage
+          src={MEDIA.claimRelease}
+          alt="Claim release boundary diagram"
+          eyebrow="FIG · 10A"
+          label="CLAIM RELEASE BOUNDARIES"
+          meta="INTERNAL ↔ PROPOSAL-SAFE ↔ PUBLIC"
+          aspect="aspect-[4/3]"
+        />
+      </div>
     </section>
-    <section className="container py-10">
+    <section className="container py-10 space-y-4">
       <SectionEyebrow>06 / DECISION LOG — STANDING DECISIONS</SectionEyebrow>
       <DecisionTimeline items={DECISIONS} />
+      <div className="grid md:grid-cols-2 gap-4 pt-2">
+        <InstrumentFrame
+          src={MEDIA.changeCtrl}
+          eyebrow="INSTR · 06A"
+          label="CHANGE CONTROL BOARD"
+          meta="CHANGE DISCIPLINE · LIVE"
+          height={440}
+        />
+        <InstrumentFrame
+          src={MEDIA.evidenceProm}
+          eyebrow="INSTR · 06B"
+          label="EVIDENCE PROMOTION GATE"
+          meta="MANIFEST GATE · LIVE"
+          height={440}
+        />
+      </div>
     </section>
     <section className="container py-10">
       <SectionEyebrow>04 / EVIDENCE MANIFEST — WALKTHROUGH</SectionEyebrow>
       <NarratedSlideshow slides={EVIDENCE_SLIDES} />
+    </section>
+  </>
+);
+
+// ============================================================
+// MISSION BAY — Operating Doctrine, Human-in-the-Loop, Multi-Agent
+// ============================================================
+const MissionCanon = () => (
+  <>
+    <section className="container py-10 space-y-4">
+      <SectionEyebrow>M1 / OPERATING DOCTRINE — PILLARS</SectionEyebrow>
+      <div className="grid lg:grid-cols-[1.05fr_1fr] gap-4 items-start">
+        <HeroImage
+          src={MEDIA.doctrinePill}
+          alt="Operating doctrine pillars"
+          eyebrow="FIG · M1A"
+          label="OPERATING DOCTRINE PILLARS"
+          meta="BRAND PHILOSOPHY · REFERENCE"
+          aspect="aspect-[4/3]"
+        />
+        <InstrumentFrame
+          src={MEDIA.doctrineTerm}
+          eyebrow="INSTR · M1B"
+          label="OPERATING DOCTRINE TERMINAL"
+          meta="DOCTRINE · READ-ONLY"
+          height={420}
+        />
+      </div>
+    </section>
+    <section className="container py-10 space-y-4">
+      <SectionEyebrow>M2 / HUMAN-IN-THE-LOOP · ACCOUNTABILITY</SectionEyebrow>
+      <div className="grid md:grid-cols-2 gap-4">
+        <InstrumentFrame
+          src={MEDIA.humanLoop}
+          eyebrow="INSTR · M2A"
+          label="HUMAN-IN-THE-LOOP REQUIREMENT"
+          height={380}
+        />
+        <InstrumentFrame
+          src={MEDIA.multiAgent}
+          eyebrow="INSTR · M2B"
+          label="MULTI-AGENT ROLES"
+          meta="NEXUS PLATFORM ARCHITECTURE"
+          height={380}
+        />
+      </div>
+    </section>
+    <section className="container py-10">
+      <SectionEyebrow>M3 / KNOWLEDGE LIFECYCLE — CORE</SectionEyebrow>
+      <HeroImage
+        src={MEDIA.knowledgeCore}
+        alt="Knowledge lifecycle core diagram"
+        eyebrow="FIG · M3A"
+        label="KNOWLEDGE LIFECYCLE CORE"
+        meta="CAPTURE → PROMOTE → GOVERN"
+        aspect="aspect-[21/9]"
+      />
     </section>
   </>
 );
@@ -473,5 +579,6 @@ export const BayCanon = ({ bayId }: { bayId: BayId }) => {
   if (bayId === "technical") return <TechnicalCanon />;
   if (bayId === "operations") return <OperationsCanon />;
   if (bayId === "capability") return <CapabilityCanon />;
+  if (bayId === "mission") return <MissionCanon />;
   return null;
 };

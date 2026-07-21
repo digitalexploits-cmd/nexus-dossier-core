@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Multi-Agent Roles — NEXUS</title>
+<style>
+  :root { --bg:#04070e; --panel:#0a101c; --gold:#d4af37; --text:#cdd6e4; --muted:#6d7d93; --line:#1a2638; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--text); font-family:ui-monospace,SFMono-Regular,Menlo,monospace; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:1.2rem; }
+  .wrap { width:100%; max-width:820px; }
+  header { text-align:center; margin-bottom:1.5rem; }
+  header h1 { font-size:0.95rem; color:var(--gold); letter-spacing:0.14em; margin-bottom:0.3rem; }
+  header p { font-size:0.75rem; color:var(--muted); }
+  .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:3px; padding:1.3rem 1.1rem; transition:border-color 0.2s; cursor:default; }
+  .card:hover { border-color:var(--gold); }
+  .card h2 { font-size:0.9rem; color:var(--gold); margin-bottom:0.6rem; letter-spacing:0.06em; }
+  .card p { font-size:0.78rem; color:var(--muted); line-height:1.5; }
+  .role { font-size:0.7rem; color:#4a90a4; margin-top:0.8rem; letter-spacing:0.05em; }
+  footer { margin-top:1.5rem; text-align:center; font-size:0.65rem; color:var(--muted); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>MULTI-AGENT REASONING ROLES</h1>
+      <p>Scout observes • Executor acts • Strategist revises</p>
+    </header>
+    <div class="grid">
+      <div class="card">
+        <h2>SCOUT</h2>
+        <p>Continuously observes signal state, noise conditions, and emerging spectral features. Surfaces anomalies without making final judgments.</p>
+        <div class="role">OBSERVATION LAYER</div>
+      </div>
+      <div class="card">
+        <h2>EXECUTOR</h2>
+        <p>Runs focused analyses, applies spectral-state estimation routines, and produces intermediate structured results for review.</p>
+        <div class="role">ACTION LAYER</div>
+      </div>
+      <div class="card">
+        <h2>STRATEGIST</h2>
+        <p>Evaluates outputs against evidence categories, domain boundaries, and operating doctrine. Decides what can be promoted or must stay internal.</p>
+        <div class="role">GOVERNANCE LAYER</div>
+      </div>
+    </div>
+    <footer>Human remains accountable for every material decision • AI Base³ • NEXUS</footer>
+  </div>
+</body>
+</html>
