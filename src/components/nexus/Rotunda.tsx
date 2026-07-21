@@ -4,6 +4,7 @@ import { BRAND, type BayId } from "@/data/content";
 import { prefersReducedMotion } from "@/lib/audio";
 import rotundaAsset from "@/assets/rotunda-hero.png.asset.json";
 import { MediaConsole } from "@/components/nexus/MediaConsole";
+import { SkyWindow } from "@/components/nexus/SkyWindow";
 
 const ROTUNDA_HERO = rotundaAsset.url;
 
@@ -308,7 +309,10 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         })}
       </div>
 
-      {/* Rotunda interior — outdoor sky effects are baked into the hero image */}
+      {/* Living outdoors — clipped to the rotunda's glass dome + bay windows */}
+      <SkyWindow top={0}  right={5}  bottom={72} left={5}  branchLeft={false} branchRight={false} />
+      <SkyWindow top={38} right={68} bottom={38} left={2}  branchRight={false} branchLeft />
+      <SkyWindow top={38} right={2}  bottom={38} left={68} branchLeft={false} branchRight />
 
       {/* CAMERA-FIXED OVERLAYS */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_72%,rgba(5,7,10,0.55)_100%)]" />

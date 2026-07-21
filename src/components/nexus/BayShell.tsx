@@ -21,6 +21,7 @@ import { AssetViewer } from "./AssetViewer";
 import { MediaConsole } from "./MediaConsole";
 import { BayCanon } from "./BayCanon";
 import { DocumentShelf } from "./DocumentShelf";
+import { SkyWindow } from "./SkyWindow";
 import llcCert from "@/assets/ai-base3-llc-certificate.jpg.asset.json";
 import whiteHouseLetter from "@/assets/white-house-letter.jpg.asset.json";
 
@@ -47,6 +48,10 @@ interface Props {
   accent?: string;
   /** Show the premium accent + ambient lighting console on the hero. */
   lightingControls?: boolean;
+  /** Rect (in %) of the visible window/glass area in the hero. Sky
+   *  animations (clouds, lightning, branches) are clipped to this box so
+   *  the outdoors feels alive without leaking into the interior. */
+  windowRect?: { top?: number; right?: number; bottom?: number; left?: number; branchLeft?: boolean; branchRight?: boolean };
   onOpenVault: () => void;
   onContact: () => void;
 }
@@ -60,6 +65,7 @@ export const BayShell = ({
   ambient = "ON RECORD",
   accent = DEFAULT_ACCENT,
   lightingControls = false,
+  windowRect,
   onOpenVault,
   onContact,
 }: Props) => {
@@ -143,7 +149,9 @@ export const BayShell = ({
           onLoad={() => setHeroLoaded(true)}
           onError={() => setHeroLoaded(true)}
         />
-        {/* Subtle interior atmosphere only — no outdoor sky overlays */}
+        {/* Living outdoors — clouds/lightning/branches, clipped to the window rect only */}
+        {windowRect && <SkyWindow {...windowRect} />}
+        {/* Subtle interior atmosphere */}
         <div aria-hidden className="bay-hero-atmos" />
         <div aria-hidden className="bay-hero-shaft" />
         <div aria-hidden className="bay-hero-motes" />
