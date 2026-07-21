@@ -150,7 +150,8 @@ export const BayShell = ({
           onError={() => setHeroLoaded(true)}
         />
         {/* Living outdoors — clouds/lightning/branches, clipped to the window rect only */}
-        {windowRect && <SkyWindow {...windowRect} />}
+        {windowRect && <SkyWindow {...windowRect} debugLabel={`${bayCode} · WINDOW`} />}
+
         {/* Subtle interior atmosphere */}
         <div aria-hidden className="bay-hero-atmos" />
         <div aria-hidden className="bay-hero-shaft" />
