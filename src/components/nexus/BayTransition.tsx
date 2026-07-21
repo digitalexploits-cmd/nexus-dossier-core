@@ -279,8 +279,9 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
         >
           <div className="flex items-end justify-between text-[0.58rem] tracking-[0.3em] mb-2">
             <span className="opacity-70">TRANSIT · {Math.floor(pct)}%</span>
-            <span className="opacity-70">
-              {pct < 45 ? "SEALING PERIMETER" : pct < 80 ? "ROUTING CHANNEL" : "HANDSHAKE"}
+            <span className="opacity-80 text-primary">{flavor.phase}</span>
+            <span className="opacity-70 hidden md:inline">
+              {pct < 30 ? "SEALING PERIMETER" : pct < 65 ? "ROUTING CHANNEL" : pct < 90 ? "HANDSHAKE" : "LOCK"}
             </span>
           </div>
           <div className="relative h-[3px] w-full bg-primary/15 overflow-hidden">
