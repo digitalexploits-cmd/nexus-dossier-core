@@ -35,6 +35,16 @@ const BAY_AMBIENT: Record<BayId, string> = {
   operations: "MONITORED · LIVE",
 };
 
+// Per-bay window rectangle (percent inset) — where the exterior glass sits
+// in each hero image. Sky animation is clipped to this box so clouds and
+// distant lightning read as "life outside" instead of overlaying the room.
+const BAY_WINDOW_RECT: Record<BayId, { top: number; right: number; bottom: number; left: number; branchLeft?: boolean; branchRight?: boolean }> = {
+  mission:    { top: 3,  right: 0,  bottom: 22, left: 36, branchRight: true },
+  technical:  { top: 8,  right: 0,  bottom: 45, left: 28, branchRight: true },
+  capability: { top: 4,  right: 0,  bottom: 48, left: 30, branchLeft: true, branchRight: true },
+  operations: { top: 3,  right: 55, bottom: 22, left: 2,  branchLeft: true },
+};
+
 const BAY_TAGLINE: Record<BayId, [string, string]> = {
   mission:    ["", ""],
   technical:  ["Inspect the signal.", ""],
