@@ -217,6 +217,10 @@ export const BayShell = ({
         {/* precision grid + grain for tactile depth */}
         <div aria-hidden className="pointer-events-none absolute inset-0 z-[0] bay-depth-grid" />
         <div aria-hidden className="pointer-events-none absolute inset-0 z-[0] bay-depth-vignette" />
+        {/* drifting luminous orbs — slow parallax bokeh */}
+        <span aria-hidden className="bay-depth-orb bay-depth-orb-a" />
+        <span aria-hidden className="bay-depth-orb bay-depth-orb-b" />
+        <span aria-hidden className="bay-depth-orb bay-depth-orb-c" />
 
         <div className="relative z-[2]">
 
