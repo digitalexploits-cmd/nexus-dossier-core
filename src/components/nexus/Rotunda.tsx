@@ -309,10 +309,9 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         })}
       </div>
 
-      {/* Living outdoors — clipped to the rotunda's glass dome + bay windows */}
-      <SkyWindow top={0}  right={5}  bottom={72} left={5}  branchLeft={false} branchRight={false} debugLabel="ROTUNDA · DOME" />
-      <SkyWindow top={38} right={68} bottom={38} left={2}  branchRight={false} branchLeft debugLabel="ROTUNDA · WEST BAY" />
-      <SkyWindow top={38} right={2}  bottom={38} left={68} branchLeft={false} branchRight debugLabel="ROTUNDA · EAST BAY" />
+      {/* Living exterior — subtle sky-life ambient over the whole scene */}
+      <div aria-hidden className="bay-exterior-life" />
+
 
 
       {/* CAMERA-FIXED OVERLAYS */}
