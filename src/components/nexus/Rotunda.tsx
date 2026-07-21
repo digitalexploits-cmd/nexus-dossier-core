@@ -240,16 +240,19 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           willChange: "transform",
         }}
       >
-        <img
-          src={ROTUNDA_HERO}
-          alt="Nexus rotunda panorama"
-          className="block max-w-none h-[100dvh] md:h-[135dvh] w-auto"
+        <video
+          src={ROTUNDA_VIDEO}
+          poster={ROTUNDA_HERO}
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="block max-w-none h-[100dvh] md:h-[135dvh] w-auto object-cover"
           style={{ filter: "brightness(1.08) contrast(1.06) saturate(1.10)" }}
-          draggable={false}
-          onLoad={measure}
+          onLoadedMetadata={measure}
+          onLoadedData={measure}
         />
 
-        <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_14%_38%,rgba(110,200,255,0.18)_0%,transparent_45%)]" />
         <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_86%_88%,rgba(255,180,100,0.16)_0%,transparent_52%)]" />
 
         <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.18)_0%,transparent_65%)]" />
