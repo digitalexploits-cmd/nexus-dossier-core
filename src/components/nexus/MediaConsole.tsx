@@ -186,6 +186,37 @@ export const MediaConsole = ({ open, onClose }: Props) => {
   );
 };
 
+const KIND_GLYPH: Record<MediaKind, string> = {
+  document: "📄",
+  video: "▶",
+  audio: "♪",
+  image: "🖼",
+};
+
+const MediaThumb = ({ item, active }: { item: MediaItem; active: boolean }) => {
+  const box = `shrink-0 w-14 h-10 border ${active ? "border-primary/60" : "border-primary/20"} bg-background/60 overflow-hidden flex items-center justify-center`;
+  if (item.kind === "image") {
+    return (
+      <div className={box}>
+        <img src={item.url} alt="" loading="lazy" className="w-full h-full object-cover" />
+      </div>
+    );
+  }
+  if (item.kind === "video") {
+    return (
+      <div className={`${box} relative`}>
+        <video src={item.url} muted playsInline preload="metadata" className="w-full h-full object-cover opacity-80" />
+        <span className="absolute inset-0 flex items-center justify-center text-primary text-xs">▶</span>
+      </div>
+    );
+  }
+  return (
+    <div className={box}>
+      <span className="mono text-primary/80 text-base">{KIND_GLYPH[item.kind]}</span>
+    </div>
+  );
+};
+
 const MediaPreview = ({ item }: { item: MediaItem }) => {
   return (
     <>
