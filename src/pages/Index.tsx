@@ -5,7 +5,7 @@ import { EvidenceVault } from "@/components/nexus/EvidenceVault";
 import { Contact } from "@/components/nexus/Contact";
 import { TopBar, BottomBar } from "@/components/nexus/Chrome";
 import { IntroOverlay } from "@/components/nexus/IntroOverlay";
-import { BayTransition, type TransitionKind } from "@/components/nexus/BayTransition";
+import { BayTransition, TRANSITION_SWAP_MS, type TransitionKind } from "@/components/nexus/BayTransition";
 import { Button } from "@/components/ui/button";
 import { BAYS, type BayId } from "@/data/content";
 import { prefersReducedMotion } from "@/lib/audio";
