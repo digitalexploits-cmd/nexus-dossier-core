@@ -116,17 +116,20 @@ export const CanonReference = ({ terms }: Props) => {
   );
 };
 
-const FilterChip = ({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) => (
+const FilterChip = ({ label, count, active, onClick }: { label: string; count?: number; active: boolean; onClick: () => void }) => (
   <button
     type="button"
     onClick={onClick}
-    className="mono text-[0.55rem] tracking-[0.24em] uppercase px-2.5 py-1 rounded-sm border transition-all"
+    className="mono text-[0.55rem] tracking-[0.24em] uppercase px-2.5 py-1 rounded-sm border transition-all inline-flex items-center gap-1.5"
     style={{
       borderColor: active ? "#c9a24a" : "rgba(201,162,74,0.35)",
       background: active ? "rgba(201,162,74,0.15)" : "rgba(11,18,32,0.5)",
       color: active ? "#eed99a" : "#c8d4e2",
     }}
   >
-    {label}
+    <span>{label}</span>
+    {typeof count === "number" && (
+      <span className="tabular-nums text-[0.5rem] text-[#8fa3b8]">{String(count).padStart(2, "0")}</span>
+    )}
   </button>
 );
