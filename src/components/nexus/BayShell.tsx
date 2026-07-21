@@ -190,9 +190,38 @@ export const BayShell = ({
 
       </section>
 
+      {/* ============ DEPTH STAGE — cinematic depth for everything below the hero ============ */}
+      <div
+        className="bay-depth-stage relative"
+        style={{ ["--bay-accent" as any]: accent }}
+      >
+        {/* seam: hero -> stage, subtle horizon light */}
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-40 z-[1]"
+          style={{
+            background: `linear-gradient(180deg, rgba(3,6,12,0.9) 0%, rgba(3,6,12,0) 100%), radial-gradient(ellipse 60% 100% at 50% 0%, ${accent}22 0%, transparent 70%)`,
+          }}
+        />
+        {/* ambient side glows */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-[0] bay-depth-ambient"
+          style={{
+            background: `
+              radial-gradient(ellipse 55% 40% at 8% 22%, ${accent}1f 0%, transparent 65%),
+              radial-gradient(ellipse 55% 40% at 92% 55%, ${accent}1a 0%, transparent 68%),
+              radial-gradient(ellipse 70% 45% at 50% 100%, rgba(3,6,12,0.95) 0%, transparent 70%)
+            `,
+          }}
+        />
+        {/* precision grid + grain for tactile depth */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 z-[0] bay-depth-grid" />
+        <div aria-hidden className="pointer-events-none absolute inset-0 z-[0] bay-depth-vignette" />
 
+        <div className="relative z-[2]">
 
       {/* ============ LAYER 1 — CATEGORY RAIL ============ */}
+
       <section id="bay-category-rail" className="container pt-14 pb-6">
         <div className="flex items-baseline justify-between mb-6 flex-wrap gap-2">
           <div className="mono text-[0.6rem] tracking-[0.28em] uppercase" style={{ color: accent }}>
