@@ -8,6 +8,7 @@ import { IntroOverlay } from "@/components/nexus/IntroOverlay";
 import { BayTransition, TRANSITION_SWAP_MS, type TransitionKind } from "@/components/nexus/BayTransition";
 import { Button } from "@/components/ui/button";
 import { BAYS, type BayId } from "@/data/content";
+import { pickTransition } from "@/data/transitions";
 import { prefersReducedMotion } from "@/lib/audio";
 
 // Hero image per bay — the stable landing state after transition.
@@ -72,7 +73,7 @@ const Index = () => {
   const [view, setView] = useState<View>(() => hashToView(window.location.hash));
   const [vaultOpen, setVaultOpen] = useState(false);
   const [introDone, setIntroDone] = useState(false);
-  const [transition, setTransition] = useState<{ label: string; kind: TransitionKind; bgImage?: string; code?: string } | null>(null);
+  const [transition, setTransition] = useState<{ label: string; kind: TransitionKind; bgImage?: string; bgVideo?: string; code?: string } | null>(null);
 
 
   const syncFromHash = useCallback(() => {
@@ -107,26 +108,28 @@ const Index = () => {
   }, []);
 
   // Curtain covers the underlying swap; TRANSITION_SWAP_MS lines up with its peak.
-  const runTransition = useCallback((label: string, kind: TransitionKind, next: View, bgImage?: string, code?: string) => {
+  const runTransition = useCallback((label: string, kind: TransitionKind, next: View, code?: string) => {
     if (prefersReducedMotion()) { commitView(next); return; }
-    setTransition({ label, kind, bgImage, code });
+    const piece = pickTransition();
+    setTransition({ label, kind, bgImage: piece.image, bgVideo: piece.video, code });
     window.setTimeout(() => { commitView(next); }, TRANSITION_SWAP_MS);
   }, [commitView]);
 
   const goHome = useCallback(() => {
     if (view === "home") return;
-    runTransition("ROTUNDA", "retreat", "home", TRANSITION_BG.home, "ATRIUM · 00");
+    runTransition("ROTUNDA", "retreat", "home", "ATRIUM · 00");
   }, [view, runTransition]);
 
   const goBay = useCallback((id: BayId) => {
     if (view === id) return;
     const bay = BAYS.find((b) => b.id === id);
-    runTransition(bayLabel(id), "advance", id, TRANSITION_BG[id], bay?.code);
+    runTransition(bayLabel(id), "advance", id, bay?.code);
   }, [view, runTransition]);
 
   const openVault = useCallback(() => {
     if (prefersReducedMotion()) { setVaultOpen(true); return; }
-    setTransition({ label: "EVIDENCE VAULT", kind: "advance", bgImage: TRANSITION_BG.vault, code: "SUB-LEVEL · V" });
+    const piece = pickTransition();
+    setTransition({ label: "EVIDENCE VAULT", kind: "advance", bgImage: piece.image, bgVideo: piece.video, code: "SUB-LEVEL · V" });
     window.setTimeout(() => { setVaultOpen(true); }, TRANSITION_SWAP_MS);
   }, []);
 
@@ -134,10 +137,10 @@ const Index = () => {
     if (open) { setVaultOpen(true); return; }
     if (prefersReducedMotion()) { setVaultOpen(false); return; }
     const label = view === "home" ? "ROTUNDA" : bayLabel(view as BayId);
-    const bg = view === "home" ? TRANSITION_BG.home : TRANSITION_BG[view as BayId];
     const bay = view !== "home" ? BAYS.find((b) => b.id === view) : undefined;
     const code = view === "home" ? "ATRIUM · 00" : bay?.code;
-    setTransition({ label, kind: "retreat", bgImage: bg, code });
+    const piece = pickTransition();
+    setTransition({ label, kind: "retreat", bgImage: piece.image, bgVideo: piece.video, code });
     window.setTimeout(() => { setVaultOpen(false); }, TRANSITION_SWAP_MS);
   }, [view]);
 
@@ -218,6 +221,7 @@ const Index = () => {
           label={transition.label}
           kind={transition.kind}
           bgImage={transition.bgImage}
+          bgVideo={transition.bgVideo}
           code={transition.code}
           onDone={() => setTransition(null)}
         />

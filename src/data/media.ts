@@ -83,6 +83,11 @@ export const MEDIA_LIBRARY: MediaItem[] = [
   vid("vid-grok-b672",        "Field Cinematic · B672",                         "Cinematics",  "/__l5e/assets-v1/3956d476-7532-4685-978a-0d6850099b8d/grok-video-b6725d81-0e6b-47ee-8eb7-add63ddae473.mp4"),
   vid("vid-grok-d4",          "Field Cinematic · D4",                           "Cinematics",  "/__l5e/assets-v1/70e23ab7-91bf-4656-92c2-fed49f1846cb/grok-video-d4.mp4"),
 
+  vid("vid-1728-doctrine",    "The 1728 Doctrine",                              "Doctrine",    "/__l5e/assets-v1/27efec98-9ab8-4d3b-8229-f933cbb51632/The_1728_Doctrine.mp4"),
+  vid("vid-aib3-solutions",   "AI Base³ · Solutions",                           "Doctrine",    "/__l5e/assets-v1/2e642d7f-fc81-4d5f-af22-9be61e041c41/AI_Base3_Solutions.mp4"),
+  vid("vid-stator-sensor",    "The Stator as a Sensor · One-Shot Diagnostic",   "Doctrine",    "/__l5e/assets-v1/07c39422-6373-40e3-9b4b-60bec5c159ad/The_Stator_as_a_Sensor.mp4"),
+  vid("vid-capability-esc",   "The Capability Escalator",                       "Doctrine",    "/__l5e/assets-v1/e5af6c30-648c-4fd8-88fe-9eda26393730/The_Capability_Escalator.mp4"),
+
 
   // ─── Images ─────────────────────────────────────────────────────────────
   img("hero-rotunda",      "Rotunda · Panoramic Hero",         "Bay Heroes", "/__l5e/assets-v1/681bea02-2f61-49a6-be5c-26fa9e58d577/rotunda-hero.png"),
