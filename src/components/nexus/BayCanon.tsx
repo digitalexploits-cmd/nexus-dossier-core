@@ -8,14 +8,23 @@ import { HeroImage, HoverVideo, InstrumentFrame } from "./MediaPanel";
 import type { BayId } from "@/data/content";
 
 const MEDIA = {
-  spectral:     "/nexus-media/spectral_structure_from_noise.png",
-  detection:    "/nexus-media/detection_horizon.png",
-  signalLock:   "/nexus-media/SignalLockGlitch.mp4",
-  faultInject:  "/nexus-media/fault_signature_injector.html",
-  signalExtr:   "/nexus-media/signal_extraction_instrument.html",
-  claimStr:     "/nexus-media/claim_strength_instrument.html",
-  reproGate:    "/nexus-media/reproducibility_gate.html",
-  boundedTerm:  "/nexus-media/bounded_thesis_terminal.html",
+  spectral:      "/nexus-media/spectral_structure_from_noise.png",
+  detection:     "/nexus-media/detection_horizon.png",
+  claimRelease:  "/nexus-media/claim_release_boundaries.png",
+  doctrinePill:  "/nexus-media/operating_doctrine_pillars.png",
+  knowledgeCore: "/nexus-media/knowledge_lifecycle_core.png",
+  signalLock:    "/nexus-media/SignalLockGlitch.mp4",
+  faultInject:   "/nexus-media/fault_signature_injector.html",
+  signalExtr:    "/nexus-media/signal_extraction_instrument.html",
+  claimStr:      "/nexus-media/claim_strength_instrument.html",
+  reproGate:     "/nexus-media/reproducibility_gate.html",
+  boundedTerm:   "/nexus-media/bounded_thesis_terminal.html",
+  phaseBound:    "/nexus-media/phase_boundary_terminal.html",
+  evidenceProm:  "/nexus-media/evidence_promotion_gate.html",
+  changeCtrl:    "/nexus-media/change_control_board.html",
+  doctrineTerm:  "/nexus-media/operating_doctrine_terminal.html",
+  humanLoop:     "/nexus-media/human_in_the_loop.html",
+  multiAgent:    "/nexus-media/multi_agent_roles.html",
 };
 
 // ============================================================
