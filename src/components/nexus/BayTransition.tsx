@@ -440,6 +440,92 @@ export const BayTransition = ({ label, kind, bgImage, bgVideo, code, tag, durati
           </div>
         </div>
       )}
+
+      {/* ============================================================
+          UNIFIED BOOKENDS — same signature on every transit.
+          Opener: gold bars slide in + seal flash + AI Base³ sigil stamp.
+          Closer: matching flash + bars retract just before hand-off.
+          ============================================================ */}
+      {!reduced && (() => {
+        const OPEN_MS  = 520;
+        const CLOSE_MS = 620;
+        const closeDelay = Math.max(0, DURATION - CLOSE_MS);
+        const barBase =
+          "linear-gradient(180deg, #04060a 0%, #04060a 78%, hsl(var(--primary)/0.55) 82%, hsl(var(--primary)/0.9) 88%, hsl(var(--primary)/0.15) 100%)";
+        const barBaseFlipped =
+          "linear-gradient(0deg, #04060a 0%, #04060a 78%, hsl(var(--primary)/0.55) 82%, hsl(var(--primary)/0.9) 88%, hsl(var(--primary)/0.15) 100%)";
+        return (
+          <>
+            {/* Top letterbox bar */}
+            <div
+              className="absolute inset-x-0 top-0 h-[9vh] pointer-events-none z-[5]"
+              style={{
+                background: barBase,
+                boxShadow: "0 6px 22px -8px hsl(var(--primary)/0.55)",
+                animation:
+                  `transit-bar-top-in ${OPEN_MS}ms cubic-bezier(0.7,0,0.2,1) forwards,` +
+                  `transit-bar-top-out ${CLOSE_MS}ms cubic-bezier(0.6,0,0.2,1) ${closeDelay}ms forwards`,
+              }}
+            />
+            {/* Bottom letterbox bar */}
+            <div
+              className="absolute inset-x-0 bottom-0 h-[9vh] pointer-events-none z-[5]"
+              style={{
+                background: barBaseFlipped,
+                boxShadow: "0 -6px 22px -8px hsl(var(--primary)/0.55)",
+                animation:
+                  `transit-bar-bot-in ${OPEN_MS}ms cubic-bezier(0.7,0,0.2,1) forwards,` +
+                  `transit-bar-bot-out ${CLOSE_MS}ms cubic-bezier(0.6,0,0.2,1) ${closeDelay}ms forwards`,
+              }}
+            />
+
+            {/* Opening seal flash */}
+            <div
+              className="absolute inset-0 pointer-events-none z-[6]"
+              style={{
+                background:
+                  "radial-gradient(ellipse at center, hsl(var(--primary)/0.55) 0%, hsl(var(--primary)/0.15) 40%, transparent 70%)",
+                mixBlendMode: "screen",
+                animation: `transit-seal-flash 620ms ease-out forwards`,
+              }}
+            />
+            {/* Closing seal flash */}
+            <div
+              className="absolute inset-0 pointer-events-none z-[6]"
+              style={{
+                background:
+                  "radial-gradient(ellipse at center, hsl(var(--primary)/0.5) 0%, hsl(var(--primary)/0.12) 45%, transparent 72%)",
+                mixBlendMode: "screen",
+                opacity: 0,
+                animation: `transit-seal-flash 700ms ease-in ${closeDelay}ms forwards`,
+              }}
+            />
+
+            {/* AI Base³ signature sigil — stamps at open, re-stamps at close */}
+            <div
+              className="absolute left-1/2 top-[9vh] mono text-primary/90 text-[0.58rem] pointer-events-none z-[7]"
+              style={{
+                transform: "translate(-50%, -50%)",
+                textShadow: "0 0 18px hsl(var(--primary)/0.7)",
+                animation: `transit-sigil-stamp 640ms ease-out forwards`,
+              }}
+            >
+              ◇ AI BASE³ · NEXUS TRANSIT ◇
+            </div>
+            <div
+              className="absolute left-1/2 bottom-[9vh] mono text-primary/90 text-[0.58rem] pointer-events-none z-[7]"
+              style={{
+                transform: "translate(-50%, 50%)",
+                textShadow: "0 0 18px hsl(var(--primary)/0.7)",
+                opacity: 0,
+                animation: `transit-sigil-stamp 720ms ease-out ${closeDelay}ms forwards`,
+              }}
+            >
+              ◇ CHANNEL SEALED · REVIEWER-SAFE ◇
+            </div>
+          </>
+        );
+      })()}
     </div>
   );
 };

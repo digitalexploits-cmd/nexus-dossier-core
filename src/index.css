@@ -714,3 +714,37 @@
 }
 
 
+
+/* ============================================================
+   Unified transit bookends — every transition opens & closes
+   with the same signature: gold letterbox bars snap in, a soft
+   gold flash marks the seal, then bars retract with a matching
+   flash at hand-off. Bookends overlay on top of any flavor/video.
+   ============================================================ */
+@keyframes transit-bar-top-in {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(0); }
+}
+@keyframes transit-bar-top-out {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-100%); }
+}
+@keyframes transit-bar-bot-in {
+  0%   { transform: translateY(100%); }
+  100% { transform: translateY(0); }
+}
+@keyframes transit-bar-bot-out {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(100%); }
+}
+@keyframes transit-seal-flash {
+  0%   { opacity: 0; }
+  20%  { opacity: 0.85; }
+  60%  { opacity: 0.25; }
+  100% { opacity: 0; }
+}
+@keyframes transit-sigil-stamp {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.6); letter-spacing: 0.9em; }
+  40%  { opacity: 1; transform: translate(-50%, -50%) scale(1);   letter-spacing: 0.42em; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.05);letter-spacing: 0.42em; }
+}
