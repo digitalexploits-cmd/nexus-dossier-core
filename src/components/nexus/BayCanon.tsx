@@ -233,6 +233,20 @@ const TechnicalCanon = () => (
           label="REPRODUCIBILITY GATE"
           height={480}
         />
+        <InstrumentFrame
+          src={MEDIA.phaseBound}
+          eyebrow="INSTR · 07D"
+          label="PHASE BOUNDARY TERMINAL"
+          meta="PHASE FRAMING · REVIEW-SAFE"
+          height={420}
+        />
+        <InstrumentFrame
+          src={MEDIA.evidenceProm}
+          eyebrow="INSTR · 07E"
+          label="EVIDENCE PROMOTION GATE"
+          meta="CLAIM DISCIPLINE · CATEGORY MATCH"
+          height={420}
+        />
       </div>
     </section>
 
