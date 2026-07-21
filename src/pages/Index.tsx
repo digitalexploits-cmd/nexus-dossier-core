@@ -121,8 +121,8 @@ const Index = () => {
   // Premium 5-second cinematic transit — CSS flavor stack (vault doors, warp, iris,
   // elevator, freefall, orbital lock, etc.). Uses destination hero as backdrop so
   // narrative overlays render. No short video clips.
-  const CINEMATIC_MS = 5000;
-  const CINEMATIC_SWAP = 1700;
+  const CINEMATIC_MS = 3000;
+  const CINEMATIC_SWAP = 1050;
 
   const bgFor = useCallback((v: View | "vault"): string => {
     if (v === "home") return "/nexus-rotunda-new.jpg";
