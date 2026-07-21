@@ -149,8 +149,9 @@ export const BayShell = ({
           onLoad={() => setHeroLoaded(true)}
           onError={() => setHeroLoaded(true)}
         />
-        {/* Living outdoors — clouds/lightning/branches, clipped to the window rect only */}
-        {windowRect && <SkyWindow {...windowRect} debugLabel={`${bayCode} · WINDOW`} />}
+        {/* Living exterior — subtle sky-life ambient, never paints clouds through the room */}
+        <div aria-hidden className="bay-exterior-life" />
+
 
         {/* Subtle interior atmosphere */}
         <div aria-hidden className="bay-hero-atmos" />
