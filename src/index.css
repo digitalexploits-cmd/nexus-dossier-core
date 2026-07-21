@@ -1215,126 +1215,48 @@ button, [role="button"], a, .panel {
 .premium-lighting > * {
   position: absolute; inset: 0;
   pointer-events: none;
-  will-change: opacity, transform;
+  will-change: opacity;
 }
 
-/* KEY — soft breathing overhead light, warm↔cool cycle */
+/* KEY — soft overhead daylight through the room's real windows.
+   Very subtle; reads as ambient light spill, not a filter. */
 .pl-key {
   background:
-    radial-gradient(ellipse 70% 45% at 50% -6%, hsla(0,0%,100%,0.22) 0%, transparent 62%),
-    radial-gradient(ellipse 55% 40% at 30% -4%, var(--pl-warm) 0%, transparent 65%),
-    radial-gradient(ellipse 55% 40% at 72% -4%, var(--pl-cool) 0%, transparent 65%);
-  mix-blend-mode: screen;
-  opacity: 0.35;
-  animation: pl-key-breathe 22s ease-in-out infinite alternate;
-  filter: blur(6px);
+    radial-gradient(ellipse 65% 40% at 50% -8%, hsla(0,0%,100%,0.10) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 35% at 30% -6%, var(--pl-warm) 0%, transparent 70%),
+    radial-gradient(ellipse 45% 35% at 72% -6%, var(--pl-cool) 0%, transparent 70%);
+  mix-blend-mode: soft-light;
+  opacity: 0.22;
+  animation: pl-key-breathe 40s ease-in-out infinite alternate;
+  filter: blur(10px);
 }
 @keyframes pl-key-breathe {
-  0%   { opacity: 0.28; filter: blur(6px)  hue-rotate(-6deg); }
-  100% { opacity: 0.5;  filter: blur(10px) hue-rotate(8deg); }
+  0%   { opacity: 0.18; }
+  100% { opacity: 0.28; }
 }
 
-/* FILL — cool ambient undertow lifting shadows from below */
+/* FILL — cool floor bounce, barely there */
 .pl-fill {
   background:
-    radial-gradient(ellipse 90% 55% at 50% 108%, color-mix(in oklab, var(--pl-accent) 55%, #0a1a2e) 0%, transparent 62%);
-  mix-blend-mode: screen;
-  opacity: 0.28;
-  animation: pl-fill-pulse 14s ease-in-out infinite alternate;
-}
-@keyframes pl-fill-pulse {
-  0%   { opacity: 0.2; }
-  100% { opacity: 0.42; }
+    radial-gradient(ellipse 90% 45% at 50% 112%, color-mix(in oklab, var(--pl-accent) 35%, #0a1a2e) 0%, transparent 68%);
+  mix-blend-mode: soft-light;
+  opacity: 0.18;
 }
 
-/* RAYS — slow volumetric god rays sweeping */
-.pl-rays {
-  background:
-    repeating-linear-gradient(
-      100deg,
-      transparent 0px,
-      transparent 90px,
-      hsla(0,0%,100%,0.055) 92px,
-      hsla(0,0%,100%,0.055) 96px,
-      transparent 98px,
-      transparent 180px
-    );
-  mix-blend-mode: screen;
-  opacity: 0.55;
-  transform-origin: 50% -40%;
-  animation: pl-rays-sweep 42s linear infinite;
-  -webkit-mask-image: radial-gradient(ellipse 80% 65% at 50% 0%, #000 20%, transparent 78%);
-          mask-image: radial-gradient(ellipse 80% 65% at 50% 0%, #000 20%, transparent 78%);
-  filter: blur(1.2px);
-}
-@keyframes pl-rays-sweep {
-  0%   { transform: rotate(-2deg) translate3d(-4%, 0, 0); }
-  50%  { transform: rotate( 3deg) translate3d( 4%, 0, 0); }
-  100% { transform: rotate(-2deg) translate3d(-4%, 0, 0); }
-}
-
-/* RIM — cinematic corner accents with slow luminance drift */
-.pl-rim {
-  background:
-    radial-gradient(ellipse 40% 55% at 0% 55%,   color-mix(in oklab, var(--pl-accent) 85%, white) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 55% at 100% 55%, color-mix(in oklab, var(--pl-accent) 85%, white) 0%, transparent 55%),
-    radial-gradient(ellipse 60% 18% at 50% 100%, color-mix(in oklab, var(--pl-accent) 70%, #ffb37a) 0%, transparent 62%);
-  mix-blend-mode: screen;
-  opacity: 0.22;
-  animation: pl-rim-drift 26s ease-in-out infinite alternate;
-  filter: blur(2px);
-}
-@keyframes pl-rim-drift {
-  0%   { opacity: 0.14; transform: translate3d(-0.4%, 0, 0); }
-  100% { opacity: 0.32; transform: translate3d( 0.4%, 0, 0); }
-}
-
-/* BLOOM — anamorphic horizontal streak drifting across the room */
-.pl-bloom {
-  top: 32%; bottom: auto; height: 6%;
-  background: linear-gradient(90deg,
-    transparent 0%,
-    color-mix(in oklab, var(--pl-accent) 60%, white) 40%,
-    hsla(0,0%,100%,0.9) 50%,
-    color-mix(in oklab, var(--pl-accent) 60%, white) 60%,
-    transparent 100%);
-  mix-blend-mode: screen;
-  filter: blur(14px);
-  opacity: 0.0;
-  animation: pl-bloom-drift 34s ease-in-out infinite;
-}
-@keyframes pl-bloom-drift {
-  0%, 100% { opacity: 0; transform: translate3d(-30%, 0, 0) scaleX(1); }
-  45%      { opacity: 0.55; transform: translate3d(10%, -4%, 0) scaleX(1.1); }
-  55%      { opacity: 0.55; transform: translate3d(20%, -4%, 0) scaleX(1.1); }
-}
-
-/* GRADE — final cinematic grade + vignette */
+/* GRADE — final cinematic grade + vignette. The only always-on layer. */
 .pl-grade {
   background:
-    radial-gradient(ellipse 130% 110% at 50% 45%, transparent 55%, rgba(3,5,10,0.55) 100%),
-    linear-gradient(180deg, rgba(200,220,255,0.05) 0%, transparent 30%, transparent 70%, rgba(180,140,90,0.06) 100%);
+    radial-gradient(ellipse 130% 110% at 50% 45%, transparent 58%, rgba(3,5,10,0.5) 100%),
+    linear-gradient(180deg, rgba(200,220,255,0.04) 0%, transparent 32%, transparent 70%, rgba(180,140,90,0.05) 100%);
   mix-blend-mode: multiply;
 }
 
-/* FLARE — subtle anamorphic lens flare that slowly orbits */
-.pl-flare {
-  background:
-    radial-gradient(circle 12% at 22% 30%, color-mix(in oklab, var(--pl-accent) 75%, white) 0%, transparent 60%),
-    radial-gradient(circle 7% at 30% 34%, color-mix(in oklab, var(--pl-accent) 65%, #ffe6b8) 0%, transparent 65%),
-    radial-gradient(circle 4% at 44% 40%, hsla(0,0%,100%,0.7) 0%, transparent 70%);
-  mix-blend-mode: screen;
-  opacity: 0.28;
-  filter: blur(6px);
-  animation: pl-flare-orbit 48s ease-in-out infinite alternate;
-}
-@keyframes pl-flare-orbit {
-  0%   { transform: translate3d(-6%, -3%, 0) scale(1); opacity: 0.18; }
-  100% { transform: translate3d( 8%,  4%, 0) scale(1.15); opacity: 0.38; }
-}
+/* Legacy classes retained as no-ops so existing markup keeps working
+   without re-introducing HUD/neon filter artifacts. */
+.pl-rays, .pl-rim, .pl-bloom, .pl-flare { display: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
-  .pl-key, .pl-fill, .pl-rays, .pl-rim, .pl-bloom, .pl-flare { animation: none !important; }
+  .pl-key { animation: none !important; }
 }
 
 
