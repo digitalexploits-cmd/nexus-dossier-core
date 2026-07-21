@@ -4,7 +4,19 @@ import { DecisionTimeline, type TimelineItem } from "./DecisionTimeline";
 import { ProposalWalkthrough, type ProposalSection, type ProposalStat } from "./ProposalWalkthrough";
 import { CanonReference, type CanonTerm } from "./CanonReference";
 import { PatchDiagram, type PatchRule } from "./PatchDiagram";
+import { HeroImage, HoverVideo, InstrumentFrame } from "./MediaPanel";
 import type { BayId } from "@/data/content";
+
+const MEDIA = {
+  spectral:     "/nexus-media/spectral_structure_from_noise.png",
+  detection:    "/nexus-media/detection_horizon.png",
+  signalLock:   "/nexus-media/SignalLockGlitch.mp4",
+  faultInject:  "/nexus-media/fault_signature_injector.html",
+  signalExtr:   "/nexus-media/signal_extraction_instrument.html",
+  claimStr:     "/nexus-media/claim_strength_instrument.html",
+  reproGate:    "/nexus-media/reproducibility_gate.html",
+  boundedTerm:  "/nexus-media/bounded_thesis_terminal.html",
+};
 
 // ============================================================
 // TECHNICAL BAY — Validation Status graph
@@ -162,6 +174,15 @@ const TechnicalCanon = () => (
         Validation controls credibility — the goal is a technically defensible bounded claim, not an
         impressive-sounding one.
       </p>
+
+      <HeroImage
+        src={MEDIA.detection}
+        alt="Detection horizon — projected lead-time surface"
+        eyebrow="FIG · 07A"
+        label="DETECTION HORIZON — LEAD-TIME FIELD"
+        meta="ATMOSPHERIC · REFERENCE"
+      />
+
       <div
         className="rounded-sm border p-5 md:p-6"
         style={{
@@ -188,6 +209,63 @@ const TechnicalCanon = () => (
             </div>
           );
         })}
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4 pt-2">
+        <InstrumentFrame
+          src={MEDIA.claimStr}
+          eyebrow="INSTR · 07B"
+          label="CLAIM STRENGTH INSTRUMENT"
+          height={480}
+        />
+        <InstrumentFrame
+          src={MEDIA.reproGate}
+          eyebrow="INSTR · 07C"
+          label="REPRODUCIBILITY GATE"
+          height={480}
+        />
+      </div>
+    </section>
+
+    <section className="container py-10 space-y-4">
+      <SectionEyebrow>08 / LIVING TECHNICAL CANON — SIGNAL PIPELINE</SectionEyebrow>
+
+      <HeroImage
+        src={MEDIA.spectral}
+        alt="Spectral structure extracted from broadband noise"
+        eyebrow="FIG · 08A"
+        label="SPECTRAL STRUCTURE FROM NOISE"
+        meta="MIXED-RADIX SUB-WINDOW · REFERENCE"
+      />
+
+      <div className="grid md:grid-cols-2 gap-4">
+        <HoverVideo
+          src={MEDIA.signalLock}
+          eyebrow="MOTION · 08B"
+          label="SIGNAL LOCK — GLITCH-TO-LOCK"
+          meta="HERO MOTION"
+        />
+        <InstrumentFrame
+          src={MEDIA.boundedTerm}
+          eyebrow="INSTR · 08C"
+          label="BOUNDED THESIS TERMINAL"
+          height={360}
+        />
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        <InstrumentFrame
+          src={MEDIA.faultInject}
+          eyebrow="INSTR · 08D"
+          label="FAULT SIGNATURE INJECTOR"
+          height={520}
+        />
+        <InstrumentFrame
+          src={MEDIA.signalExtr}
+          eyebrow="INSTR · 08E"
+          label="SIGNAL EXTRACTION INSTRUMENT"
+          height={520}
+        />
       </div>
     </section>
 
