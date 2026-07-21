@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { BRAND, type BayId } from "@/data/content";
 import { prefersReducedMotion } from "@/lib/audio";
-import rotundaAsset from "@/assets/rotunda-hero-clean.png.asset.json";
+import rotundaAsset from "@/assets/rotunda-hero.png.asset.json";
 import { MediaConsole } from "@/components/nexus/MediaConsole";
 import { SkyWindow } from "@/components/nexus/SkyWindow";
 import sineWaivLogo from "@/assets/sine-waiv-logo.png.asset.json";
@@ -258,75 +258,84 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
         <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.18)_0%,transparent_65%)]" />
 
-        {/* SINE~WaiV shield — carved from the concrete itself. Pure stone,
-            no color: deep engraved recess with dark shadowed inner walls
-            (bottom-right) and a bright polished chisel highlight (top-left)
-            where the dome light catches the carved edge. */}
+        {/* Rotunda floor — kept off the view. Just a soft feathered concrete
+            wash across the very bottom of the image so the etched crest has
+            somewhere to sit, without blocking the architecture above. */}
+        <div
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 pointer-events-none"
+          style={{
+            height: "22%",
+            background:
+              "linear-gradient(to top, rgba(26,31,40,0.85) 0%, rgba(30,36,46,0.55) 45%, rgba(35,41,53,0.25) 80%, transparent 100%)",
+          }}
+        />
+        {/* Ambient pool of light under the dome */}
+        <div
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 pointer-events-none"
+          style={{
+            height: "22%",
+            background:
+              "radial-gradient(ellipse 60% 100% at 50% 30%, rgba(120,170,220,0.18) 0%, transparent 70%)",
+            mixBlendMode: "screen",
+          }}
+        />
+
+
+        {/* Etched-in-concrete floor emblem — SINE~WaiV crest embossed into the
+            rotunda floor. Perspective-tilted, low-opacity, blended so it reads
+            as milled/engraved stone rather than a pasted graphic. */}
         <div
           aria-hidden
           className="absolute left-1/2 pointer-events-none"
           style={{
-            bottom: "14%",
-            width: "min(46%, 560px)",
+            bottom: "1%",
+            width: "min(42%, 560px)",
             aspectRatio: "1550 / 640",
-            transform: "translateX(-50%) perspective(1400px) rotateX(72deg)",
+            transform: "translateX(-50%) perspective(900px) rotateX(68deg)",
             transformOrigin: "50% 100%",
           }}
         >
-          {/* 1. Deep engraved shadow — dark recess of the carving */}
+          {/* Engraved fill — desaturated, low opacity, soft-light blend */}
           <img
             src={sineWaivLogo.url}
             alt=""
             draggable={false}
             className="absolute inset-0 w-full h-full object-contain"
             style={{
-              opacity: 0.85,
-              mixBlendMode: "multiply",
-              filter: "grayscale(1) brightness(0.15) contrast(1.4) blur(1.2px)",
-              transform: "translate(2.5px, 3px)",
+              opacity: 0.22,
+              mixBlendMode: "soft-light",
+              filter: "grayscale(1) contrast(1.15) brightness(0.9)",
             }}
           />
-          {/* 2. Inner shadow — chiseled wall on bottom-right */}
+          {/* Highlight pass — thin warm rim to fake chiseled edges */}
           <img
             src={sineWaivLogo.url}
             alt=""
             draggable={false}
             className="absolute inset-0 w-full h-full object-contain"
             style={{
-              opacity: 0.7,
-              mixBlendMode: "multiply",
-              filter: "grayscale(1) brightness(0.25) contrast(1.6)",
-              transform: "translate(1px, 1.2px)",
-            }}
-          />
-          {/* 3. Chisel highlight — polished top-left edge catching dome light */}
-          <img
-            src={sineWaivLogo.url}
-            alt=""
-            draggable={false}
-            className="absolute inset-0 w-full h-full object-contain"
-            style={{
-              opacity: 0.55,
-              mixBlendMode: "screen",
-              filter: "grayscale(1) brightness(1.9) contrast(1.5) blur(0.3px)",
-              transform: "translate(-1.5px, -1.8px)",
-            }}
-          />
-          {/* 4. Warm stone tone — subtle concrete grey, no color */}
-          <img
-            src={sineWaivLogo.url}
-            alt=""
-            draggable={false}
-            className="absolute inset-0 w-full h-full object-contain"
-            style={{
-              opacity: 0.4,
+              opacity: 0.18,
               mixBlendMode: "overlay",
-              filter: "grayscale(1) brightness(1.1) contrast(0.9) sepia(0.15)",
+              filter: "grayscale(1) brightness(1.4) contrast(1.3)",
+              transform: "translateY(-1px)",
+            }}
+          />
+          {/* Shadow pass — deep inset shadow below to fake depth */}
+          <img
+            src={sineWaivLogo.url}
+            alt=""
+            draggable={false}
+            className="absolute inset-0 w-full h-full object-contain"
+            style={{
+              opacity: 0.35,
+              mixBlendMode: "multiply",
+              filter: "grayscale(1) brightness(0.35) blur(0.6px)",
+              transform: "translateY(1.5px)",
             }}
           />
         </div>
-
-
 
 
         {/* Synthetic Vault doorway — scales down on mobile so it never crops */}
