@@ -16,6 +16,15 @@ const BAY_ICONS: Record<BayId, typeof Target> = {
   operations: Radar,
 };
 
+// Short nav labels shown under each icon.
+const BAY_LABELS: Record<BayId, string> = {
+  mission: "MISSION",
+  technical: "SINE WAVE",
+  capability: "CAPABILITY",
+  operations: "OPS",
+};
+
+
 export const TopBar = ({ view, currentBay = "home", onHome, onBay, onOpenVault }: TopBarProps) => {
   return (
     <header className="fixed top-0 inset-x-0 z-40 border-b border-primary/25 bg-background/85 backdrop-blur-md">
