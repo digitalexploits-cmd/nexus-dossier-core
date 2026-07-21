@@ -146,11 +146,29 @@
   .tick { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
   .rule { height: 1px; background: linear-gradient(90deg, transparent, hsl(var(--border)), transparent); }
   .panel {
+    position: relative;
     background: var(--gradient-panel);
     border: 1px solid hsl(var(--border));
-    box-shadow: var(--shadow-panel);
+    box-shadow:
+      var(--shadow-panel),
+      inset 0 1px 0 hsl(210 30% 96% / 0.05),
+      inset 0 -1px 0 hsl(220 60% 4% / 0.6);
     border-radius: var(--radius);
+    transition: box-shadow 420ms cubic-bezier(.2,.7,.2,1),
+                border-color 420ms ease,
+                transform 420ms cubic-bezier(.2,.7,.2,1);
   }
+  .panel::before {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(180deg, hsl(41 65% 56% / 0.10), transparent 22%);
+    opacity: 0.5;
+    transition: opacity 420ms ease;
+  }
+  .panel:hover { border-color: hsl(var(--primary) / 0.45); }
+  .panel:hover::before { opacity: 0.9; }
   .brushed {
     background-image:
       linear-gradient(180deg, hsl(218 18% 13%), hsl(218 20% 9%)),
