@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { BRAND, type BayId } from "@/data/content";
 import { prefersReducedMotion } from "@/lib/audio";
-import rotundaAsset from "@/assets/rotunda-hero.png.asset.json";
+import rotundaAsset from "@/assets/rotunda-hero-clean.png.asset.json";
 import { MediaConsole } from "@/components/nexus/MediaConsole";
 import { SkyWindow } from "@/components/nexus/SkyWindow";
 import sineWaivLogo from "@/assets/sine-waiv-logo.png.asset.json";
