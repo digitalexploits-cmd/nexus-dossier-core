@@ -293,7 +293,9 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           </div>
         </div>
 
-        {/* Zone markers */}
+        {/* Zone markers — kiosk labels with strict 3-tier hierarchy:
+            (1) index chip · (2) title · (3) sub. Label block is width-capped
+            so adjacent zones never overlap on any breakpoint. */}
         {ZONES.map((z) => {
           const isLocked = lockedZone?.id === z.id;
           return (
@@ -306,7 +308,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
               aria-label={`${z.id === "vault" ? "Open" : "Enter"} ${z.label}`}
             >
               <div className="relative flex flex-col items-center pointer-events-auto">
-
+                {/* Beacon */}
                 <div
                   className={`w-3 h-3 rounded-full transition-all duration-200 ${
                     isLocked
@@ -314,21 +316,51 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
                       : "bg-primary/70 shadow-[0_0_10px_rgba(70,150,255,0.9)] anim-flicker"
                   }`}
                 />
-                <div className={`mt-2 w-px transition-all ${isLocked ? "h-16 sm:h-24 bg-primary/60" : "h-8 sm:h-12 bg-primary/30"}`} />
-                <div
-                  className={`mt-2 mono uppercase whitespace-nowrap transition-all ${
-                    isLocked
-                      ? "text-primary text-xs sm:text-sm tracking-[0.28em] sm:tracking-[0.32em]"
-                      : "text-primary/70 text-[0.55rem] sm:text-[0.6rem] tracking-[0.24em] sm:tracking-[0.28em] group-hover:text-primary"
-                  }`}
-                  style={isLocked ? { textShadow: "0 0 18px hsl(var(--primary) / 0.7)" } : undefined}
+                {/* Stem */}
+                <div className={`mt-2 w-px transition-all ${isLocked ? "h-14 sm:h-20 bg-primary/60" : "h-8 sm:h-12 bg-primary/30"}`} />
+
+                {/* Label stack — capped width, centered, tiered typography */}
+                <div className={`mt-2 flex flex-col items-center gap-1 transition-opacity ${
+                  isLocked ? "opacity-100" : "opacity-90 group-hover:opacity-100"
+                }`}
+                  style={{ width: isLocked ? "min(11rem, 40vw)" : "min(8.5rem, 32vw)" }}
                 >
-                  {z.index} · {z.label}
-                </div>
-                <div className={`mono text-[0.5rem] sm:text-[0.55rem] tracking-[0.24em] sm:tracking-[0.28em] uppercase mt-1 transition-opacity ${
-                  isLocked ? "text-primary/80 opacity-100" : "text-muted-foreground opacity-0 group-hover:opacity-70"
-                }`}>
-                  {z.sub}
+                  {/* Tier 1 — index chip */}
+                  <div className={`mono tracking-[0.32em] px-1.5 py-[1px] border transition-colors ${
+                    isLocked
+                      ? "text-primary border-primary/70 bg-primary/10 text-[0.55rem] sm:text-[0.6rem]"
+                      : "text-primary/70 border-primary/25 bg-background/40 text-[0.5rem] sm:text-[0.55rem] group-hover:text-primary group-hover:border-primary/60"
+                  }`}>
+                    {z.index}
+                  </div>
+
+                  {/* Tier 2 — title */}
+                  <div
+                    className={`mono uppercase text-center leading-tight transition-all ${
+                      isLocked
+                        ? "text-primary text-[0.72rem] sm:text-sm tracking-[0.22em] sm:tracking-[0.28em]"
+                        : "text-primary/85 text-[0.6rem] sm:text-[0.68rem] tracking-[0.18em] sm:tracking-[0.24em] group-hover:text-primary"
+                    }`}
+                    style={isLocked ? { textShadow: "0 0 18px hsl(var(--primary) / 0.7)" } : undefined}
+                  >
+                    {z.label}
+                  </div>
+
+                  {/* Tier 3 — sub (only on lock or hover, never wraps to more than 2 lines) */}
+                  <div className={`mono uppercase text-center leading-tight tracking-[0.2em] sm:tracking-[0.24em] transition-opacity ${
+                    isLocked
+                      ? "text-primary/70 opacity-100 text-[0.5rem] sm:text-[0.55rem]"
+                      : "text-muted-foreground opacity-0 group-hover:opacity-70 text-[0.5rem] sm:text-[0.55rem]"
+                  }`}
+                    style={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {z.sub}
+                  </div>
                 </div>
               </div>
             </button>
