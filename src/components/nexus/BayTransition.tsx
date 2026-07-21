@@ -102,7 +102,7 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
         }}
       />
 
-      {/* Cinematic still with slow parallax push */}
+      {/* Cinematic still — camera flavor drives motion (fall/dolly/reverse/warp/…) */}
       {bgImage && !reduced && (
         <>
           <div
@@ -111,11 +111,13 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
               backgroundImage: `url(${bgImage})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
-              filter: "saturate(0.85) contrast(1.08)",
-              animation: `bay-still-kenburns ${dur} ${ease} forwards`,
+              filter: "saturate(0.9) contrast(1.08)",
+              transformOrigin: "50% 50%",
+              willChange: "transform, filter, opacity",
+              animation: flavorAnim,
             }}
           />
-          {/* Deep vignette */}
+          {/* Deep vignette rides with the camera */}
           <div
             className="absolute inset-0"
             style={{
@@ -134,6 +136,22 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
               filter: "blur(24px)",
             }}
           />
+          {/* Anamorphic flare sweep across the frame */}
+          <div
+            className="absolute inset-0 overflow-hidden mix-blend-screen"
+            style={{ animation: `bay-label ${dur} ${ease} forwards` }}
+          >
+            <div
+              className="absolute top-0 bottom-0 w-1/3"
+              style={{
+                left: 0,
+                background:
+                  "linear-gradient(90deg, transparent, hsl(var(--primary)/0.35), hsl(var(--primary)/0.6), hsl(var(--primary)/0.35), transparent)",
+                filter: "blur(28px)",
+                animation: `flavor-flare-sweep ${DURATION - 400}ms ${ease} 300ms forwards`,
+              }}
+            />
+          </div>
           {/* Scanline texture */}
           <div
             className="absolute inset-0 opacity-25 mix-blend-overlay"
@@ -146,7 +164,7 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
         </>
       )}
 
-      {/* Dual scan beams */}
+      {/* Dual scan beams — longer travel for the extended sequence */}
       {!reduced && (
         <>
           <div
@@ -156,7 +174,7 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
               background:
                 "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.95), transparent)",
               boxShadow: "0 0 32px hsl(var(--primary) / 0.7)",
-              animation: `${kind === "advance" ? "bay-scan-down" : "bay-scan-up"} 1600ms ${ease} forwards`,
+              animation: `${kind === "advance" ? "bay-scan-down" : "bay-scan-up"} 2600ms ${ease} forwards`,
             }}
           />
           <div
@@ -165,7 +183,7 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
               top: kind === "advance" ? "100%" : "-3px",
               background:
                 "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.6), transparent)",
-              animation: `${kind === "advance" ? "bay-scan-up" : "bay-scan-down"} 1800ms ${ease} 400ms forwards`,
+              animation: `${kind === "advance" ? "bay-scan-up" : "bay-scan-down"} 3000ms ${ease} 900ms forwards`,
             }}
           />
         </>
