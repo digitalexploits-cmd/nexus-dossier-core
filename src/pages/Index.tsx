@@ -64,7 +64,17 @@ const Index = () => {
   const [introDone, setIntroDone] = useState(() => {
     try { return sessionStorage.getItem("nexus:intro") === "done"; } catch { return false; }
   });
-  const [transition, setTransition] = useState<{ label: string; kind: TransitionKind } | null>(null);
+  const [transition, setTransition] = useState<{ label: string; kind: TransitionKind; bgImage?: string } | null>(null);
+
+  // Cinematic transition stills — hidden-in-plain-sight approaches per destination.
+  const TRANSITION_BG: Record<View | "vault", string> = {
+    home:       "/media/transitions/transition-rotunda.jpg",
+    mission:    "/media/transitions/transition-mission.jpg",
+    technical:  "/media/transitions/transition-technical.jpg",
+    capability: "/media/transitions/transition-capability.jpg",
+    operations: "/media/transitions/transition-operations.jpg",
+    vault:      "/media/transitions/transition-vault.jpg",
+  };
 
   const syncFromHash = useCallback(() => {
     const h = window.location.hash;
