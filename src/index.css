@@ -923,6 +923,61 @@
   .bay-hero-lightning { opacity: 0 !important; }
 }
 
+/* ============================================================
+   EXTERIOR LIFE — subtle "weather outside" ambient overlay.
+   Applied over the full hero. No literal clouds inside the room:
+   just a slow color-temperature shift at the top edge and an
+   occasional distant lightning tint. Reads as life happening
+   outside without ever painting clouds through the ceiling.
+   ============================================================ */
+.bay-exterior-life {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  mix-blend-mode: screen;
+  opacity: 0.55;
+}
+.bay-exterior-life::before {
+  /* Slow warm↔cool sky wash bleeding down from the top edge only */
+  content: "";
+  position: absolute;
+  inset: 0 0 55% 0;
+  background: linear-gradient(180deg,
+    rgba(110, 170, 220, 0.22) 0%,
+    rgba(230, 190, 140, 0.10) 45%,
+    transparent 100%);
+  animation: bay-exterior-daycycle 42s ease-in-out infinite alternate;
+  filter: blur(2px);
+}
+.bay-exterior-life::after {
+  /* Rare distant lightning tint — top band only, no shape */
+  content: "";
+  position: absolute;
+  inset: 0 0 70% 0;
+  background: linear-gradient(180deg, rgba(200, 220, 255, 0.55), transparent 100%);
+  opacity: 0;
+  animation: bay-exterior-lightning 19s ease-out infinite;
+}
+@keyframes bay-exterior-daycycle {
+  0%   { filter: hue-rotate(0deg)   blur(2px); opacity: 0.55; }
+  50%  { filter: hue-rotate(-14deg) blur(2px); opacity: 0.70; }
+  100% { filter: hue-rotate(10deg)  blur(2px); opacity: 0.50; }
+}
+@keyframes bay-exterior-lightning {
+  0%, 94%   { opacity: 0; }
+  95%       { opacity: 0.75; }
+  96%       { opacity: 0.10; }
+  97%       { opacity: 0.55; }
+  100%      { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bay-exterior-life::before,
+  .bay-exterior-life::after { animation: none !important; }
+  .bay-exterior-life::after { opacity: 0 !important; }
+}
+
+
 
 
 /* ============================================================
