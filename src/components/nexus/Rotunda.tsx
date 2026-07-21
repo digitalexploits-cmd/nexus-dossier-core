@@ -485,7 +485,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         aria-hidden
         className="absolute inset-x-0 bottom-0 pointer-events-none z-10"
         style={{
-          height: "clamp(200px, 34vh, 320px)",
+          height: "clamp(320px, 46vh, 380px)",
           background:
             "linear-gradient(to top, #08101c 0%, #08101c 82%, rgba(8,16,28,0.96) 92%, rgba(8,16,28,0.6) 98%, transparent 100%)",
         }}
