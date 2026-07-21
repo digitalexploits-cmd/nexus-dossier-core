@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BAY_CONTENT, resolveAssetHref, isLocal, type Asset, type Category, type CategoryAction } from "@/data/bayCategories";
 import { CategoryIcon } from "./CategoryIcons";
+import { HeroVideo } from "./HeroVideo";
 import { BAYS, type BayId } from "@/data/content";
 import { OfficialCertificationsGallery } from "./OfficialCertificationsGallery";
 import { AssetViewer } from "./AssetViewer";
@@ -39,6 +40,8 @@ const resolvedLocal = (a: Asset) => {
 interface Props {
   bayId: BayId;
   heroImage: string;
+  /** Optional ambient looping video played over the hero image (seamless loop). */
+  heroVideo?: string;
   /** One or two-line HUD tagline shown on the hero. */
   tagline: [string, string];
   /** Ambient status text shown top-right (e.g. "ON RECORD"). */
@@ -56,6 +59,7 @@ const DEFAULT_ACCENT = "#4db7ff";
 export const BayShell = ({
   bayId,
   heroImage,
+  heroVideo,
   tagline,
   ambient = "ON RECORD",
   accent = DEFAULT_ACCENT,
@@ -130,17 +134,27 @@ export const BayShell = ({
       {/* ============ HERO — cinematic, stable, uncluttered ============ */}
       <section className="relative min-h-screen w-full overflow-hidden bg-[#05070a]">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_55%_45%,#111d2e_0%,#080c14_75%)]" />
-        <img
-          src={heroImage}
-          alt={`${bayMeta.title} — immersive environment`}
-          className={`absolute inset-0 w-full h-full object-cover contrast-[1.04] saturate-[1.10] transition-opacity duration-700 ease-out ${heroLoaded ? "opacity-100" : "opacity-0"}`}
-          style={{ filter: `brightness(${ambientBrightness.toFixed(3)}) contrast(1.04) saturate(1.10)` }}
-          draggable={false}
-          loading="eager"
-          decoding="async"
-          onLoad={() => setHeroLoaded(true)}
-          onError={() => setHeroLoaded(true)}
-        />
+        {heroVideo ? (
+          <HeroVideo
+            src={heroVideo}
+            poster={heroImage}
+            alt={`${bayMeta.title} — living environment`}
+            className="absolute inset-0 w-full h-full"
+            style={{ filter: `brightness(${ambientBrightness.toFixed(3)}) contrast(1.04) saturate(1.10)` }}
+          />
+        ) : (
+          <img
+            src={heroImage}
+            alt={`${bayMeta.title} — immersive environment`}
+            className={`absolute inset-0 w-full h-full object-cover contrast-[1.04] saturate-[1.10] transition-opacity duration-700 ease-out ${heroLoaded ? "opacity-100" : "opacity-0"}`}
+            style={{ filter: `brightness(${ambientBrightness.toFixed(3)}) contrast(1.04) saturate(1.10)` }}
+            draggable={false}
+            loading="eager"
+            decoding="async"
+            onLoad={() => setHeroLoaded(true)}
+            onError={() => setHeroLoaded(true)}
+          />
+        )}
         {/* Legibility overlays — quiet, do not clutter */}
         <div className="absolute inset-x-0 top-0 h-[45%] pointer-events-none bg-[linear-gradient(180deg,rgba(4,8,16,0.55)_0%,rgba(4,8,16,0.15)_60%,transparent_100%)]" />
         <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/50 to-transparent" />
