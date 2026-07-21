@@ -169,6 +169,16 @@ export const BayShell = ({
           debugLabel={`${bayMeta.title} sky`}
         />
 
+        {/* PREMIUM LIGHTING RIG — inherits --bay-accent from the section */}
+        <div aria-hidden className="premium-lighting">
+          <div className="pl-key" />
+          <div className="pl-fill" />
+          <div className="pl-rays" />
+          <div className="pl-rim" />
+          <div className="pl-bloom" />
+          <div className="pl-grade" />
+        </div>
+
 
         {/* Subtle interior atmosphere */}
         <div aria-hidden className="bay-hero-atmos" />
