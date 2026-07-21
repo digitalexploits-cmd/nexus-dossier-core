@@ -258,9 +258,11 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
         <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.18)_0%,transparent_65%)]" />
 
-        {/* SINE~WaiV shield — engraved directly into the polished concrete.
-            Pure etch: dark inset carve + subtle top-lit rim highlight. No
-            color fill, no glow pool, no border. Just chiseled stone. */}
+        {/* SINE~WaiV shield — inlaid into polished concrete like a master
+            artisan's mosaic. Full color crest sits in a chiseled recess:
+            deep cast shadow beneath, beveled dark inner walls, colored
+            enamel fill on top, and a bright rim highlight where the dome
+            light catches the polished edge. */}
         <div
           aria-hidden
           className="absolute left-1/2 pointer-events-none"
@@ -272,7 +274,33 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
             transformOrigin: "50% 100%",
           }}
         >
-          {/* Recessed dark carve — the depth of the engraving */}
+          {/* 1. Deep cast shadow — the pit below the inlay */}
+          <img
+            src={sineWaivLogo.url}
+            alt=""
+            draggable={false}
+            className="absolute inset-0 w-full h-full object-contain"
+            style={{
+              opacity: 0.7,
+              mixBlendMode: "multiply",
+              filter: "grayscale(1) brightness(0.08) blur(4px)",
+              transform: "translateY(6px) scale(1.015)",
+            }}
+          />
+          {/* 2. Beveled inner wall — dark chiseled edge on bottom-right */}
+          <img
+            src={sineWaivLogo.url}
+            alt=""
+            draggable={false}
+            className="absolute inset-0 w-full h-full object-contain"
+            style={{
+              opacity: 0.9,
+              mixBlendMode: "multiply",
+              filter: "grayscale(1) brightness(0.2) contrast(1.5) blur(0.8px)",
+              transform: "translate(2px, 2.5px)",
+            }}
+          />
+          {/* 3. Bright bevel highlight — polished top-left edge catching light */}
           <img
             src={sineWaivLogo.url}
             alt=""
@@ -280,37 +308,38 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
             className="absolute inset-0 w-full h-full object-contain"
             style={{
               opacity: 0.85,
-              mixBlendMode: "multiply",
-              filter: "grayscale(1) brightness(0.15) contrast(1.4) blur(0.6px)",
-              transform: "translateY(1.5px)",
-            }}
-          />
-          {/* Bright rim highlight — top edge catching the dome light */}
-          <img
-            src={sineWaivLogo.url}
-            alt=""
-            draggable={false}
-            className="absolute inset-0 w-full h-full object-contain"
-            style={{
-              opacity: 0.55,
               mixBlendMode: "screen",
-              filter: "grayscale(1) brightness(1.8) contrast(1.3)",
-              transform: "translateY(-1.5px)",
+              filter: "grayscale(1) brightness(2.2) contrast(1.4) blur(0.4px)",
+              transform: "translate(-1.5px, -2px)",
             }}
           />
-          {/* Soft inner shadow to seat the carve into the stone */}
+          {/* 4. Main color enamel — the inlaid crest itself, rich and saturated */}
           <img
             src={sineWaivLogo.url}
             alt=""
             draggable={false}
             className="absolute inset-0 w-full h-full object-contain"
             style={{
-              opacity: 0.4,
-              mixBlendMode: "multiply",
-              filter: "grayscale(1) brightness(0.4) blur(2px)",
+              opacity: 1,
+              filter:
+                "contrast(1.15) saturate(1.35) brightness(1.02) drop-shadow(0 2px 3px rgba(0,0,0,0.55)) drop-shadow(0 0 12px rgba(80,160,230,0.18))",
+            }}
+          />
+          {/* 5. Wet-polish specular sheen — subtle top gloss */}
+          <img
+            src={sineWaivLogo.url}
+            alt=""
+            draggable={false}
+            className="absolute inset-0 w-full h-full object-contain"
+            style={{
+              opacity: 0.35,
+              mixBlendMode: "overlay",
+              filter: "brightness(1.7) contrast(1.25) blur(0.3px)",
+              transform: "translateY(-0.5px)",
             }}
           />
         </div>
+
 
 
 
