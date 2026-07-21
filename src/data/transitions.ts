@@ -18,13 +18,7 @@ const STILL_DURATION_MS = 5000;
 const MAX_TRANSIT_MS = 30000;
 
 export const TRANSITION_POOL: TransitionPiece[] = [
-  // Stadium fireworks — also the site intro, but included here for the shuffle.
-  {
-    id: "stadium-fireworks",
-    video: "/__l5e/assets-v1/df935555-91eb-4b14-96e9-695bf71e9c43/Best_July_4_Vid.mp4",
-    tag: "HOMELAND · IGNITION",
-    durationMs: 10000,
-  },
+
 
 
   {
