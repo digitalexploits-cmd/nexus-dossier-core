@@ -202,6 +202,12 @@
     70%  { opacity: 1; }
     100% { opacity: 0; transform: scale(1.14); }
   }
+  @keyframes bay-haze {
+    0%   { opacity: 0; transform: translateY(-50%) scaleX(0.6); }
+    30%  { opacity: 0.9; transform: translateY(-50%) scaleX(1); }
+    70%  { opacity: 0.9; }
+    100% { opacity: 0; transform: translateY(-50%) scaleX(1.2); }
+  }
   @keyframes advance-push {
     0% { transform: scale(1); filter: blur(0) brightness(1); }
     100% { transform: scale(1.14); filter: blur(6px) brightness(0.5); }

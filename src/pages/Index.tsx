@@ -5,7 +5,7 @@ import { EvidenceVault } from "@/components/nexus/EvidenceVault";
 import { Contact } from "@/components/nexus/Contact";
 import { TopBar, BottomBar } from "@/components/nexus/Chrome";
 import { IntroOverlay } from "@/components/nexus/IntroOverlay";
-import { BayTransition, type TransitionKind } from "@/components/nexus/BayTransition";
+import { BayTransition, TRANSITION_SWAP_MS, type TransitionKind } from "@/components/nexus/BayTransition";
 import { Button } from "@/components/ui/button";
 import { BAYS, type BayId } from "@/data/content";
 import { prefersReducedMotion } from "@/lib/audio";
@@ -74,7 +74,7 @@ const Index = () => {
   const [introDone, setIntroDone] = useState(() => {
     try { return sessionStorage.getItem("nexus:intro") === "done"; } catch { return false; }
   });
-  const [transition, setTransition] = useState<{ label: string; kind: TransitionKind; bgImage?: string } | null>(null);
+  const [transition, setTransition] = useState<{ label: string; kind: TransitionKind; bgImage?: string; code?: string } | null>(null);
 
 
   const syncFromHash = useCallback(() => {
@@ -108,29 +108,28 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: "auto" });
   }, []);
 
-  // Curtain (see BayTransition + @keyframes bay-curtain) peaks at ~35% of 1400ms ≈ 490ms.
-  // Swap the underlying view at peak so the curtain covers the change, then let the
-  // overlay play its reveal-out half and self-clear via onDone.
-  const runTransition = useCallback((label: string, kind: TransitionKind, next: View, bgImage?: string) => {
+  // Curtain covers the underlying swap; TRANSITION_SWAP_MS lines up with its peak.
+  const runTransition = useCallback((label: string, kind: TransitionKind, next: View, bgImage?: string, code?: string) => {
     if (prefersReducedMotion()) { commitView(next); return; }
-    setTransition({ label, kind, bgImage });
-    window.setTimeout(() => { commitView(next); }, 490);
+    setTransition({ label, kind, bgImage, code });
+    window.setTimeout(() => { commitView(next); }, TRANSITION_SWAP_MS);
   }, [commitView]);
 
   const goHome = useCallback(() => {
     if (view === "home") return;
-    runTransition("ROTUNDA", "retreat", "home", TRANSITION_BG.home);
+    runTransition("ROTUNDA", "retreat", "home", TRANSITION_BG.home, "ATRIUM · 00");
   }, [view, runTransition]);
 
   const goBay = useCallback((id: BayId) => {
     if (view === id) return;
-    runTransition(bayLabel(id), "advance", id, TRANSITION_BG[id]);
+    const bay = BAYS.find((b) => b.id === id);
+    runTransition(bayLabel(id), "advance", id, TRANSITION_BG[id], bay?.code);
   }, [view, runTransition]);
 
   const openVault = useCallback(() => {
     if (prefersReducedMotion()) { setVaultOpen(true); return; }
-    setTransition({ label: "EVIDENCE VAULT", kind: "advance", bgImage: TRANSITION_BG.vault });
-    window.setTimeout(() => { setVaultOpen(true); }, 490);
+    setTransition({ label: "EVIDENCE VAULT", kind: "advance", bgImage: TRANSITION_BG.vault, code: "SUB-LEVEL · V" });
+    window.setTimeout(() => { setVaultOpen(true); }, TRANSITION_SWAP_MS);
   }, []);
 
   const closeVault = useCallback((open: boolean) => {
@@ -138,8 +137,10 @@ const Index = () => {
     if (prefersReducedMotion()) { setVaultOpen(false); return; }
     const label = view === "home" ? "ROTUNDA" : bayLabel(view as BayId);
     const bg = view === "home" ? TRANSITION_BG.home : TRANSITION_BG[view as BayId];
-    setTransition({ label, kind: "retreat", bgImage: bg });
-    window.setTimeout(() => { setVaultOpen(false); }, 490);
+    const bay = view !== "home" ? BAYS.find((b) => b.id === view) : undefined;
+    const code = view === "home" ? "ATRIUM · 00" : bay?.code;
+    setTransition({ label, kind: "retreat", bgImage: bg, code });
+    window.setTimeout(() => { setVaultOpen(false); }, TRANSITION_SWAP_MS);
   }, [view]);
 
   const goContact = useCallback(() => {
@@ -219,6 +220,7 @@ const Index = () => {
           label={transition.label}
           kind={transition.kind}
           bgImage={transition.bgImage}
+          code={transition.code}
           onDone={() => setTransition(null)}
         />
       )}
