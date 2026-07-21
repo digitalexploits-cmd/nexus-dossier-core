@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { prefersReducedMotion } from "@/lib/audio";
+import introAsset from "@/assets/nexus-intro.mp4.asset.json";
 
 interface Props {
   onComplete: () => void;
 }
 
-const INTRO_SRC = "/media/intro-load.mp4";
-const HARD_TIMEOUT_MS = 8000;
-const STALL_TIMEOUT_MS = 3500;
+const INTRO_SRC = introAsset.url;
+const HARD_TIMEOUT_MS = 20000;
+const STALL_TIMEOUT_MS = 6000;
 
 /**
  * Cold-open intro. Robust guards:
