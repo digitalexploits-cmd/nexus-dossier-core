@@ -180,6 +180,15 @@
     35% { opacity: 0.95; }
     100% { opacity: 0; }
   }
+  /* Brief blackout: only opaque long enough to cover the underlying swap,
+     then it's out of the way so the cinematic frame reads bright and clear. */
+  @keyframes bay-curtain-brief {
+    0%   { opacity: 0; }
+    18%  { opacity: 1; }
+    32%  { opacity: 1; }
+    46%  { opacity: 0; }
+    100% { opacity: 0; }
+  }
   @keyframes bay-scan-down {
     0% { top: -3%; opacity: 0; }
     20% { opacity: 1; }
@@ -198,8 +207,8 @@
   }
   @keyframes bay-still-kenburns {
     0%   { opacity: 0; transform: scale(1.08); }
-    18%  { opacity: 1; }
-    82%  { opacity: 1; }
+    14%  { opacity: 1; }
+    88%  { opacity: 1; }
     100% { opacity: 0; transform: scale(1.14); }
   }
   @keyframes bay-haze {
@@ -208,56 +217,57 @@
     70%  { opacity: 0.9; }
     100% { opacity: 0; transform: translateY(-50%) scaleX(1.2); }
   }
-  /* Cinematic flavor moves — each transition rolls one at random */
+  /* Cinematic flavor moves — bright, in-your-face; short dark tail only */
   @keyframes flavor-fall {
-    0%   { opacity: 0; transform: scale(0.6) translateY(-42%) rotate(-4deg); filter: blur(14px) brightness(0.4); }
-    22%  { opacity: 1; filter: blur(2px) brightness(0.95); }
-    82%  { opacity: 1; transform: scale(1.06) translateY(2%) rotate(0.4deg); filter: blur(0) brightness(1); }
-    100% { opacity: 0; transform: scale(1.14) translateY(6%) rotate(0.8deg); filter: blur(6px) brightness(0.6); }
+    0%   { opacity: 0; transform: scale(0.55) translateY(-46%) rotate(-5deg); filter: blur(10px) brightness(0.85); }
+    14%  { opacity: 1; }
+    22%  { filter: blur(2px) brightness(1.1); }
+    82%  { opacity: 1; transform: scale(1.08) translateY(2%) rotate(0.4deg); filter: blur(0) brightness(1.15); }
+    100% { opacity: 0; transform: scale(1.18) translateY(6%) rotate(0.8deg); filter: blur(4px) brightness(1); }
   }
   @keyframes flavor-dolly-in {
-    0%   { opacity: 0; transform: scale(1.02); filter: blur(10px) brightness(0.5); }
-    20%  { opacity: 1; filter: blur(2px) brightness(1); }
-    82%  { opacity: 1; transform: scale(1.28); filter: blur(0) brightness(1.05); }
-    100% { opacity: 0; transform: scale(1.42); filter: blur(8px) brightness(0.55); }
+    0%   { opacity: 0; transform: scale(1.02); filter: blur(6px) brightness(0.95); }
+    16%  { opacity: 1; filter: blur(2px) brightness(1.1); }
+    82%  { opacity: 1; transform: scale(1.35); filter: blur(0) brightness(1.15); }
+    100% { opacity: 0; transform: scale(1.55); filter: blur(4px) brightness(1); }
   }
   @keyframes flavor-reverse-out {
-    0%   { opacity: 0; transform: scale(1.55) translateZ(0); filter: blur(12px) brightness(0.55); }
-    22%  { opacity: 1; filter: blur(2px) brightness(1); }
-    82%  { opacity: 1; transform: scale(1.02); filter: blur(0) brightness(1); }
-    100% { opacity: 0; transform: scale(0.9); filter: blur(6px) brightness(0.5); }
+    0%   { opacity: 0; transform: scale(1.7); filter: blur(8px) brightness(1); }
+    16%  { opacity: 1; filter: blur(2px) brightness(1.1); }
+    82%  { opacity: 1; transform: scale(1.02); filter: blur(0) brightness(1.15); }
+    100% { opacity: 0; transform: scale(0.85); filter: blur(4px) brightness(1); }
   }
   @keyframes flavor-warp {
-    0%   { opacity: 0; transform: perspective(900px) rotateX(18deg) scale(1.25); filter: blur(14px) brightness(0.5) saturate(1.3); }
-    22%  { opacity: 1; filter: blur(3px) brightness(1) saturate(1.1); }
-    82%  { opacity: 1; transform: perspective(900px) rotateX(-2deg) scale(1.02); filter: blur(0) brightness(1) saturate(1); }
-    100% { opacity: 0; transform: perspective(900px) rotateX(-10deg) scale(1.12); filter: blur(8px) brightness(0.6); }
+    0%   { opacity: 0; transform: perspective(900px) rotateX(22deg) scale(1.3); filter: blur(10px) brightness(1) saturate(1.4); }
+    16%  { opacity: 1; filter: blur(3px) brightness(1.1) saturate(1.2); }
+    82%  { opacity: 1; transform: perspective(900px) rotateX(-2deg) scale(1.05); filter: blur(0) brightness(1.15) saturate(1.1); }
+    100% { opacity: 0; transform: perspective(900px) rotateX(-14deg) scale(1.18); filter: blur(6px) brightness(1); }
   }
   @keyframes flavor-spin-in {
-    0%   { opacity: 0; transform: scale(1.6) rotate(-14deg); filter: blur(16px) brightness(0.4); }
-    22%  { opacity: 1; filter: blur(3px) brightness(0.95); }
-    82%  { opacity: 1; transform: scale(1.04) rotate(0.4deg); filter: blur(0) brightness(1); }
-    100% { opacity: 0; transform: scale(1.1) rotate(1.6deg); filter: blur(6px) brightness(0.6); }
+    0%   { opacity: 0; transform: scale(1.7) rotate(-18deg); filter: blur(10px) brightness(0.95); }
+    16%  { opacity: 1; filter: blur(3px) brightness(1.1); }
+    82%  { opacity: 1; transform: scale(1.06) rotate(0.4deg); filter: blur(0) brightness(1.15); }
+    100% { opacity: 0; transform: scale(1.14) rotate(1.6deg); filter: blur(4px) brightness(1); }
   }
   @keyframes flavor-tilt-pan {
-    0%   { opacity: 0; transform: scale(1.22) translateX(-18%) skewX(-4deg); filter: blur(12px) brightness(0.55); }
-    22%  { opacity: 1; filter: blur(2px) brightness(1); }
-    82%  { opacity: 1; transform: scale(1.08) translateX(4%) skewX(0deg); filter: blur(0) brightness(1); }
-    100% { opacity: 0; transform: scale(1.14) translateX(10%) skewX(1deg); filter: blur(6px) brightness(0.55); }
+    0%   { opacity: 0; transform: scale(1.28) translateX(-22%) skewX(-5deg); filter: blur(8px) brightness(1); }
+    16%  { opacity: 1; filter: blur(2px) brightness(1.1); }
+    82%  { opacity: 1; transform: scale(1.1) translateX(6%) skewX(0deg); filter: blur(0) brightness(1.15); }
+    100% { opacity: 0; transform: scale(1.18) translateX(14%) skewX(1deg); filter: blur(4px) brightness(1); }
   }
   @keyframes flavor-rise {
-    0%   { opacity: 0; transform: scale(1.1) translateY(48%); filter: blur(14px) brightness(0.4); }
-    22%  { opacity: 1; filter: blur(2px) brightness(0.95); }
-    82%  { opacity: 1; transform: scale(1.04) translateY(-2%); filter: blur(0) brightness(1); }
-    100% { opacity: 0; transform: scale(1.1) translateY(-8%); filter: blur(6px) brightness(0.6); }
+    0%   { opacity: 0; transform: scale(1.14) translateY(54%); filter: blur(10px) brightness(0.9); }
+    16%  { opacity: 1; filter: blur(2px) brightness(1.1); }
+    82%  { opacity: 1; transform: scale(1.06) translateY(-3%); filter: blur(0) brightness(1.15); }
+    100% { opacity: 0; transform: scale(1.14) translateY(-10%); filter: blur(4px) brightness(1); }
   }
   @keyframes flavor-glitch-slice {
-    0%   { opacity: 0; transform: scale(1.2) translateX(6%); filter: blur(10px) hue-rotate(20deg) brightness(0.6); clip-path: inset(0 0 0 0); }
-    12%  { clip-path: inset(0 40% 0 0); transform: translateX(-6%) scale(1.15); }
-    20%  { clip-path: inset(0 0 0 30%); transform: translateX(4%) scale(1.1); opacity: 1; }
-    30%  { clip-path: inset(0 0 0 0); filter: blur(2px) hue-rotate(0deg) brightness(1); }
-    82%  { opacity: 1; transform: scale(1.04); filter: blur(0) brightness(1); }
-    100% { opacity: 0; transform: scale(1.1); filter: blur(6px) brightness(0.6); }
+    0%   { opacity: 0; transform: scale(1.22) translateX(6%); filter: blur(6px) hue-rotate(20deg) brightness(1.1); clip-path: inset(0 0 0 0); }
+    10%  { opacity: 1; clip-path: inset(0 40% 0 0); transform: translateX(-6%) scale(1.18); }
+    18%  { clip-path: inset(0 0 0 30%); transform: translateX(4%) scale(1.12); }
+    28%  { clip-path: inset(0 0 0 0); filter: blur(2px) hue-rotate(0deg) brightness(1.1); }
+    82%  { opacity: 1; transform: scale(1.06); filter: blur(0) brightness(1.15); }
+    100% { opacity: 0; transform: scale(1.12); filter: blur(4px) brightness(1); }
   }
   @keyframes flavor-flare-sweep {
     0%   { transform: translateX(-120%) skewX(-24deg); opacity: 0; }
@@ -265,6 +275,8 @@
     55%  { opacity: 0.9; }
     100% { transform: translateX(160%) skewX(-24deg); opacity: 0; }
   }
+
+
 
   /* --- Narrative flavor moves & overlays --- */
   @keyframes flavor-secret-door-hold {
