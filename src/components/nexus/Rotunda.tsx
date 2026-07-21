@@ -275,11 +275,12 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
               key={z.id}
               onPointerDown={(e) => e.stopPropagation()}
               onClick={(e) => { e.stopPropagation(); dismissHint(); enterZone(z); }}
-              className="bay-hover-glow absolute top-1/2 group rounded-sm"
-              style={{ left: `${z.pos * 100}%`, transform: "translate(-50%, -50%)" }}
+              className="bay-hover-glow absolute top-1/2 group rounded-sm px-3 py-4 -m-3 touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
+              style={{ left: `${z.pos * 100}%`, transform: "translate(-50%, -50%)", minWidth: 56, minHeight: 88 }}
               aria-label={`${z.id === "vault" ? "Open" : "Enter"} ${z.label}`}
             >
               <div className="relative flex flex-col items-center pointer-events-auto">
+
                 <div
                   className={`w-3 h-3 rounded-full transition-all duration-200 ${
                     isLocked
@@ -351,66 +352,77 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
       {/* Look buttons */}
       <button
-        onClick={() => stepH(-STEP_H)}
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={(e) => { e.stopPropagation(); stepH(-STEP_H); }}
         aria-label="Look left"
-        className="absolute left-3 top-1/2 -translate-y-1/2 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-10 h-16 flex items-center justify-center text-lg"
+        className="absolute left-3 top-1/2 -translate-y-1/2 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-11 h-16 flex items-center justify-center text-lg touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
       >◄</button>
       <button
-        onClick={() => stepH(STEP_H)}
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={(e) => { e.stopPropagation(); stepH(STEP_H); }}
         aria-label="Look right"
-        className="absolute right-3 top-1/2 -translate-y-1/2 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-10 h-16 flex items-center justify-center text-lg"
+        className="absolute right-3 top-1/2 -translate-y-1/2 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-11 h-16 flex items-center justify-center text-lg touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
       >►</button>
       <button
-        onClick={() => stepV(-STEP_V)}
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={(e) => { e.stopPropagation(); stepV(-STEP_V); }}
         aria-label="Look up"
-        className="absolute left-1/2 -translate-x-1/2 top-20 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-8 flex items-center justify-center"
+        className="absolute left-1/2 -translate-x-1/2 top-24 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-11 flex items-center justify-center touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
       >▲</button>
       <button
-        onClick={() => stepV(STEP_V)}
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={(e) => { e.stopPropagation(); stepV(STEP_V); }}
         aria-label="Look down"
-        className="absolute left-1/2 -translate-x-1/2 bottom-6 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-8 flex items-center justify-center"
+        className="absolute left-1/2 -translate-x-1/2 bottom-6 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-11 flex items-center justify-center touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
       >▼</button>
 
       {/* Lock-on ENTER prompt (keyboard/drag flow) */}
       {lockedZone && (
-        <div className="absolute inset-x-0 bottom-20 z-20 flex justify-center pointer-events-none">
+        <div className="absolute inset-x-0 bottom-20 z-20 flex justify-center pointer-events-none px-4">
           <button
-            onClick={() => enterZone(lockedZone)}
-            className="pointer-events-auto mono uppercase text-primary border border-primary/70 bg-primary/10 hover:bg-primary/20 backdrop-blur-sm px-6 py-3 tracking-[0.32em] text-sm shadow-[0_0_40px_rgba(70,150,255,0.35)] transition-colors"
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => { e.stopPropagation(); enterZone(lockedZone); }}
+            className="pointer-events-auto mono uppercase text-primary border border-primary/70 bg-primary/10 hover:bg-primary/20 backdrop-blur-sm px-6 py-3 tracking-[0.32em] text-xs sm:text-sm shadow-[0_0_40px_rgba(70,150,255,0.35)] transition-colors touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 max-w-[calc(100vw-2rem)] truncate"
           >
             ▶ {lockedZone.id === "vault" ? "OPEN" : "ENTER"} — {lockedZone.label.toUpperCase()}
           </button>
         </div>
       )}
 
+
       {/* Compass bar removed — bay tiles on the panorama are the selection buttons. */}
 
       {/* Vault HUD panel (compact / collapsible) */}
-      <div className="absolute right-3 top-28 z-20 anim-fade-up" style={{ animationDelay: "300ms" }}>
+      <div
+        className="absolute right-3 top-28 z-20 anim-fade-up"
+        style={{ animationDelay: "300ms" }}
+        onPointerDown={(e) => e.stopPropagation()}
+      >
         {vaultPanelOpen ? (
-          <div className="w-64 border border-primary/40 bg-background/70 backdrop-blur-md p-3 space-y-2">
+          <div className="w-[min(16rem,calc(100vw-6.5rem))] border border-primary/40 bg-background/70 backdrop-blur-md p-3 space-y-2">
             <div className="flex items-center justify-between">
               <div className="mono text-[0.6rem] tracking-[0.28em] text-primary">EVIDENCE VAULT</div>
               <button
-                onClick={() => setVaultPanelOpen(false)}
+                onClick={(e) => { e.stopPropagation(); setVaultPanelOpen(false); }}
                 aria-label="Collapse vault panel"
-                className="mono text-[0.6rem] text-muted-foreground hover:text-primary px-1"
+                className="mono text-sm text-muted-foreground hover:text-primary px-2 py-1 -m-1 touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
               >×</button>
             </div>
             <div className="text-[0.65rem] text-muted-foreground leading-relaxed">
               Secured archive of evidence artifacts with claim boundaries and audience labels.
             </div>
             <button
-              onClick={onOpenVault}
-              className="w-full mono text-[0.6rem] tracking-[0.28em] uppercase text-primary border border-primary/50 hover:border-primary/80 bg-primary/10 hover:bg-primary/20 px-3 py-1.5 transition-colors"
+              onClick={(e) => { e.stopPropagation(); onOpenVault(); }}
+              className="w-full mono text-[0.6rem] tracking-[0.28em] uppercase text-primary border border-primary/50 hover:border-primary/80 bg-primary/10 hover:bg-primary/20 px-3 py-2 transition-colors touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
             >
               OPEN VAULT →
             </button>
           </div>
         ) : (
           <button
-            onClick={() => setVaultPanelOpen(true)}
-            className="mono text-[0.6rem] tracking-[0.28em] uppercase text-primary/80 hover:text-primary border border-primary/30 hover:border-primary/70 px-3 py-1.5 transition-colors bg-background/50 backdrop-blur-sm"
+            onClick={(e) => { e.stopPropagation(); setVaultPanelOpen(true); }}
+            aria-label="Open Evidence Vault panel"
+            className="mono text-[0.65rem] tracking-[0.28em] uppercase text-primary/80 hover:text-primary border border-primary/30 hover:border-primary/70 px-3 py-2 min-h-[36px] transition-colors bg-background/50 backdrop-blur-sm touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
           >
             ◆ VAULT
           </button>
@@ -418,36 +430,42 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
       </div>
 
       {/* Viewing Console launcher (left-side mirror of Vault) */}
-      <div className="absolute left-3 top-28 z-20 anim-fade-up" style={{ animationDelay: "300ms" }}>
+      <div
+        className="absolute left-3 top-28 z-20 anim-fade-up"
+        style={{ animationDelay: "300ms" }}
+        onPointerDown={(e) => e.stopPropagation()}
+      >
         {mediaPanelOpen ? (
-          <div className="w-64 border border-primary/40 bg-background/70 backdrop-blur-md p-3 space-y-2">
+          <div className="w-[min(16rem,calc(100vw-6.5rem))] border border-primary/40 bg-background/70 backdrop-blur-md p-3 space-y-2">
             <div className="flex items-center justify-between">
               <div className="mono text-[0.6rem] tracking-[0.28em] text-primary">VIEWING CONSOLE</div>
               <button
-                onClick={() => setMediaPanelOpen(false)}
+                onClick={(e) => { e.stopPropagation(); setMediaPanelOpen(false); }}
                 aria-label="Collapse viewing console panel"
-                className="mono text-[0.6rem] text-muted-foreground hover:text-primary px-1"
+                className="mono text-sm text-muted-foreground hover:text-primary px-2 py-1 -m-1 touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
               >×</button>
             </div>
             <div className="text-[0.65rem] text-muted-foreground leading-relaxed">
               Browse and open all installed documents, videos, audio, and images. Preview inline, open externally, or save to disk.
             </div>
             <button
-              onClick={() => setMediaConsoleOpen(true)}
-              className="w-full mono text-[0.6rem] tracking-[0.28em] uppercase text-primary border border-primary/50 hover:border-primary/80 bg-primary/10 hover:bg-primary/20 px-3 py-1.5 transition-colors"
+              onClick={(e) => { e.stopPropagation(); setMediaConsoleOpen(true); }}
+              className="w-full mono text-[0.6rem] tracking-[0.28em] uppercase text-primary border border-primary/50 hover:border-primary/80 bg-primary/10 hover:bg-primary/20 px-3 py-2 transition-colors touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
             >
               OPEN CONSOLE →
             </button>
           </div>
         ) : (
           <button
-            onClick={() => setMediaPanelOpen(true)}
-            className="mono text-[0.6rem] tracking-[0.28em] uppercase text-primary/80 hover:text-primary border border-primary/30 hover:border-primary/70 px-3 py-1.5 transition-colors bg-background/50 backdrop-blur-sm"
+            onClick={(e) => { e.stopPropagation(); setMediaPanelOpen(true); }}
+            aria-label="Open Viewing Console panel"
+            className="mono text-[0.65rem] tracking-[0.28em] uppercase text-primary/80 hover:text-primary border border-primary/30 hover:border-primary/70 px-3 py-2 min-h-[36px] transition-colors bg-background/50 backdrop-blur-sm touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
           >
             ◇ MEDIA
           </button>
         )}
       </div>
+
 
       <MediaConsole open={mediaConsoleOpen} onClose={() => setMediaConsoleOpen(false)} />
 
