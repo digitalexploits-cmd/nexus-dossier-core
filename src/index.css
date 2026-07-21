@@ -805,12 +805,83 @@
   100% { background-position: 0 60px; }
 }
 
+/* Drifting sky clouds — soft, wide, parallax across the top of hero */
+.bay-hero-clouds {
+  position: absolute; top: -6%; left: -20%;
+  width: 160%; height: 62%;
+  pointer-events: none; mix-blend-mode: screen;
+  opacity: 0.5;
+  background:
+    radial-gradient(ellipse 22% 45% at 8% 40%,  rgba(230,240,255,0.55) 0%, transparent 70%),
+    radial-gradient(ellipse 18% 38% at 24% 30%, rgba(220,232,250,0.42) 0%, transparent 72%),
+    radial-gradient(ellipse 26% 50% at 44% 55%, rgba(235,242,255,0.50) 0%, transparent 70%),
+    radial-gradient(ellipse 16% 34% at 62% 28%, rgba(210,224,245,0.38) 0%, transparent 72%),
+    radial-gradient(ellipse 24% 46% at 80% 48%, rgba(230,240,255,0.52) 0%, transparent 70%),
+    radial-gradient(ellipse 20% 42% at 96% 34%, rgba(220,232,250,0.42) 0%, transparent 72%);
+  filter: blur(14px);
+  animation: bay-hero-clouds-drift 120s linear infinite;
+  will-change: transform;
+}
+.bay-hero-clouds.layer-b {
+  top: 2%; height: 46%; opacity: 0.35;
+  filter: blur(20px);
+  animation: bay-hero-clouds-drift 200s linear infinite reverse;
+}
+@keyframes bay-hero-clouds-drift {
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-38%, 0, 0); }
+}
+
+/* Cloud shadows drifting across the ground — dims lower half rhythmically */
+.bay-hero-shadow {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 40% 28% at 25% 78%, rgba(3,6,12,0.55) 0%, transparent 70%),
+    radial-gradient(ellipse 35% 24% at 70% 82%, rgba(3,6,12,0.45) 0%, transparent 72%);
+  mix-blend-mode: multiply;
+  opacity: 0.6;
+  animation: bay-hero-shadow-drift 90s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+@keyframes bay-hero-shadow-drift {
+  0%   { transform: translate3d(-14%, 0, 0) scale(1.05); opacity: 0.35; }
+  50%  { opacity: 0.6; }
+  100% { transform: translate3d(16%, -1%, 0) scale(1.12); opacity: 0.4; }
+}
+
+/* Distant lightning — rare, brief double-flash with soft bloom */
+.bay-hero-lightning {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 40% at 30% 22%, rgba(210,230,255,0.9) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 30% at 75% 18%, rgba(230,240,255,0.7) 0%, transparent 65%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  animation: bay-hero-lightning-flash 17s ease-out infinite;
+}
+.bay-hero-lightning.layer-b {
+  animation: bay-hero-lightning-flash 23s ease-out infinite;
+  animation-delay: 11s;
+}
+@keyframes bay-hero-lightning-flash {
+  0%, 92%   { opacity: 0; }
+  93%       { opacity: 0.85; }
+  94%       { opacity: 0.15; }
+  95%       { opacity: 0.7; }
+  96%       { opacity: 0.05; }
+  100%      { opacity: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bay-hero-img,
   .bay-hero-atmos,
   .bay-hero-shaft,
   .bay-hero-motes,
-  .bay-hero-scan { animation: none !important; }
+  .bay-hero-scan,
+  .bay-hero-clouds,
+  .bay-hero-shadow,
+  .bay-hero-lightning { animation: none !important; }
+  .bay-hero-lightning { opacity: 0 !important; }
 }
 
 
