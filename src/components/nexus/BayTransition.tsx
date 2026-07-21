@@ -103,17 +103,17 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
       className="fixed inset-0 z-[90] pointer-events-none overflow-hidden"
       style={{ animation: reduced ? "intro-fade-in 300ms ease-out forwards" : undefined }}
     >
-      {/* Dark curtain */}
+      {/* Curtain — very brief blackout only long enough to hide the swap */}
       <div
         className="absolute inset-0 bg-[#04060a]"
         style={{
           animation: reduced
             ? "intro-fade-in 300ms ease-out forwards"
-            : `bay-curtain ${dur} ${ease} forwards`,
+            : `bay-curtain-brief ${dur} ${ease} forwards`,
         }}
       />
 
-      {/* Cinematic still — camera flavor drives motion (fall/dolly/reverse/warp/…) */}
+      {/* Cinematic still — big, bright, and in-your-face */}
       {bgImage && !reduced && (
         <>
           <div
@@ -122,7 +122,7 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
               backgroundImage: `url(${bgImage})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
-              filter: "saturate(0.9) contrast(1.08)",
+              filter: "saturate(1.15) contrast(1.15) brightness(1.15)",
               transformOrigin: "50% 50%",
               willChange: "transform, filter, opacity, clip-path",
               animation:
@@ -131,12 +131,12 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
                   : flavorAnim,
             }}
           />
-          {/* Deep vignette rides with the camera */}
+          {/* Gentle vignette — keeps focus without swallowing the frame */}
           <div
             className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(ellipse at center, rgba(4,6,10,0) 0%, rgba(4,6,10,0.55) 60%, rgba(4,6,10,0.96) 100%)",
+                "radial-gradient(ellipse at center, rgba(4,6,10,0) 0%, rgba(4,6,10,0.15) 70%, rgba(4,6,10,0.55) 100%)",
               animation: `bay-still-kenburns ${dur} ${ease} forwards`,
             }}
           />
