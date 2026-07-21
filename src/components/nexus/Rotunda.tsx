@@ -266,10 +266,10 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           aria-hidden
           className="absolute left-1/2 pointer-events-none"
           style={{
-            bottom: "4%",
-            width: "min(62%, 780px)",
+            bottom: "14%",
+            width: "min(46%, 560px)",
             aspectRatio: "1550 / 640",
-            transform: "translateX(-50%) perspective(1100px) rotateX(64deg)",
+            transform: "translateX(-50%) perspective(1400px) rotateX(72deg)",
             transformOrigin: "50% 100%",
           }}
         >
