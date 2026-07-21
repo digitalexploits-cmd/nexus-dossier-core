@@ -71,9 +71,7 @@ const bayLabel = (id: BayId) => BAYS.find((b) => b.id === id)?.title ?? id.toUpp
 const Index = () => {
   const [view, setView] = useState<View>(() => hashToView(window.location.hash));
   const [vaultOpen, setVaultOpen] = useState(false);
-  const [introDone, setIntroDone] = useState(() => {
-    try { return sessionStorage.getItem("nexus:intro") === "done"; } catch { return false; }
-  });
+  const [introDone, setIntroDone] = useState(false);
   const [transition, setTransition] = useState<{ label: string; kind: TransitionKind; bgImage?: string; code?: string } | null>(null);
 
 
