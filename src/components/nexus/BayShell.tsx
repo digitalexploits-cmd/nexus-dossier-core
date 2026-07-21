@@ -210,12 +210,12 @@ export const BayShell = ({
 
 
 
-        {/* Multimedia Viewer launcher — glass panel button */}
-        <div className="absolute top-6 right-6 z-20">
+        {/* Multimedia Viewer launcher — glass panel button (responsive) */}
+        <div className="absolute top-3 right-3 md:top-6 md:right-6 z-20">
           <button
             type="button"
             onClick={() => setMediaConsoleOpen(true)}
-            className="interactive group relative flex items-center gap-2.5 rounded-sm px-4 py-2.5 backdrop-blur-md transition-all duration-300"
+            className="interactive group relative flex items-center gap-2 md:gap-2.5 rounded-sm px-2.5 py-2 md:px-4 md:py-2.5 backdrop-blur-md transition-all duration-300 hover:-translate-y-[1px]"
             style={{
               borderWidth: 1,
               borderStyle: "solid",
@@ -225,9 +225,9 @@ export const BayShell = ({
             }}
             aria-label="Open multimedia viewer"
           >
-            <span className="text-base leading-none" style={{ color: accent }}>◫</span>
-            <span className="mono text-[0.6rem] tracking-[0.28em] uppercase" style={{ color: "#eef6ff" }}>
-              Multimedia Viewer
+            <span className="text-sm md:text-base leading-none" style={{ color: accent }}>◫</span>
+            <span className="mono text-[0.55rem] md:text-[0.6rem] tracking-[0.24em] md:tracking-[0.28em] uppercase" style={{ color: "#eef6ff" }}>
+              <span className="hidden sm:inline">Multimedia </span>Viewer
             </span>
           </button>
         </div>
@@ -271,7 +271,7 @@ export const BayShell = ({
       {/* ============ LAYER 1 — CATEGORY RAIL ============ */}
 
       <section id="bay-category-rail" className="container pt-14 pb-6">
-        <div className="flex items-baseline justify-between mb-6 flex-wrap gap-2">
+        <div className="flex items-baseline justify-between mb-2 flex-wrap gap-2">
           <div className="mono text-[0.6rem] tracking-[0.28em] uppercase" style={{ color: accent }}>
             {bayCode} / CATEGORIES
           </div>
@@ -279,6 +279,9 @@ export const BayShell = ({
             {content.categories.length.toString().padStart(2, "0")} · SELECT TO REVEAL
           </div>
         </div>
+        <p className="text-xs md:text-sm text-[#c8d4e2] leading-relaxed max-w-3xl mb-6">
+          {bayMeta.title} — {bayMeta.subtitle ?? "Curated evidence, instruments, and correspondence for this bay."}
+        </p>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-2 md:gap-3">
           {content.categories.map((c) => {
@@ -385,16 +388,19 @@ export const BayShell = ({
                 TAP ANY CATEGORY TO REVEAL
               </div>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-              {content.categories.map((c) => {
+            {(() => {
+              const contentCats = content.categories.filter((c) => !c.action);
+              const actionCats = content.categories.filter((c) => c.action);
+              const renderTile = (c: Category) => {
                 const count = c.assets?.length ?? 0;
                 return (
                   <button
                     key={c.id}
                     type="button"
                     onClick={() => onCategoryClick(c)}
-                    className="interactive group flex items-center gap-2 rounded-sm border px-2.5 py-2 text-left transition-all duration-200 hover:border-[color:var(--bay-accent)]"
+                    className="interactive group flex items-center gap-2 rounded-sm border px-2.5 py-2 text-left transition-all duration-200 hover:-translate-y-[1px] hover:border-[color:var(--bay-accent)]"
                     style={{ borderColor: "rgba(130,205,255,0.18)", background: "rgba(8,14,24,0.55)" }}
+                    aria-label={`${c.label}${c.action ? " — action" : count ? ` — ${count} items` : ""}`}
                   >
                     <span style={{ color: accent }} className="shrink-0">
                       <CategoryIcon name={c.icon} />
@@ -405,8 +411,26 @@ export const BayShell = ({
                     </span>
                   </button>
                 );
-              })}
-            </div>
+              };
+              return (
+                <>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                    {contentCats.map(renderTile)}
+                  </div>
+                  {actionCats.length > 0 && (
+                    <>
+                      <div className="flex items-center gap-3 mt-5 mb-2">
+                        <div className="mono text-[0.55rem] tracking-[0.28em] uppercase text-[#8fa3b8]">ACTIONS</div>
+                        <div className="flex-1 h-[1px]" style={{ background: `linear-gradient(90deg, ${accent}55, transparent)` }} />
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                        {actionCats.map(renderTile)}
+                      </div>
+                    </>
+                  )}
+                </>
+              );
+            })()}
           </div>
         )}
       </section>
