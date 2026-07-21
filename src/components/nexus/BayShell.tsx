@@ -368,69 +368,10 @@ export const BayShell = ({
         )}
 
         {!activeCategory && (
-          <div
-            className="relative rounded-sm border backdrop-blur-md px-5 py-6 md:px-8 md:py-8 overflow-hidden"
-            style={{
-              borderColor: "rgba(130,205,255,0.22)",
-              background: "linear-gradient(180deg,rgba(14,26,44,0.55),rgba(8,14,24,0.72))",
-            }}
-          >
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-x-0 top-0 h-[1px]"
-              style={{ background: `linear-gradient(90deg, transparent, ${accent}88, transparent)` }}
-            />
-            <div className="flex items-baseline justify-between mb-4 flex-wrap gap-2">
-              <div className="mono text-[0.6rem] tracking-[0.32em] uppercase" style={{ color: accent }}>
-                AT A GLANCE
-              </div>
-              <div className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
-                TAP ANY CATEGORY TO REVEAL
-              </div>
+          <div className="flex items-center justify-center py-10 md:py-12">
+            <div className="mono text-[0.6rem] tracking-[0.28em] uppercase text-[#8fa3b8]">
+              SELECT A CATEGORY ABOVE TO REVEAL ASSETS
             </div>
-            {(() => {
-              const contentCats = content.categories.filter((c) => !c.action);
-              const actionCats = content.categories.filter((c) => c.action);
-              const renderTile = (c: Category) => {
-                const count = c.assets?.length ?? 0;
-                return (
-                  <button
-                    key={c.id}
-                    type="button"
-                    onClick={() => onCategoryClick(c)}
-                    className="interactive group flex items-center gap-2 rounded-sm border px-2.5 py-2 text-left transition-all duration-200 hover:-translate-y-[1px] hover:border-[color:var(--bay-accent)]"
-                    style={{ borderColor: "rgba(130,205,255,0.18)", background: "rgba(8,14,24,0.55)" }}
-                    aria-label={`${c.label}${c.action ? " — action" : count ? ` — ${count} items` : ""}`}
-                  >
-                    <span style={{ color: accent }} className="shrink-0">
-                      <CategoryIcon name={c.icon} />
-                    </span>
-                    <span className="text-[0.78rem] text-[#dbe6f2] truncate">{c.label}</span>
-                    <span className="ml-auto mono text-[0.55rem] tracking-[0.2em] tabular-nums text-[#8fa3b8]">
-                      {c.action ? "→" : count.toString().padStart(2, "0")}
-                    </span>
-                  </button>
-                );
-              };
-              return (
-                <>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                    {contentCats.map(renderTile)}
-                  </div>
-                  {actionCats.length > 0 && (
-                    <>
-                      <div className="flex items-center gap-3 mt-5 mb-2">
-                        <div className="mono text-[0.55rem] tracking-[0.28em] uppercase text-[#8fa3b8]">ACTIONS</div>
-                        <div className="flex-1 h-[1px]" style={{ background: `linear-gradient(90deg, ${accent}55, transparent)` }} />
-                      </div>
-                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                        {actionCats.map(renderTile)}
-                      </div>
-                    </>
-                  )}
-                </>
-              );
-            })()}
           </div>
         )}
       </section>
