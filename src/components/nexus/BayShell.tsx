@@ -271,7 +271,7 @@ export const BayShell = ({
       {/* ============ LAYER 1 — CATEGORY RAIL ============ */}
 
       <section id="bay-category-rail" className="container pt-14 pb-6">
-        <div className="flex items-baseline justify-between mb-6 flex-wrap gap-2">
+        <div className="flex items-baseline justify-between mb-2 flex-wrap gap-2">
           <div className="mono text-[0.6rem] tracking-[0.28em] uppercase" style={{ color: accent }}>
             {bayCode} / CATEGORIES
           </div>
@@ -279,6 +279,9 @@ export const BayShell = ({
             {content.categories.length.toString().padStart(2, "0")} · SELECT TO REVEAL
           </div>
         </div>
+        <p className="text-xs md:text-sm text-[#c8d4e2] leading-relaxed max-w-3xl mb-6">
+          {bayMeta.title} — {bayMeta.subtitle ?? "Curated evidence, instruments, and correspondence for this bay."}
+        </p>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-2 md:gap-3">
           {content.categories.map((c) => {
