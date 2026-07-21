@@ -209,7 +209,7 @@ const Index = () => {
       <BottomBar />
       <EvidenceVault
         open={vaultOpen}
-        onOpenChange={setVaultOpen}
+        onOpenChange={closeVault}
         onReturnToRotunda={goHome}
       />
 
@@ -217,6 +217,7 @@ const Index = () => {
         <BayTransition
           label={transition.label}
           kind={transition.kind}
+          bgImage={transition.bgImage}
           onDone={() => setTransition(null)}
         />
       )}
