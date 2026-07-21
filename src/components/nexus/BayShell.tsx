@@ -143,7 +143,12 @@ export const BayShell = ({
           onLoad={() => setHeroLoaded(true)}
           onError={() => setHeroLoaded(true)}
         />
-        {/* Living outside environment — drifting atmosphere, light shafts, dust motes */}
+        {/* Living outside environment — clouds, shadows, lightning, drift, motes */}
+        <div aria-hidden className="bay-hero-clouds layer-b" />
+        <div aria-hidden className="bay-hero-clouds" />
+        <div aria-hidden className="bay-hero-shadow" />
+        <div aria-hidden className="bay-hero-lightning" />
+        <div aria-hidden className="bay-hero-lightning layer-b" />
         <div aria-hidden className="bay-hero-atmos" />
         <div aria-hidden className="bay-hero-shaft" />
         <div aria-hidden className="bay-hero-motes" />
