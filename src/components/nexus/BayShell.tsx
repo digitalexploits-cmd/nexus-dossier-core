@@ -283,12 +283,13 @@ export const BayShell = ({
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-2 md:gap-3">
           {content.categories.map((c) => {
             const active = activeCategoryId === c.id;
+            const count = c.assets?.length ?? 0;
             return (
               <button
                 key={c.id}
                 type="button"
                 onClick={() => onCategoryClick(c)}
-                className="group interactive relative text-left rounded-sm border p-3 md:p-4 backdrop-blur-md transition-all duration-300"
+                className="group interactive relative text-left rounded-sm border p-3 md:p-4 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5"
                 style={{
                   borderColor: active ? accent : "rgba(130,205,255,0.32)",
                   background: active
@@ -299,12 +300,25 @@ export const BayShell = ({
                     : undefined,
                 }}
                 aria-pressed={active}
+                aria-label={`${c.label}${c.action ? " — action" : count ? ` — ${count} items` : ""}`}
               >
                 <div className="flex items-center gap-2 mb-2" style={{ color: active ? accent : "#7dd3ff" }}>
                   <CategoryIcon name={c.icon} />
-                  {c.action && (
-                    <span className="ml-auto mono text-[0.5rem] tracking-[0.24em] uppercase text-[#8fa3b8]">ACTION</span>
-                  )}
+                  {c.action ? (
+                    <span
+                      className="ml-auto mono text-[0.5rem] tracking-[0.24em] uppercase px-1.5 py-[2px] rounded-sm"
+                      style={{ color: accent, borderWidth: 1, borderStyle: "solid", borderColor: `${accent}55` }}
+                    >
+                      ACTION
+                    </span>
+                  ) : count > 0 ? (
+                    <span
+                      className="ml-auto mono text-[0.55rem] tracking-[0.2em] tabular-nums px-1.5 py-[2px] rounded-sm text-[#c8d4e2]"
+                      style={{ borderWidth: 1, borderStyle: "solid", borderColor: "rgba(130,205,255,0.28)" }}
+                    >
+                      {count.toString().padStart(2, "0")}
+                    </span>
+                  ) : null}
                 </div>
                 <div className="text-sm md:text-base font-medium leading-tight text-[#eef6ff]">{c.label}</div>
                 {c.blurb && (
