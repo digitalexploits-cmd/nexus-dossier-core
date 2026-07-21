@@ -5,8 +5,8 @@ interface Props {
   onComplete: () => void;
 }
 
-// Cinematic Gateway Arch approach — cold-open intro.
-const INTRO_SRC = "/__l5e/assets-v1/319d60ea-3f7a-4bee-a1b4-1380e1d1b856/grok_video_2026-07-20-16-11-58.mp4";
+// Stadium fireworks flyby — cold-open intro.
+const INTRO_SRC = "/__l5e/assets-v1/df935555-91eb-4b14-96e9-695bf71e9c43/Best_July_4_Vid.mp4";
 
 const HARD_TIMEOUT_MS = 20000;
 const STALL_TIMEOUT_MS = 6000;
