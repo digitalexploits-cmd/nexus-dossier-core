@@ -28,15 +28,26 @@ const TELEMETRY_LINES = [
 
 // Cinematic camera flavors — one is chosen at random per transit so no two
 // feel the same. Each flavor is a CSS keyframe defined in index.css.
-const FLAVORS = [
-  { name: "flavor-fall",         phase: "FREEFALL VECTOR" },
-  { name: "flavor-dolly-in",     phase: "DOLLY ADVANCE" },
-  { name: "flavor-reverse-out",  phase: "REVERSE PULL" },
-  { name: "flavor-warp",         phase: "WARP ALIGNMENT" },
-  { name: "flavor-spin-in",      phase: "ORBITAL LOCK" },
-  { name: "flavor-tilt-pan",     phase: "LATERAL SWEEP" },
-  { name: "flavor-rise",         phase: "ASCENT VECTOR" },
-  { name: "flavor-glitch-slice", phase: "SIGNAL RECONSTRUCT" },
+// Some flavors carry an `overlay` id that renders a narrative prop
+// (secret door, iris, warp streaks, elevator slats, film gate, etc.).
+type FlavorOverlay = "doors" | "iris" | "warp" | "elevator" | "film" | "coincidence";
+type Flavor = { name: string; phase: string; overlay?: FlavorOverlay };
+const FLAVORS: readonly Flavor[] = [
+  { name: "flavor-fall",              phase: "FREEFALL VECTOR" },
+  { name: "flavor-dolly-in",          phase: "DOLLY ADVANCE" },
+  { name: "flavor-reverse-out",       phase: "REVERSE PULL" },
+  { name: "flavor-warp",              phase: "WARP ALIGNMENT" },
+  { name: "flavor-spin-in",           phase: "ORBITAL LOCK" },
+  { name: "flavor-tilt-pan",          phase: "LATERAL SWEEP" },
+  { name: "flavor-rise",              phase: "ASCENT VECTOR" },
+  { name: "flavor-glitch-slice",      phase: "SIGNAL RECONSTRUCT" },
+  { name: "flavor-secret-door-hold",  phase: "CONCEALED ENTRY",  overlay: "doors" },
+  { name: "flavor-coincidence",       phase: "PASSING COINCIDENCE", overlay: "coincidence" },
+  { name: "flavor-warp-drive",        phase: "WARP DRIVE · ENGAGED", overlay: "warp" },
+  { name: "flavor-coaster",           phase: "GRAVITY COASTER" },
+  { name: "flavor-iris",              phase: "IRIS OPEN",         overlay: "iris" },
+  { name: "flavor-elevator",          phase: "SERVICE ELEVATOR",  overlay: "elevator" },
+  { name: "flavor-film",              phase: "PROJECTION GATE",   overlay: "film" },
 ] as const;
 
 /** Cinematic multi-stage transit sequence with HUD, telemetry, and dual scans. */
@@ -113,8 +124,11 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
               backgroundPosition: "center",
               filter: "saturate(0.9) contrast(1.08)",
               transformOrigin: "50% 50%",
-              willChange: "transform, filter, opacity",
-              animation: flavorAnim,
+              willChange: "transform, filter, opacity, clip-path",
+              animation:
+                flavor.overlay === "iris"
+                  ? `${flavorAnim}, iris-open ${dur} ${ease} forwards`
+                  : flavorAnim,
             }}
           />
           {/* Deep vignette rides with the camera */}
@@ -152,6 +166,91 @@ export const BayTransition = ({ label, kind, bgImage, code, onDone }: Props) => 
               }}
             />
           </div>
+
+          {/* Narrative overlays — secret doors, warp streaks, elevator, film gate, camera flash */}
+          {flavor.overlay === "doors" && (
+            <>
+              {(["left", "right"] as const).map((side) => (
+                <div
+                  key={side}
+                  className="absolute top-0 bottom-0 w-1/2 bg-[#04060a]"
+                  style={{
+                    [side]: 0,
+                    borderInlineEnd: side === "left" ? "1px solid hsl(var(--primary)/0.6)" : undefined,
+                    borderInlineStart: side === "right" ? "1px solid hsl(var(--primary)/0.6)" : undefined,
+                    boxShadow: "inset 0 0 80px rgba(0,0,0,0.8)",
+                    backgroundImage:
+                      "repeating-linear-gradient(180deg, rgba(212,175,55,0.05) 0 2px, transparent 2px 22px), radial-gradient(circle at 50% 40%, rgba(212,175,55,0.18), transparent 60%)",
+                    animation: `door-open-${side} ${DURATION - 400}ms cubic-bezier(0.7,0,0.2,1) 200ms forwards`,
+                  }}
+                />
+              ))}
+            </>
+          )}
+
+          {flavor.overlay === "warp" && (
+            <div
+              className="absolute inset-0 overflow-hidden pointer-events-none"
+              style={{ animation: `warp-streaks ${DURATION - 400}ms cubic-bezier(0.6,0,0.3,1) 200ms forwards` }}
+            >
+              {Array.from({ length: 60 }).map((_, i) => {
+                const angle = (i / 60) * 360;
+                const len = 30 + Math.random() * 40;
+                return (
+                  <span
+                    key={i}
+                    className="absolute left-1/2 top-1/2 origin-left"
+                    style={{
+                      width: `${len}%`,
+                      height: 1 + Math.random() * 1.5,
+                      background: "linear-gradient(90deg, transparent, hsl(var(--primary)/0.85), white)",
+                      transform: `rotate(${angle}deg)`,
+                      filter: "blur(0.5px)",
+                    }}
+                  />
+                );
+              })}
+            </div>
+          )}
+
+          {flavor.overlay === "elevator" && (
+            <>
+              {[0, 1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  className="absolute inset-x-0 bg-[#04060a]"
+                  style={{
+                    top: `${i * 20}%`,
+                    height: "20%",
+                    borderTop: "1px solid hsl(var(--primary)/0.35)",
+                    borderBottom: "1px solid hsl(var(--primary)/0.15)",
+                    boxShadow: "inset 0 0 40px rgba(0,0,0,0.7)",
+                    animation: `elevator-slat ${DURATION - 400}ms cubic-bezier(0.7,0,0.2,1) ${100 + i * 80}ms forwards`,
+                  }}
+                />
+              ))}
+            </>
+          )}
+
+          {flavor.overlay === "film" && (
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  "repeating-linear-gradient(0deg, rgba(0,0,0,0.35) 0 3px, transparent 3px 8px)",
+                animation: `film-gate ${DURATION}ms steps(12,end) forwards`,
+                mixBlendMode: "multiply",
+              }}
+            />
+          )}
+
+          {flavor.overlay === "coincidence" && (
+            <div
+              className="absolute inset-0 bg-white pointer-events-none"
+              style={{ animation: `coincidence-flash ${DURATION}ms ease-out forwards` }}
+            />
+          )}
+
           {/* Scanline texture */}
           <div
             className="absolute inset-0 opacity-25 mix-blend-overlay"
