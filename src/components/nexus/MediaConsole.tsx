@@ -150,17 +150,20 @@ export const MediaConsole = ({ open, onClose }: Props) => {
                 <button
                   key={m.id}
                   onClick={() => setSelectedId(m.id)}
-                  className={`w-full text-left px-4 py-3 border-b border-primary/10 transition-colors ${
+                  className={`w-full text-left px-3 py-2.5 border-b border-primary/10 transition-colors flex items-center gap-3 ${
                     active
                       ? "bg-primary/10 border-l-2 border-l-primary"
                       : "hover:bg-primary/5 border-l-2 border-l-transparent"
                   }`}
                 >
-                  <div className={`text-sm truncate ${active ? "text-primary" : "text-foreground"}`}>
-                    {m.title}
-                  </div>
-                  <div className="mono text-[0.55rem] tracking-[0.22em] uppercase text-muted-foreground mt-1">
-                    {m.category} · {m.kind}
+                  <MediaThumb item={m} active={active} />
+                  <div className="min-w-0 flex-1">
+                    <div className={`text-sm truncate ${active ? "text-primary" : "text-foreground"}`}>
+                      {m.title}
+                    </div>
+                    <div className="mono text-[0.55rem] tracking-[0.22em] uppercase text-muted-foreground mt-1 truncate">
+                      {m.category} · {m.kind}
+                    </div>
                   </div>
                 </button>
               );
