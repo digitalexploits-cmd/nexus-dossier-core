@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Human-in-the-Loop Requirement</title>
+<style>
+  :root { --bg:#04070e; --panel:#0a101c; --gold:#d4af37; --text:#cdd6e4; --muted:#6d7d93; --line:#1a2638; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--text); font-family:ui-monospace,SFMono-Regular,Menlo,monospace; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:1.2rem; }
+  .card { width:100%; max-width:640px; background:var(--panel); border:1px solid var(--line); border-radius:3px; overflow:hidden; }
+  header { padding:1rem 1.3rem; border-bottom:1px solid var(--line); }
+  header h1 { font-size:0.9rem; color:var(--gold); letter-spacing:0.12em; }
+  .body { padding:1.5rem 1.3rem; }
+  .statement { font-size:1.05rem; color:#e0e6ed; line-height:1.55; margin-bottom:1.4rem; border-left:3px solid var(--gold); padding-left:1rem; }
+  .points { list-style:none; }
+  .points li { font-size:0.82rem; color:var(--muted); padding:0.55rem 0; border-bottom:1px solid #141e2c; display:flex; gap:0.7rem; }
+  .points li:last-child { border-bottom:none; }
+  .points li span { color:var(--gold); font-weight:600; min-width:1.2rem; }
+  footer { padding:0.7rem 1.3rem; border-top:1px solid var(--line); font-size:0.65rem; color:var(--muted); display:flex; justify-content:space-between; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <header>
+      <h1>HUMAN-IN-THE-LOOP REQUIREMENT</h1>
+    </header>
+    <div class="body">
+      <div class="statement">
+        No material decision is ever fully automated. A named human remains accountable for outcome.
+      </div>
+      <ul class="points">
+        <li><span>01</span> AI may accelerate analysis and surface patterns</li>
+        <li><span>02</span> AI may never issue final operational or claim decisions</li>
+        <li><span>03</span> Every promoted result requires explicit human sign-off</li>
+        <li><span>04</span> Accountability cannot be transferred to the model or the platform</li>
+      </ul>
+    </div>
+    <footer>
+      <span>AI Base³ Operating Doctrine</span>
+      <span>Non-negotiable</span>
+    </footer>
+  </div>
+</body>
+</html>
