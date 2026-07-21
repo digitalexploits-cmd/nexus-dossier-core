@@ -28,6 +28,7 @@ export const IntroOverlay = ({ onComplete }: Props) => {
   const finish = useCallback(() => {
     if (finishedRef.current) return;
     finishedRef.current = true;
+    try { window.localStorage.setItem("nexus.introSeen", "1"); } catch {}
     try { onComplete(); } catch { /* ignore */ }
     requestAnimationFrame(() => {
       setFading(true);
@@ -36,9 +37,12 @@ export const IntroOverlay = ({ onComplete }: Props) => {
   }, [onComplete]);
 
 
-  // Reduced motion → skip immediately
+  // Reduced motion OR returning visitor → skip immediately
   useEffect(() => {
-    if (reducedRef.current) finish();
+    if (reducedRef.current) { finish(); return; }
+    try {
+      if (window.localStorage.getItem("nexus.introSeen") === "1") finish();
+    } catch { /* ignore */ }
   }, [finish]);
 
   // Escape to skip
