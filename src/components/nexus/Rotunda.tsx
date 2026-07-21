@@ -273,11 +273,11 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         {/* Secondary tight scrim centered on the baked kiosk row */}
         <div
           aria-hidden
-          className="absolute left-0 right-0 bottom-[4%] h-[24%] pointer-events-none"
+          className="absolute left-0 right-0 bottom-[2%] h-[30%] pointer-events-none"
           style={{
             background:
-              "radial-gradient(ellipse at 50% 55%, rgba(2,4,8,0.98) 0%, rgba(2,4,8,0.85) 55%, transparent 90%)",
-            filter: "blur(8px)",
+              "radial-gradient(ellipse at 50% 55%, #04070d 0%, rgba(4,7,13,0.96) 60%, transparent 92%)",
+            filter: "blur(6px)",
           }}
         />
         {/* Gold hairline capping the new "console counter" so the mask reads as architecture */}
