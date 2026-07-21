@@ -74,7 +74,7 @@ const Index = () => {
   const [view, setView] = useState<View>(() => hashToView(window.location.hash));
   const [vaultOpen, setVaultOpen] = useState(false);
   const [introDone, setIntroDone] = useState(false);
-  const [transition, setTransition] = useState<{ label: string; kind: TransitionKind; bgImage?: string; bgVideo?: string; code?: string } | null>(null);
+  const [transition, setTransition] = useState<{ label: string; kind: TransitionKind; bgImage?: string; bgVideo?: string; code?: string; tag?: string; durationMs?: number } | null>(null);
 
 
   const syncFromHash = useCallback(() => {
