@@ -3,11 +3,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BRAND, type BayId } from "@/data/content";
 import { prefersReducedMotion } from "@/lib/audio";
 import rotundaAsset from "@/assets/rotunda-hero.png.asset.json";
-import rotundaVideoAsset from "../../../public/media/hero-rotunda.mp4.asset.json";
 import { MediaConsole } from "@/components/nexus/MediaConsole";
 
 const ROTUNDA_HERO = rotundaAsset.url;
-const ROTUNDA_VIDEO = rotundaVideoAsset.url;
 
 interface Props {
   onSelect: (id: BayId) => void;
