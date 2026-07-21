@@ -314,6 +314,8 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
       <div aria-hidden className="bay-hero-shadow" />
       <div aria-hidden className="bay-hero-lightning" />
       <div aria-hidden className="bay-hero-lightning layer-b" />
+      <div aria-hidden className="bay-hero-branch left" />
+      <div aria-hidden className="bay-hero-branch right" />
 
       {/* CAMERA-FIXED OVERLAYS */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_72%,rgba(5,7,10,0.55)_100%)]" />
