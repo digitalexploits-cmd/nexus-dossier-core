@@ -308,6 +308,13 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         })}
       </div>
 
+      {/* Living sky — clouds drifting, cloud shadows, distant lightning */}
+      <div aria-hidden className="bay-hero-clouds layer-b" style={{ ["--bay-accent" as any]: "#4db7ff" }} />
+      <div aria-hidden className="bay-hero-clouds" />
+      <div aria-hidden className="bay-hero-shadow" />
+      <div aria-hidden className="bay-hero-lightning" />
+      <div aria-hidden className="bay-hero-lightning layer-b" />
+
       {/* CAMERA-FIXED OVERLAYS */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_72%,rgba(5,7,10,0.55)_100%)]" />
       <div className="absolute inset-x-0 top-0 h-20 pointer-events-none bg-gradient-to-b from-background/50 to-transparent" />
