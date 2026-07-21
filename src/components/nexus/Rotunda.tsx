@@ -301,7 +301,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
               key={z.id}
               onPointerDown={(e) => e.stopPropagation()}
               onClick={(e) => { e.stopPropagation(); dismissHint(); enterZone(z); }}
-              className="bay-hover-glow absolute top-1/2 group rounded-sm px-3 py-4 -m-3 touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
+              className="bay-hover-glow absolute top-[46%] group rounded-sm px-3 py-4 -m-3 touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
               style={{ left: `${z.pos * 100}%`, transform: "translate(-50%, -50%)", minWidth: 56, minHeight: 88 }}
               aria-label={`${z.id === "vault" ? "Open" : "Enter"} ${z.label}`}
             >
@@ -314,18 +314,18 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
                       : "bg-primary/70 shadow-[0_0_10px_rgba(70,150,255,0.9)] anim-flicker"
                   }`}
                 />
-                <div className={`mt-2 w-px transition-all ${isLocked ? "h-24 bg-primary/60" : "h-12 bg-primary/30"}`} />
+                <div className={`mt-2 w-px transition-all ${isLocked ? "h-16 sm:h-24 bg-primary/60" : "h-8 sm:h-12 bg-primary/30"}`} />
                 <div
                   className={`mt-2 mono uppercase whitespace-nowrap transition-all ${
                     isLocked
-                      ? "text-primary text-sm tracking-[0.32em]"
-                      : "text-primary/70 text-[0.6rem] tracking-[0.28em] group-hover:text-primary"
+                      ? "text-primary text-xs sm:text-sm tracking-[0.28em] sm:tracking-[0.32em]"
+                      : "text-primary/70 text-[0.55rem] sm:text-[0.6rem] tracking-[0.24em] sm:tracking-[0.28em] group-hover:text-primary"
                   }`}
                   style={isLocked ? { textShadow: "0 0 18px hsl(var(--primary) / 0.7)" } : undefined}
                 >
                   {z.index} · {z.label}
                 </div>
-                <div className={`mono text-[0.55rem] tracking-[0.28em] uppercase mt-1 transition-opacity ${
+                <div className={`mono text-[0.5rem] sm:text-[0.55rem] tracking-[0.24em] sm:tracking-[0.28em] uppercase mt-1 transition-opacity ${
                   isLocked ? "text-primary/80 opacity-100" : "text-muted-foreground opacity-0 group-hover:opacity-70"
                 }`}>
                   {z.sub}
