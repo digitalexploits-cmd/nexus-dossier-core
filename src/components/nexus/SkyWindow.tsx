@@ -17,7 +17,15 @@ interface SkyWindowProps {
   branchRight?: boolean;
   /** Slightly dim/tint like glass tint. */
   glassTint?: string;
+  /** Optional label shown when debug overlay is enabled. */
+  debugLabel?: string;
 }
+
+/** Debug mode: append `?debugSky=1` to the URL to draw the SkyWindow rects. */
+const isDebug = () => {
+  if (typeof window === "undefined") return false;
+  return new URLSearchParams(window.location.search).get("debugSky") === "1";
+};
 
 export const SkyWindow = ({
   top = 4,
@@ -27,7 +35,9 @@ export const SkyWindow = ({
   branchLeft = false,
   branchRight = true,
   glassTint,
+  debugLabel,
 }: SkyWindowProps) => {
+  const debug = isDebug();
   const style: React.CSSProperties = {
     position: "absolute",
     top: `${top}%`,
@@ -36,25 +46,25 @@ export const SkyWindow = ({
     left: `${left}%`,
     overflow: "hidden",
     pointerEvents: "none",
-    // Feather the edges so animation blends with the baked window frame
-    WebkitMaskImage:
-      "radial-gradient(ellipse at center, #000 62%, transparent 100%)",
-    maskImage:
-      "radial-gradient(ellipse at center, #000 62%, transparent 100%)",
-    zIndex: 2,
+    WebkitMaskImage: debug
+      ? undefined
+      : "radial-gradient(ellipse at center, #000 62%, transparent 100%)",
+    maskImage: debug
+      ? undefined
+      : "radial-gradient(ellipse at center, #000 62%, transparent 100%)",
+    zIndex: debug ? 60 : 2,
+    outline: debug ? "2px dashed #ff2d55" : undefined,
+    outlineOffset: debug ? "-2px" : undefined,
+    background: debug ? "rgba(255,45,85,0.18)" : undefined,
   };
 
   return (
-    <div aria-hidden style={style}>
-      {/* Drifting clouds (two layers, different speeds) */}
+    <div aria-hidden style={style} data-sky-window={debugLabel ?? ""}>
       <div className="bay-hero-clouds layer-b" />
       <div className="bay-hero-clouds" />
-      {/* Rare distant lightning */}
       <div className="bay-hero-lightning" />
       <div className="bay-hero-lightning layer-b" />
-      {/* Cloud shadow drift */}
       <div className="bay-hero-shadow" />
-      {/* Optional swaying branches */}
       {branchLeft && <div className="bay-hero-branch left" />}
       {branchRight && <div className="bay-hero-branch right" />}
       {glassTint && (
@@ -68,6 +78,25 @@ export const SkyWindow = ({
           }}
         />
       )}
+      {debug && (
+        <div
+          style={{
+            position: "absolute",
+            top: 4,
+            left: 6,
+            font: "600 10px/1.2 ui-monospace,monospace",
+            letterSpacing: "0.14em",
+            color: "#fff",
+            background: "#ff2d55",
+            padding: "2px 6px",
+            borderRadius: 2,
+            textTransform: "uppercase",
+          }}
+        >
+          SKY · {debugLabel ?? `${top}/${right}/${bottom}/${left}`}
+        </div>
+      )}
     </div>
   );
 };
+
