@@ -258,31 +258,34 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
         <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.18)_0%,transparent_65%)]" />
 
-        {/* SINE~WaiV shield emblem — set into the polished rotunda floor,
-            centered on the lit ring. Multi-pass composite: engraved shadow
-            below, colored crest fill, warm rim highlight, and a soft glow
-            pool so it reads as a real inlaid architectural emblem. */}
+        {/* SINE~WaiV shield — engraved directly into the polished concrete.
+            Pure etch: dark inset carve + subtle top-lit rim highlight. No
+            color fill, no glow pool, no border. Just chiseled stone. */}
         <div
           aria-hidden
           className="absolute left-1/2 pointer-events-none"
           style={{
-            bottom: "6%",
-            width: "min(34%, 460px)",
+            bottom: "4%",
+            width: "min(62%, 780px)",
             aspectRatio: "1550 / 640",
             transform: "translateX(-50%) perspective(1100px) rotateX(64deg)",
             transformOrigin: "50% 100%",
           }}
         >
-          {/* Soft blue glow pool under the crest — floor light bloom */}
-          <div
-            className="absolute -inset-x-8 -inset-y-6"
+          {/* Recessed dark carve — the depth of the engraving */}
+          <img
+            src={sineWaivLogo.url}
+            alt=""
+            draggable={false}
+            className="absolute inset-0 w-full h-full object-contain"
             style={{
-              background:
-                "radial-gradient(ellipse 60% 55% at 50% 55%, rgba(80,160,230,0.22) 0%, transparent 70%)",
-              mixBlendMode: "screen",
+              opacity: 0.85,
+              mixBlendMode: "multiply",
+              filter: "grayscale(1) brightness(0.15) contrast(1.4) blur(0.6px)",
+              transform: "translateY(1.5px)",
             }}
           />
-          {/* Deep drop shadow — grounds the emblem on the floor */}
+          {/* Bright rim highlight — top edge catching the dome light */}
           <img
             src={sineWaivLogo.url}
             alt=""
@@ -290,33 +293,21 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
             className="absolute inset-0 w-full h-full object-contain"
             style={{
               opacity: 0.55,
+              mixBlendMode: "screen",
+              filter: "grayscale(1) brightness(1.8) contrast(1.3)",
+              transform: "translateY(-1.5px)",
+            }}
+          />
+          {/* Soft inner shadow to seat the carve into the stone */}
+          <img
+            src={sineWaivLogo.url}
+            alt=""
+            draggable={false}
+            className="absolute inset-0 w-full h-full object-contain"
+            style={{
+              opacity: 0.4,
               mixBlendMode: "multiply",
-              filter: "grayscale(1) brightness(0.25) blur(3px)",
-              transform: "translateY(6px) scale(1.02)",
-            }}
-          />
-          {/* Main crest — full color, slightly muted to sit into the floor */}
-          <img
-            src={sineWaivLogo.url}
-            alt=""
-            draggable={false}
-            className="absolute inset-0 w-full h-full object-contain"
-            style={{
-              opacity: 0.92,
-              filter: "contrast(1.05) saturate(1.1) brightness(0.95) drop-shadow(0 2px 4px rgba(0,0,0,0.6))",
-            }}
-          />
-          {/* Warm rim highlight — chiseled edge catching dome light */}
-          <img
-            src={sineWaivLogo.url}
-            alt=""
-            draggable={false}
-            className="absolute inset-0 w-full h-full object-contain"
-            style={{
-              opacity: 0.35,
-              mixBlendMode: "overlay",
-              filter: "brightness(1.6) contrast(1.2)",
-              transform: "translateY(-1px)",
+              filter: "grayscale(1) brightness(0.4) blur(2px)",
             }}
           />
         </div>
