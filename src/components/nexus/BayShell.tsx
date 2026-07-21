@@ -47,6 +47,10 @@ interface Props {
   accent?: string;
   /** Show the premium accent + ambient lighting console on the hero. */
   lightingControls?: boolean;
+  /** Rect (in %) of the visible window/glass area in the hero. Sky
+   *  animations (clouds, lightning, branches) are clipped to this box so
+   *  the outdoors feels alive without leaking into the interior. */
+  windowRect?: { top?: number; right?: number; bottom?: number; left?: number; branchLeft?: boolean; branchRight?: boolean };
   onOpenVault: () => void;
   onContact: () => void;
 }
