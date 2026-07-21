@@ -151,6 +151,11 @@ export const BayShell = ({
         />
         {/* Living exterior — subtle sky-life ambient, never paints clouds through the room */}
         <div aria-hidden className="bay-exterior-life" />
+        {/* Storm clouds — occasional cumulonimbus drifting across the sky band */}
+        <div aria-hidden className="sky-storm-band">
+          <div className="bay-hero-storm" />
+          <div className="bay-hero-storm layer-b" />
+        </div>
         {/* Drifting clouds + distant lightning, clipped to the sky/window band of the hero */}
         <SkyWindow
           top={windowRect?.top ?? 2}
