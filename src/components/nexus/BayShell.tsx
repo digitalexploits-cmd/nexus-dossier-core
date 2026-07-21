@@ -128,19 +128,26 @@ export const BayShell = ({
   return (
     <div className="relative">
       {/* ============ HERO — cinematic, stable, uncluttered ============ */}
-      <section className="relative min-h-screen w-full overflow-hidden bg-[#05070a]">
+      <section
+        className="relative min-h-screen w-full overflow-hidden bg-[#05070a]"
+        style={{ ["--bay-accent" as any]: accent, ["--bay-hero-b" as any]: ambientBrightness.toFixed(3) }}
+      >
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_55%_45%,#111d2e_0%,#080c14_75%)]" />
         <img
           src={heroImage}
           alt={`${bayMeta.title} — immersive environment`}
-          className={`absolute inset-0 w-full h-full object-cover contrast-[1.04] saturate-[1.10] transition-opacity duration-700 ease-out ${heroLoaded ? "opacity-100" : "opacity-0"}`}
-          style={{ filter: `brightness(${ambientBrightness.toFixed(3)}) contrast(1.04) saturate(1.10)` }}
+          className={`bay-hero-img absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-out ${heroLoaded ? "opacity-100" : "opacity-0"}`}
           draggable={false}
           loading="eager"
           decoding="async"
           onLoad={() => setHeroLoaded(true)}
           onError={() => setHeroLoaded(true)}
         />
+        {/* Living outside environment — drifting atmosphere, light shafts, dust motes */}
+        <div aria-hidden className="bay-hero-atmos" />
+        <div aria-hidden className="bay-hero-shaft" />
+        <div aria-hidden className="bay-hero-motes" />
+        <div aria-hidden className="bay-hero-scan" />
         {/* Legibility overlays — quiet, do not clutter */}
         <div className="absolute inset-x-0 top-0 h-[45%] pointer-events-none bg-[linear-gradient(180deg,rgba(4,8,16,0.55)_0%,rgba(4,8,16,0.15)_60%,transparent_100%)]" />
         <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-background/50 to-transparent" />
@@ -163,6 +170,7 @@ export const BayShell = ({
             boxShadow: `0 0 24px ${accent}${accentA(160)}`,
           }}
         />
+
 
 
 
