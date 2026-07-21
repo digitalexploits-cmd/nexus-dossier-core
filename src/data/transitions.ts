@@ -28,6 +28,17 @@ export const TRANSITION_POOL: TransitionPiece[] = [
     video: "/__l5e/assets-v1/319d60ea-3f7a-4bee-a1b4-1380e1d1b856/grok_video_2026-07-20-16-11-58.mp4",
     tag: "GATEWAY · RISE",
   },
+  {
+    id: "rig-pulse",
+    video: "/__l5e/assets-v1/79923186-a9fc-4fe1-9081-65053a26d215/transition-rig.mp4",
+    tag: "COMPUTE · IGNITION",
+  },
+  {
+    id: "salute-orbit",
+    video: "/__l5e/assets-v1/65ee462e-0ebb-4229-882a-75fa94d348b1/transition-salute.mp4",
+    tag: "STANDARD · SALUTE",
+  },
+
 
   // Legacy still-image approaches — kept in rotation until the video library reaches 12.
   { id: "still-rotunda",    image: "/media/transitions/transition-rotunda.jpg",    tag: "ATRIUM APPROACH" },
