@@ -18,12 +18,8 @@ const STILL_DURATION_MS = 5000;
 const MAX_TRANSIT_MS = 30000;
 
 export const TRANSITION_POOL: TransitionPiece[] = [
-  {
-    id: "fireworks-4th",
-    video: "/__l5e/assets-v1/df935555-91eb-4b14-96e9-695bf71e9c43/Best_July_4_Vid.mp4",
-    tag: "INDEPENDENCE · FLARE",
-    durationMs: 29000,
-  },
+  // NOTE: Best_July_4_Vid.mp4 is reserved as the site intro — not used as a transition.
+
   {
     id: "arch-approach-1",
     video: "/__l5e/assets-v1/29ae399e-c1e5-4576-9ca5-f156c780d5f1/grok_video_2026-07-14-17-30-48.mp4",
