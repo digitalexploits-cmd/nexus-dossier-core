@@ -50,6 +50,16 @@ const VIEW_HASH: Record<View, string> = {
   operations: "#operations",
 };
 
+// Cinematic transition stills — hidden-in-plain-sight approaches per destination.
+const TRANSITION_BG: Record<View | "vault", string> = {
+  home:       "/media/transitions/transition-rotunda.jpg",
+  mission:    "/media/transitions/transition-mission.jpg",
+  technical:  "/media/transitions/transition-technical.jpg",
+  capability: "/media/transitions/transition-capability.jpg",
+  operations: "/media/transitions/transition-operations.jpg",
+  vault:      "/media/transitions/transition-vault.jpg",
+};
+
 const hashToView = (h: string): View => {
   const clean = h.replace("#", "");
   if (["mission", "technical", "capability", "operations"].includes(clean)) return clean as View;
@@ -64,7 +74,8 @@ const Index = () => {
   const [introDone, setIntroDone] = useState(() => {
     try { return sessionStorage.getItem("nexus:intro") === "done"; } catch { return false; }
   });
-  const [transition, setTransition] = useState<{ label: string; kind: TransitionKind } | null>(null);
+  const [transition, setTransition] = useState<{ label: string; kind: TransitionKind; bgImage?: string } | null>(null);
+
 
   const syncFromHash = useCallback(() => {
     const h = window.location.hash;
@@ -100,25 +111,36 @@ const Index = () => {
   // Curtain (see BayTransition + @keyframes bay-curtain) peaks at ~35% of 1400ms ≈ 490ms.
   // Swap the underlying view at peak so the curtain covers the change, then let the
   // overlay play its reveal-out half and self-clear via onDone.
-  const runTransition = useCallback((label: string, kind: TransitionKind, next: View) => {
+  const runTransition = useCallback((label: string, kind: TransitionKind, next: View, bgImage?: string) => {
     if (prefersReducedMotion()) { commitView(next); return; }
-    setTransition({ label, kind });
+    setTransition({ label, kind, bgImage });
     window.setTimeout(() => { commitView(next); }, 490);
   }, [commitView]);
 
   const goHome = useCallback(() => {
     if (view === "home") return;
-    runTransition("ROTUNDA", "retreat", "home");
+    runTransition("ROTUNDA", "retreat", "home", TRANSITION_BG.home);
   }, [view, runTransition]);
 
   const goBay = useCallback((id: BayId) => {
     if (view === id) return;
-    runTransition(bayLabel(id), "advance", id);
+    runTransition(bayLabel(id), "advance", id, TRANSITION_BG[id]);
   }, [view, runTransition]);
 
   const openVault = useCallback(() => {
-    setVaultOpen(true);
+    if (prefersReducedMotion()) { setVaultOpen(true); return; }
+    setTransition({ label: "EVIDENCE VAULT", kind: "advance", bgImage: TRANSITION_BG.vault });
+    window.setTimeout(() => { setVaultOpen(true); }, 490);
   }, []);
+
+  const closeVault = useCallback((open: boolean) => {
+    if (open) { setVaultOpen(true); return; }
+    if (prefersReducedMotion()) { setVaultOpen(false); return; }
+    const label = view === "home" ? "ROTUNDA" : bayLabel(view as BayId);
+    const bg = view === "home" ? TRANSITION_BG.home : TRANSITION_BG[view as BayId];
+    setTransition({ label, kind: "retreat", bgImage: bg });
+    window.setTimeout(() => { setVaultOpen(false); }, 490);
+  }, [view]);
 
   const goContact = useCallback(() => {
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -188,7 +210,7 @@ const Index = () => {
       <BottomBar />
       <EvidenceVault
         open={vaultOpen}
-        onOpenChange={setVaultOpen}
+        onOpenChange={closeVault}
         onReturnToRotunda={goHome}
       />
 
@@ -196,6 +218,7 @@ const Index = () => {
         <BayTransition
           label={transition.label}
           kind={transition.kind}
+          bgImage={transition.bgImage}
           onDone={() => setTransition(null)}
         />
       )}
