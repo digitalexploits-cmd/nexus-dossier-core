@@ -9,6 +9,10 @@ import { BayTransition, type TransitionKind } from "@/components/nexus/BayTransi
 import { Button } from "@/components/ui/button";
 import { BAYS, type BayId } from "@/data/content";
 import { pickTransition, transitionDuration, transitionSwapMs } from "@/data/transitions";
+import heroMissionVid    from "../../public/media/hero-mission.mp4.asset.json";
+import heroTechnicalVid  from "../../public/media/hero-technical.mp4.asset.json";
+import heroCapabilityVid from "../../public/media/hero-capability.mp4.asset.json";
+import heroOperationsVid from "../../public/media/hero-operations.mp4.asset.json";
 
 import { prefersReducedMotion } from "@/lib/audio";
 
@@ -21,10 +25,6 @@ const HERO_IMAGES: Record<BayId, string> = {
 };
 
 // Ambient looping hero videos — outside environment is alive.
-import heroMissionVid    from "../../public/media/hero-mission.mp4.asset.json";
-import heroTechnicalVid  from "../../public/media/hero-technical.mp4.asset.json";
-import heroCapabilityVid from "../../public/media/hero-capability.mp4.asset.json";
-import heroOperationsVid from "../../public/media/hero-operations.mp4.asset.json";
 const HERO_VIDEOS: Record<BayId, string> = {
   mission:    heroMissionVid.url,
   technical:  heroTechnicalVid.url,
