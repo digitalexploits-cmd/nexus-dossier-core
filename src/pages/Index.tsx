@@ -173,35 +173,16 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <TopBar view={viewLabel} />
+      <TopBar
+        view={viewLabel}
+        currentBay={view}
+        onHome={goHome}
+        onBay={goBay}
+        onOpenVault={openVault}
+      />
 
-      {view !== "home" && (
-        <div className="fixed top-12 inset-x-0 z-30 border-b border-border/60 bg-background/70 backdrop-blur-md">
-          <div className="container h-10 flex items-center justify-between">
-            <button onClick={goHome} className="mono text-xs tracking-widest text-muted-foreground hover:text-foreground">
-              ← RETURN TO ROTUNDA
-            </button>
-            <div className="hidden md:flex gap-2">
-              {BAYS.map((b) => (
-                <button
-                  key={b.id}
-                  onClick={() => goBay(b.id)}
-                  className={`bay-hover-glow mono text-[0.65rem] tracking-widest px-2 py-1 border ${
-                    view === b.id ? "border-primary text-primary bg-primary/10" : "border-border/60 text-muted-foreground"
-                  }`}
-                >
-                  {b.index} · {b.title.toUpperCase()}
-                </button>
-              ))}
-            </div>
-            <Button variant="ghost" size="sm" onClick={openVault} className="mono text-[0.65rem] tracking-widest">
-              EVIDENCE VAULT
-            </Button>
-          </div>
-        </div>
-      )}
+      <main>
 
-      <main className={view !== "home" ? "pt-10" : ""}>
         {view === "home" && <Rotunda onSelect={goBay} onOpenVault={openVault} />}
         {view !== "home" && (
           <div key={view} className="anim-bay-enter">
