@@ -108,20 +108,11 @@ export const BayTransition = ({ label, kind, bgImage, bgVideo, code, tag, durati
   const ease = "cubic-bezier(0.22,1,0.36,1)";
   const flavorAnim = `${flavor.name} ${dur} ${ease} forwards`;
 
-  const BLEND_IN_MS = 320;
-  const BLEND_OUT_MS = 420;
-  const blendOutDelay = Math.max(0, DURATION - BLEND_OUT_MS);
-
   return (
     <div
       className="fixed inset-0 z-[90] pointer-events-none overflow-hidden"
-      style={{
-        animation: reduced
-          ? "intro-fade-in 300ms ease-out forwards"
-          : `transit-blend-in ${BLEND_IN_MS}ms ease-out forwards, transit-blend-out ${BLEND_OUT_MS}ms ease-in ${blendOutDelay}ms forwards`,
-      }}
+      style={{ animation: reduced ? "intro-fade-in 300ms ease-out forwards" : undefined }}
     >
-
       {/* Curtain — very brief blackout only long enough to hide the swap */}
       <div
         className="absolute inset-0 bg-[#04060a]"

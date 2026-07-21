@@ -241,9 +241,9 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         <img
           src={ROTUNDA_HERO}
           alt="Nexus rotunda panorama"
-          draggable={false}
-          className="block max-w-none h-[100dvh] md:h-[135dvh] w-auto object-cover"
+          className="block max-w-none h-[100dvh] md:h-[135dvh] w-auto"
           style={{ filter: "brightness(1.08) contrast(1.06) saturate(1.10)" }}
+          draggable={false}
           onLoad={measure}
         />
 
