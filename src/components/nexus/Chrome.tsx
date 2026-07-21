@@ -1,5 +1,5 @@
 import { BRAND, BAYS, type BayId } from "@/data/content";
-import { Target, Waves, LayoutGrid, Radar, Lock } from "lucide-react";
+import { Target, Waves, LayoutGrid, Radar, Lock, Compass } from "lucide-react";
 
 interface TopBarProps {
   view: string;
@@ -56,6 +56,26 @@ export const TopBar = ({ view, currentBay = "home", onHome, onBay, onOpenVault }
             className="flex items-center gap-1 sm:gap-1.5"
             aria-label="Nexus navigation"
           >
+            {onHome && (
+              <>
+                <button
+                  onClick={onHome}
+                  disabled={currentBay === "home"}
+                  aria-label="Return to Rotunda"
+                  aria-current={currentBay === "home" ? "page" : undefined}
+                  title="Rotunda"
+                  className={`bay-hover-glow relative flex flex-col items-center justify-center gap-0.5 px-1.5 py-1 min-w-[3.25rem] border transition-colors touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 ${
+                    currentBay === "home"
+                      ? "border-primary text-primary bg-primary/15 shadow-[0_0_16px_rgba(70,150,255,0.35)] cursor-default"
+                      : "border-border/50 text-muted-foreground hover:text-primary hover:border-primary/60"
+                  }`}
+                >
+                  <Compass size={16} strokeWidth={1.75} />
+                  <span className="mono text-[0.5rem] tracking-[0.18em] leading-none">ROTUNDA</span>
+                </button>
+                <div className="h-8 w-px bg-primary/25 mx-0.5" aria-hidden />
+              </>
+            )}
             {onBay && BAYS.map((b) => {
               const Icon = BAY_ICONS[b.id];
               const active = currentBay === b.id;
