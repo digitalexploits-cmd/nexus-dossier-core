@@ -365,9 +365,47 @@ export const BayShell = ({
         )}
 
         {!activeCategory && (
-          <div className="text-center py-10">
-            <div className="mono text-[0.6rem] tracking-[0.32em] uppercase text-[#8fa3b8]">
-              SELECT A CATEGORY ABOVE
+          <div
+            className="relative rounded-sm border backdrop-blur-md px-5 py-6 md:px-8 md:py-8 overflow-hidden"
+            style={{
+              borderColor: "rgba(130,205,255,0.22)",
+              background: "linear-gradient(180deg,rgba(14,26,44,0.55),rgba(8,14,24,0.72))",
+            }}
+          >
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 top-0 h-[1px]"
+              style={{ background: `linear-gradient(90deg, transparent, ${accent}88, transparent)` }}
+            />
+            <div className="flex items-baseline justify-between mb-4 flex-wrap gap-2">
+              <div className="mono text-[0.6rem] tracking-[0.32em] uppercase" style={{ color: accent }}>
+                AT A GLANCE
+              </div>
+              <div className="mono text-[0.55rem] tracking-[0.24em] uppercase text-[#8fa3b8]">
+                TAP ANY CATEGORY TO REVEAL
+              </div>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+              {content.categories.map((c) => {
+                const count = c.assets?.length ?? 0;
+                return (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => onCategoryClick(c)}
+                    className="interactive group flex items-center gap-2 rounded-sm border px-2.5 py-2 text-left transition-all duration-200 hover:border-[color:var(--bay-accent)]"
+                    style={{ borderColor: "rgba(130,205,255,0.18)", background: "rgba(8,14,24,0.55)" }}
+                  >
+                    <span style={{ color: accent }} className="shrink-0">
+                      <CategoryIcon name={c.icon} />
+                    </span>
+                    <span className="text-[0.78rem] text-[#dbe6f2] truncate">{c.label}</span>
+                    <span className="ml-auto mono text-[0.55rem] tracking-[0.2em] tabular-nums text-[#8fa3b8]">
+                      {c.action ? "→" : count.toString().padStart(2, "0")}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}
