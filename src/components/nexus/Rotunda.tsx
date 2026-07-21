@@ -293,6 +293,61 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           }}
         />
 
+        {/* Etched-in-concrete floor emblem — SINE~WaiV crest embossed into the
+            rotunda floor. Perspective-tilted, low-opacity, blended so it reads
+            as milled/engraved stone rather than a pasted graphic. */}
+        <div
+          aria-hidden
+          className="absolute left-1/2 pointer-events-none"
+          style={{
+            bottom: "3%",
+            width: "min(58%, 780px)",
+            aspectRatio: "1550 / 640",
+            transform: "translateX(-50%) perspective(900px) rotateX(62deg)",
+            transformOrigin: "50% 100%",
+          }}
+        >
+          {/* Engraved fill — desaturated, low opacity, soft-light blend */}
+          <img
+            src={sineWaivLogo.url}
+            alt=""
+            draggable={false}
+            className="absolute inset-0 w-full h-full object-contain"
+            style={{
+              opacity: 0.22,
+              mixBlendMode: "soft-light",
+              filter: "grayscale(1) contrast(1.15) brightness(0.9)",
+            }}
+          />
+          {/* Highlight pass — thin warm rim to fake chiseled edges */}
+          <img
+            src={sineWaivLogo.url}
+            alt=""
+            draggable={false}
+            className="absolute inset-0 w-full h-full object-contain"
+            style={{
+              opacity: 0.18,
+              mixBlendMode: "overlay",
+              filter: "grayscale(1) brightness(1.4) contrast(1.3)",
+              transform: "translateY(-1px)",
+            }}
+          />
+          {/* Shadow pass — deep inset shadow below to fake depth */}
+          <img
+            src={sineWaivLogo.url}
+            alt=""
+            draggable={false}
+            className="absolute inset-0 w-full h-full object-contain"
+            style={{
+              opacity: 0.35,
+              mixBlendMode: "multiply",
+              filter: "grayscale(1) brightness(0.35) blur(0.6px)",
+              transform: "translateY(1.5px)",
+            }}
+          />
+        </div>
+
+
         {/* Synthetic Vault doorway — scales down on mobile so it never crops */}
         <div
           className="absolute top-[46%] pointer-events-none"
