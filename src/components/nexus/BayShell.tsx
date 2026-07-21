@@ -21,6 +21,7 @@ import { AssetViewer } from "./AssetViewer";
 import { MediaConsole } from "./MediaConsole";
 import { BayCanon } from "./BayCanon";
 import { DocumentShelf } from "./DocumentShelf";
+import { SkyWindow } from "./SkyWindow";
 import llcCert from "@/assets/ai-base3-llc-certificate.jpg.asset.json";
 import whiteHouseLetter from "@/assets/white-house-letter.jpg.asset.json";
 
