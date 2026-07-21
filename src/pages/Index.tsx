@@ -8,6 +8,7 @@ import { IntroOverlay } from "@/components/nexus/IntroOverlay";
 import { BayTransition, type TransitionKind } from "@/components/nexus/BayTransition";
 
 import { BAYS, type BayId } from "@/data/content";
+import { pickTransition } from "@/data/transitions";
 
 
 import { prefersReducedMotion } from "@/lib/audio";
