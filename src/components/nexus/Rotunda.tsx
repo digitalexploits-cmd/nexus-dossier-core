@@ -257,25 +257,38 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
         <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.18)_0%,transparent_65%)]" />
 
-        {/* Mask baked-in kiosk gibberish: heavy navy scrim across the bottom
-            band where the hallucinated typography sits, feathered so the
-            floor and architecture read as intentional shadow, not censoring. */}
+        {/* Mask baked-in kiosk gibberish ("SELECT OBJECTIVE / 01 MISSION BRIEF"
+            etc. that the hero image was generated with). Opaque bottom band
+            with a feathered top so it reads as an intentional dark console
+            counter, not a censoring rectangle. */}
         <div
           aria-hidden
           className="absolute inset-x-0 bottom-0 pointer-events-none"
           style={{
-            height: "38%",
+            height: "42%",
             background:
-              "linear-gradient(to top, rgba(4,8,16,0.96) 0%, rgba(6,12,24,0.85) 32%, rgba(8,16,28,0.55) 62%, transparent 100%)",
+              "linear-gradient(to top, #04070d 0%, #04070d 38%, rgba(6,12,24,0.92) 58%, rgba(8,16,28,0.6) 82%, transparent 100%)",
           }}
         />
+        {/* Secondary tight scrim centered on the baked kiosk row */}
         <div
           aria-hidden
-          className="absolute left-[8%] right-[8%] bottom-[6%] h-[18%] pointer-events-none"
+          className="absolute left-0 right-0 bottom-[4%] h-[24%] pointer-events-none"
           style={{
             background:
-              "radial-gradient(ellipse at 50% 60%, rgba(2,4,8,0.85) 0%, rgba(2,4,8,0.55) 45%, transparent 78%)",
-            filter: "blur(12px)",
+              "radial-gradient(ellipse at 50% 55%, rgba(2,4,8,0.98) 0%, rgba(2,4,8,0.85) 55%, transparent 90%)",
+            filter: "blur(8px)",
+          }}
+        />
+        {/* Gold hairline capping the new "console counter" so the mask reads as architecture */}
+        <div
+          aria-hidden
+          className="absolute inset-x-0 pointer-events-none"
+          style={{
+            bottom: "42%",
+            height: "1px",
+            background:
+              "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.15) 20%, rgba(212,175,55,0.55) 50%, rgba(212,175,55,0.15) 80%, transparent 100%)",
           }}
         />
 
