@@ -119,11 +119,17 @@ const Index = () => {
   }, []);
 
   // Curtain covers the underlying swap; swap time is derived per-piece from its runtime.
+  // Returning visitors (same session) get a fast-path transit so re-navigation isn't blocked.
   const runTransition = useCallback((label: string, kind: TransitionKind, next: View, code?: string) => {
     if (prefersReducedMotion()) { commitView(next); return; }
     const piece = pickTransition();
-    setTransition({ label, kind, bgImage: piece.image, bgVideo: piece.video, code, tag: piece.tag, durationMs: transitionDuration(piece) });
-    window.setTimeout(() => { commitView(next); }, transitionSwapMs(piece));
+    const seen = (() => { try { return window.sessionStorage.getItem("nexus.seenTransit") === "1"; } catch { return false; } })();
+    try { window.sessionStorage.setItem("nexus.seenTransit", "1"); } catch {}
+    const fullDuration = transitionDuration(piece);
+    const duration = seen ? Math.min(fullDuration, 1800) : fullDuration;
+    const swap = seen ? Math.min(transitionSwapMs(piece), 900) : transitionSwapMs(piece);
+    setTransition({ label, kind, bgImage: piece.image, bgVideo: piece.video, code, tag: piece.tag, durationMs: duration });
+    window.setTimeout(() => { commitView(next); }, swap);
   }, [commitView]);
 
   const goHome = useCallback(() => {
