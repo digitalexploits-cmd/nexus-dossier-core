@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Claim Strength vs Evidence — Instrument</title>
+<style>
+  :root { --bg:#060a12; --panel:#0d1522; --gold:#d4af37; --text:#d0d8e4; --muted:#7a8ba0; --red:#c45c5c; --green:#4caf82; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--text); font-family:ui-monospace, SFMono-Regular, Menlo, monospace; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:1.5rem; }
+  .box { width:100%; max-width:720px; background:var(--panel); border:1px solid #1c2a3d; border-radius:4px; overflow:hidden; }
+  header { padding:1rem 1.25rem; border-bottom:1px solid #1c2a3d; display:flex; justify-content:space-between; align-items:center; }
+  header h1 { font-size:0.9rem; color:var(--gold); letter-spacing:0.1em; }
+  .body { padding:1.5rem; }
+  .row { margin-bottom:1.4rem; }
+  label { display:block; font-size:0.65rem; color:var(--muted); letter-spacing:0.08em; margin-bottom:0.45rem; text-transform:uppercase; }
+  select, textarea { width:100%; background:#080e18; border:1px solid #243044; color:var(--text); padding:0.7rem; font-family:inherit; font-size:0.85rem; border-radius:3px; }
+  textarea { height:90px; resize:vertical; }
+  .meter { height:14px; background:#0a101c; border-radius:2px; overflow:hidden; margin-top:0.5rem; position:relative; }
+  .meter-fill { height:100%; width:0%; transition:width 0.4s ease, background 0.4s; }
+  .verdict { margin-top:1.2rem; padding:1rem; border-left:3px solid var(--gold); background:rgba(212,175,55,0.05); font-size:0.85rem; line-height:1.5; min-height:70px; }
+  .verdict.bad { border-color:var(--red); background:rgba(196,92,92,0.06); }
+  .verdict.good { border-color:var(--green); background:rgba(76,175,130,0.06); }
+  footer { padding:0.7rem 1.25rem; border-top:1px solid #1c2a3d; font-size:0.65rem; color:var(--muted); display:flex; justify-content:space-between; }
+</style>
+</head>
+<body>
+  <div class="box">
+    <header>
+      <h1>CLAIM STRENGTH vs EVIDENCE</h1>
+      <span style="font-size:0.7rem;color:var(--muted)">LIVE DISCIPLINE CHECK</span>
+    </header>
+    <div class="body">
+      <div class="row">
+        <label>Evidence Category Behind the Claim</label>
+        <select id="evidence">
+          <option value="5">5 — Speculation</option>
+          <option value="4">4 — Working Hypothesis</option>
+          <option value="3">3 — Engineering Observation</option>
+          <option value="2">2 — Experimental Result</option>
+          <option value="1">1 — Validated Result</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>Proposed Public or Proposal Language</label>
+        <textarea id="claim" placeholder="Paste or type the claim language here..."></textarea>
+      </div>
+      <div class="row">
+        <label>Claim Strength Meter</label>
+        <div class="meter"><div class="meter-fill" id="fill"></div></div>
+      </div>
+      <div class="verdict" id="verdict">Select evidence level and enter a claim to evaluate discipline match.</div>
+    </div>
+    <footer>
+      <span>AI Base³ • NEXUS • Review-safe guard</span>
+      <span>Stronger evidence required for stronger language</span>
+    </footer>
+  </div>
+<script>
+const evidence = document.getElementById('evidence');
+const claim = document.getElementById('claim');
+const fill = document.getElementById('fill');
+const verdict = document.getElementById('verdict');
+
+const strongWords = ['proven','guarantees','always','definitively','revolutionary','solves','eliminates','never fails','complete observability','universal'];
+const mediumWords = ['demonstrates','significantly improves','highly effective','robust','superior'];
+const safeWords = ['designed to evaluate','under validation','preliminary','investigates','aims to','bounded','Phase I will determine'];
+
+function evaluate() {
+  const level = parseInt(evidence.value);
+  const text = claim.value.toLowerCase();
+  let strength = 0;
+  let flags = [];
+
+  strongWords.forEach(w => { if (text.includes(w)) { strength += 3; flags.push(w); } });
+  mediumWords.forEach(w => { if (text.includes(w)) { strength += 1.5; } });
+  safeWords.forEach(w => { if (text.includes(w)) { strength -= 1; } });
+
+  strength = Math.max(0, Math.min(10, strength + (5 - level)));
+  const pct = Math.min(100, strength * 12);
+  fill.style.width = pct + '%';
+
+  if (level >= 4 && strength > 3) {
+    fill.style.background = '#c45c5c';
+    verdict.className = 'verdict bad';
+    verdict.innerHTML = '<strong>Discipline violation risk.</strong> High claim language with only ' + 
+      (level===5?'speculation':'hypothesis') + ' level evidence. Soften language or strengthen evidence before use.';
+  } else if (level <= 2 && strength < 4) {
+    fill.style.background = '#4caf82';
+    verdict.className = 'verdict good';
+    verdict.innerHTML = '<strong>Aligned.</strong> Language appears appropriately bounded for the stated evidence category.';
+  } else if (strength > 6) {
+    fill.style.background = '#c45c5c';
+    verdict.className = 'verdict bad';
+    verdict.innerHTML = '<strong>Over-claim detected.</strong> Contains strong absolute language (' + (flags[0]||'absolute terms') + '). Match to higher evidence or rewrite.';
+  } else {
+    fill.style.background = '#d4af37';
+    verdict.className = 'verdict';
+    verdict.innerHTML = 'Moderate tension. Review whether the language stays inside the evidence boundary before external use.';
+  }
+}
+evidence.onchange = evaluate;
+claim.oninput = evaluate;
+</script>
+</body>
+</html>

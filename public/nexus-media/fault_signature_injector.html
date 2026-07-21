@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fault Signature Injector — SINE~WaiV</title>
+<style>
+  :root {
+    --bg: #03060d;
+    --panel: #080e18;
+    --gold: #d4af37;
+    --text: #c5d0e0;
+    --muted: #5e6f86;
+    --line: #1a2536;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "SF Mono", "Fira Code", ui-monospace, monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.2rem;
+  }
+  .unit {
+    width: 100%;
+    max-width: 860px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .top {
+    padding: 0.85rem 1.2rem;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .top h1 {
+    font-size: 0.82rem;
+    color: var(--gold);
+    letter-spacing: 0.13em;
+  }
+  .scope-wrap {
+    height: 260px;
+    background: #02040a;
+    position: relative;
+  }
+  canvas { width: 100%; height: 100%; display: block; }
+  .controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .ctrl {
+    padding: 1rem 1.1rem;
+    border-right: 1px solid var(--line);
+  }
+  .ctrl:last-child { border-right: none; }
+  .ctrl label {
+    display: block;
+    font-size: 0.62rem;
+    color: var(--muted);
+    letter-spacing: 0.09em;
+    margin-bottom: 0.55rem;
+    text-transform: uppercase;
+  }
+  select, input[type=range] {
+    width: 100%;
+    background: #050a14;
+    border: 1px solid #1e2c40;
+    color: var(--text);
+    padding: 0.45rem;
+    font-family: inherit;
+    font-size: 0.78rem;
+    border-radius: 2px;
+  }
+  input[type=range] { accent-color: var(--gold); height: 4px; padding: 0; }
+  .val {
+    font-size: 0.85rem;
+    color: var(--gold);
+    margin-top: 0.35rem;
+  }
+  .bottom {
+    padding: 0.7rem 1.2rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.65rem;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+  }
+  .tag {
+    color: var(--gold);
+  }
+</style>
+</head>
+<body>
+  <div class="unit">
+    <div class="top">
+      <h1>FAULT SIGNATURE INJECTOR</h1>
+      <span style="font-size:0.68rem;color:var(--muted)">CURRENT DOMAIN • LIVE</span>
+    </div>
+    <div class="scope-wrap">
+      <canvas id="c"></canvas>
+    </div>
+    <div class="controls">
+      <div class="ctrl">
+        <label>Fault Type</label>
+        <select id="fault">
+          <option value="none">None (healthy)</option>
+          <option value="bearing">Bearing wear</option>
+          <option value="torque">Torque ripple</option>
+          <option value="load">Load variation</option>
+          <option value="mixed">Mixed industrial</option>
+        </select>
+      </div>
+      <div class="ctrl">
+        <label>Severity</label>
+        <input type="range" id="sev" min="0" max="100" value="45">
+        <div class="val" id="sevVal">45%</div>
+      </div>
+      <div class="ctrl">
+        <label>Noise Floor</label>
+        <input type="range" id="noise" min="0" max="100" value="35">
+        <div class="val" id="noiseVal">35%</div>
+      </div>
+    </div>
+    <div class="bottom">
+      <span>SINE~WaiV observes the modulated current, not the mechanical domain directly</span>
+      <span class="tag">UNDER VALIDATION</span>
+    </div>
+  </div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let w, h, phase = 0;
+
+function resize() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  w = canvas.width = rect.width * devicePixelRatio;
+  h = canvas.height = rect.height * devicePixelRatio;
+  ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+}
+window.addEventListener('resize', resize);
+resize();
+
+const faultEl = document.getElementById('fault');
+const sevEl = document.getElementById('sev');
+const noiseEl = document.getElementById('noise');
+const sevVal = document.getElementById('sevVal');
+const noiseVal = document.getElementById('noiseVal');
+
+sevEl.oninput = () => sevVal.textContent = sevEl.value + '%';
+noiseEl.oninput = () => noiseVal.textContent = noiseEl.value + '%';
+
+function draw() {
+  const width = canvas.offsetWidth;
+  const height = canvas.offsetHeight;
+  ctx.fillStyle = '#02040a';
+  ctx.fillRect(0, 0, width, height);
+
+  // subtle grid
+  ctx.strokeStyle = 'rgba(26,37,54,0.7)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < width; x += 36) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
+  }
+  for (let y = 0; y < height; y += 28) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
+  }
+
+  const fault = faultEl.value;
+  const sev = sevEl.value / 100;
+  const noise = noiseEl.value / 100;
+  phase += 0.045;
+
+  ctx.beginPath();
+  for (let x = 0; x < width; x++) {
+    let y = height / 2;
+
+    // fundamental
+    y += Math.sin(x * 0.035 + phase) * 16;
+
+    // fault modulations
+    if (fault === 'bearing' || fault === 'mixed') {
+      y += Math.sin(x * 0.19 + phase * 2.3) * 19 * sev;
+      y += Math.sin(x * 0.41 + phase * 1.1) * 7 * sev;
+    }
+    if (fault === 'torque' || fault === 'mixed') {
+      y += Math.sin(x * 0.09 + phase * 0.7) * 24 * sev;
+    }
+    if (fault === 'load' || fault === 'mixed') {
+      y += Math.sin(x * 0.015 + phase * 0.25) * 28 * sev;
+    }
+
+    // industrial noise
+    y += (Math.random() - 0.5) * 42 * noise;
+
+    if (x === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+
+  // color shifts with severity
+  const r = 90 + Math.floor(sev * 120);
+  const g = 110 + Math.floor(sev * 40);
+  const b = 160 - Math.floor(sev * 70);
+  ctx.strokeStyle = `rgb(${r},${g},${b})`;
+  ctx.lineWidth = 1.6;
+  ctx.stroke();
+
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+</body>
+</html>
