@@ -71,7 +71,7 @@ export const TopBar = ({ view, currentBay = "home", onHome, onBay, onOpenVault }
                   }`}
                 >
                   <Compass size={16} strokeWidth={1.75} />
-                  <span className="hidden sm:inline mono text-[0.5rem] tracking-[0.18em] leading-none">ROTUNDA</span>
+                  <span className="mono text-[0.5rem] sm:text-[0.55rem] tracking-[0.16em] leading-none">ROTUNDA</span>
                 </button>
                 <div className="h-8 w-px bg-primary/25 mx-0.5" aria-hidden />
               </>
@@ -93,7 +93,7 @@ export const TopBar = ({ view, currentBay = "home", onHome, onBay, onOpenVault }
                   }`}
                 >
                   <Icon size={16} strokeWidth={1.75} />
-                  <span className="hidden sm:inline mono text-[0.5rem] tracking-[0.18em] leading-none">{BAY_LABELS[b.id]}</span>
+                  <span className="mono text-[0.5rem] sm:text-[0.55rem] tracking-[0.16em] leading-none">{BAY_LABELS[b.id]}</span>
                 </button>
               );
             })}
@@ -107,7 +107,7 @@ export const TopBar = ({ view, currentBay = "home", onHome, onBay, onOpenVault }
                   className="bay-hover-glow flex flex-col items-center justify-center gap-0.5 px-1.5 py-1 min-w-[3.25rem] border border-primary/40 text-primary/90 hover:text-primary hover:border-primary/80 hover:bg-primary/10 transition-colors touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
                 >
                   <Lock size={16} strokeWidth={1.75} />
-                  <span className="hidden sm:inline mono text-[0.5rem] tracking-[0.18em] leading-none">VAULT</span>
+                  <span className="mono text-[0.5rem] sm:text-[0.55rem] tracking-[0.16em] leading-none">VAULT</span>
                 </button>
               </>
             )}
