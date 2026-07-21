@@ -293,3 +293,43 @@
   ::selection { background: hsl(var(--interactive) / 0.35); color: hsl(var(--foreground)); }
 }
 
+
+/* ============================================================
+   Instrument / Media interaction layer
+   Crosshair scan on open, slow drift on hero stills, gold glow.
+   ============================================================ */
+@layer utilities {
+  @keyframes crosshair-scan {
+    0%   { transform: translateX(-100%); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateX(100%); opacity: 0; }
+  }
+  .anim-crosshair-scan {
+    animation: crosshair-scan 1.3s ease-out 1 forwards;
+  }
+  @keyframes slow-drift {
+    0%   { transform: scale(1.02) translate3d(0,0,0); }
+    50%  { transform: scale(1.045) translate3d(-0.6%, -0.4%, 0); }
+    100% { transform: scale(1.02) translate3d(0,0,0); }
+  }
+  .anim-slow-drift { animation: slow-drift 18s ease-in-out infinite; }
+
+  @keyframes media-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .anim-media-fade { animation: media-fade-in 180ms ease-out both; }
+
+  @keyframes media-scale-in {
+    from { opacity: 0; transform: scale(0.985); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  .anim-media-scale { animation: media-scale-in 200ms ease-out both; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .anim-crosshair-scan, .anim-slow-drift, .anim-media-fade, .anim-media-scale {
+      animation: none !important;
+    }
+  }
+}
