@@ -348,6 +348,16 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
       {/* Drifting clouds through the dome oculus / upper glass — clipped, never inside */}
       <SkyWindow top={0} left={12} right={12} bottom={72} branchRight debugLabel="rotunda dome" />
 
+      {/* PREMIUM LIGHTING RIG — cinematic key/fill/rays/rim/bloom/grade */}
+      <div aria-hidden className="premium-lighting" style={{ ["--bay-accent" as any]: "#4db7ff" }}>
+        <div className="pl-key" />
+        <div className="pl-fill" />
+        <div className="pl-rays" />
+        <div className="pl-rim" />
+        <div className="pl-bloom" />
+        <div className="pl-grade" />
+      </div>
+
 
 
       {/* CAMERA-FIXED OVERLAYS */}

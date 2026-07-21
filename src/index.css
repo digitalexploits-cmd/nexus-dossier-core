@@ -1184,3 +1184,134 @@ button, [role="button"], a, .panel {
   .panel:hover { transform: none; }
   .premium-fade-in { animation: none; }
 }
+
+/* ============================================================
+   PREMIUM LIGHTING SYSTEM
+   Cinematic multi-layer lighting rig, themed per-room via
+   --bay-accent (falls back to precision-blue). Mount inside any
+   hero container by dropping <div class="premium-lighting" />.
+   Layers, from back to front:
+     · key   — soft breathing top-key light (warm→cool cycle)
+     · fill  — cool undertow ambient fill from below
+     · rays  — slow volumetric god rays sweeping across
+     · rim   — corner rim accents with slow luminance drift
+     · bloom — horizontal anamorphic streak that drifts
+     · grade — cinematic color grade + gentle vignette
+   ============================================================ */
+.premium-lighting {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  --pl-accent: var(--bay-accent, #4db7ff);
+  --pl-warm: #ffd8a8;
+  --pl-cool: #7fc9ff;
+}
+.premium-lighting > * {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+/* KEY — soft breathing overhead light, warm↔cool cycle */
+.pl-key {
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -6%, hsla(0,0%,100%,0.22) 0%, transparent 62%),
+    radial-gradient(ellipse 55% 40% at 30% -4%, var(--pl-warm) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 40% at 72% -4%, var(--pl-cool) 0%, transparent 65%);
+  mix-blend-mode: screen;
+  opacity: 0.35;
+  animation: pl-key-breathe 22s ease-in-out infinite alternate;
+  filter: blur(6px);
+}
+@keyframes pl-key-breathe {
+  0%   { opacity: 0.28; filter: blur(6px)  hue-rotate(-6deg); }
+  100% { opacity: 0.5;  filter: blur(10px) hue-rotate(8deg); }
+}
+
+/* FILL — cool ambient undertow lifting shadows from below */
+.pl-fill {
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 108%, color-mix(in oklab, var(--pl-accent) 55%, #0a1a2e) 0%, transparent 62%);
+  mix-blend-mode: screen;
+  opacity: 0.28;
+  animation: pl-fill-pulse 14s ease-in-out infinite alternate;
+}
+@keyframes pl-fill-pulse {
+  0%   { opacity: 0.2; }
+  100% { opacity: 0.42; }
+}
+
+/* RAYS — slow volumetric god rays sweeping */
+.pl-rays {
+  background:
+    repeating-linear-gradient(
+      100deg,
+      transparent 0px,
+      transparent 90px,
+      hsla(0,0%,100%,0.055) 92px,
+      hsla(0,0%,100%,0.055) 96px,
+      transparent 98px,
+      transparent 180px
+    );
+  mix-blend-mode: screen;
+  opacity: 0.55;
+  transform-origin: 50% -40%;
+  animation: pl-rays-sweep 42s linear infinite;
+  -webkit-mask-image: radial-gradient(ellipse 80% 65% at 50% 0%, #000 20%, transparent 78%);
+          mask-image: radial-gradient(ellipse 80% 65% at 50% 0%, #000 20%, transparent 78%);
+  filter: blur(1.2px);
+}
+@keyframes pl-rays-sweep {
+  0%   { transform: rotate(-2deg) translate3d(-4%, 0, 0); }
+  50%  { transform: rotate( 3deg) translate3d( 4%, 0, 0); }
+  100% { transform: rotate(-2deg) translate3d(-4%, 0, 0); }
+}
+
+/* RIM — cinematic corner accents with slow luminance drift */
+.pl-rim {
+  background:
+    radial-gradient(ellipse 40% 55% at 0% 55%,   color-mix(in oklab, var(--pl-accent) 85%, white) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 55% at 100% 55%, color-mix(in oklab, var(--pl-accent) 85%, white) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 18% at 50% 100%, color-mix(in oklab, var(--pl-accent) 70%, #ffb37a) 0%, transparent 62%);
+  mix-blend-mode: screen;
+  opacity: 0.22;
+  animation: pl-rim-drift 26s ease-in-out infinite alternate;
+  filter: blur(2px);
+}
+@keyframes pl-rim-drift {
+  0%   { opacity: 0.14; transform: translate3d(-0.4%, 0, 0); }
+  100% { opacity: 0.32; transform: translate3d( 0.4%, 0, 0); }
+}
+
+/* BLOOM — anamorphic horizontal streak drifting across the room */
+.pl-bloom {
+  top: 32%; bottom: auto; height: 6%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    color-mix(in oklab, var(--pl-accent) 60%, white) 40%,
+    hsla(0,0%,100%,0.9) 50%,
+    color-mix(in oklab, var(--pl-accent) 60%, white) 60%,
+    transparent 100%);
+  mix-blend-mode: screen;
+  filter: blur(14px);
+  opacity: 0.0;
+  animation: pl-bloom-drift 34s ease-in-out infinite;
+}
+@keyframes pl-bloom-drift {
+  0%, 100% { opacity: 0; transform: translate3d(-30%, 0, 0) scaleX(1); }
+  45%      { opacity: 0.55; transform: translate3d(10%, -4%, 0) scaleX(1.1); }
+  55%      { opacity: 0.55; transform: translate3d(20%, -4%, 0) scaleX(1.1); }
+}
+
+/* GRADE — final cinematic grade + vignette */
+.pl-grade {
+  background:
+    radial-gradient(ellipse 130% 110% at 50% 45%, transparent 55%, rgba(3,5,10,0.55) 100%),
+    linear-gradient(180deg, rgba(200,220,255,0.05) 0%, transparent 30%, transparent 70%, rgba(180,140,90,0.06) 100%);
+  mix-blend-mode: multiply;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pl-key, .pl-fill, .pl-rays, .pl-rim, .pl-bloom { animation: none !important; }
+}
+
