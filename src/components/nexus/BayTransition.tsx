@@ -59,8 +59,10 @@ const FLAVORS: readonly Flavor[] = [
 ] as const;
 
 /** Cinematic multi-stage transit sequence with HUD, telemetry, and dual scans. */
-export const BayTransition = ({ label, kind, bgImage, bgVideo, code, onDone }: Props) => {
+export const BayTransition = ({ label, kind, bgImage, bgVideo, code, tag, durationMs, onDone }: Props) => {
   const reduced = prefersReducedMotion();
+  const DURATION = Math.max(2400, Math.min(30000, durationMs ?? DEFAULT_DURATION));
+
 
   useEffect(() => {
     const t = setTimeout(onDone, reduced ? 320 : DURATION);
