@@ -579,5 +579,6 @@ export const BayCanon = ({ bayId }: { bayId: BayId }) => {
   if (bayId === "technical") return <TechnicalCanon />;
   if (bayId === "operations") return <OperationsCanon />;
   if (bayId === "capability") return <CapabilityCanon />;
+  if (bayId === "mission") return <MissionCanon />;
   return null;
 };
