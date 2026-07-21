@@ -118,19 +118,23 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: "auto" });
   }, []);
 
-  // Curtain covers the underlying swap; swap time is derived per-piece from its runtime.
-  // Returning visitors (same session) get a fast-path transit so re-navigation isn't blocked.
+  // Premium 5-second cinematic transit — CSS flavor stack (vault doors, warp, iris,
+  // elevator, freefall, orbital lock, etc.). Uses destination hero as backdrop so
+  // narrative overlays render. No short video clips.
+  const CINEMATIC_MS = 5000;
+  const CINEMATIC_SWAP = 1700;
+
+  const bgFor = useCallback((v: View | "vault"): string => {
+    if (v === "home") return "/nexus-rotunda-new.jpg";
+    if (v === "vault") return TRANSITION_BG.vault;
+    return HERO_IMAGES[v as BayId];
+  }, []);
+
   const runTransition = useCallback((label: string, kind: TransitionKind, next: View, code?: string) => {
     if (prefersReducedMotion()) { commitView(next); return; }
-    const piece = pickTransition();
-    const seen = (() => { try { return window.sessionStorage.getItem("nexus.seenTransit") === "1"; } catch { return false; } })();
-    try { window.sessionStorage.setItem("nexus.seenTransit", "1"); } catch {}
-    const fullDuration = transitionDuration(piece);
-    const duration = seen ? Math.min(fullDuration, 1800) : fullDuration;
-    const swap = seen ? Math.min(transitionSwapMs(piece), 900) : transitionSwapMs(piece);
-    setTransition({ label, kind, bgImage: piece.image, bgVideo: piece.video, code, tag: piece.tag, durationMs: duration });
-    window.setTimeout(() => { commitView(next); }, swap);
-  }, [commitView]);
+    setTransition({ label, kind, bgImage: bgFor(next), code, tag: "NEXUS TRANSIT", durationMs: CINEMATIC_MS });
+    window.setTimeout(() => { commitView(next); }, CINEMATIC_SWAP);
+  }, [commitView, bgFor]);
 
   const goHome = useCallback(() => {
     if (view === "home") return;
@@ -145,10 +149,9 @@ const Index = () => {
 
   const openVault = useCallback(() => {
     if (prefersReducedMotion()) { setVaultOpen(true); return; }
-    const piece = pickTransition();
-    setTransition({ label: "EVIDENCE VAULT", kind: "advance", bgImage: piece.image, bgVideo: piece.video, code: "SUB-LEVEL · V", tag: piece.tag, durationMs: transitionDuration(piece) });
-    window.setTimeout(() => { setVaultOpen(true); }, transitionSwapMs(piece));
-  }, []);
+    setTransition({ label: "EVIDENCE VAULT", kind: "advance", bgImage: bgFor("vault"), code: "SUB-LEVEL · V", tag: "NEXUS TRANSIT", durationMs: CINEMATIC_MS });
+    window.setTimeout(() => { setVaultOpen(true); }, CINEMATIC_SWAP);
+  }, [bgFor]);
 
   const closeVault = useCallback((open: boolean) => {
     if (open) { setVaultOpen(true); return; }
@@ -156,10 +159,9 @@ const Index = () => {
     const label = view === "home" ? "ROTUNDA" : bayLabel(view as BayId);
     const bay = view !== "home" ? BAYS.find((b) => b.id === view) : undefined;
     const code = view === "home" ? "ATRIUM · 00" : bay?.code;
-    const piece = pickTransition();
-    setTransition({ label, kind: "retreat", bgImage: piece.image, bgVideo: piece.video, code, tag: piece.tag, durationMs: transitionDuration(piece) });
-    window.setTimeout(() => { setVaultOpen(false); }, transitionSwapMs(piece));
-  }, [view]);
+    setTransition({ label, kind: "retreat", bgImage: bgFor(view), code, tag: "NEXUS TRANSIT", durationMs: CINEMATIC_MS });
+    window.setTimeout(() => { setVaultOpen(false); }, CINEMATIC_SWAP);
+  }, [view, bgFor]);
 
 
   const goContact = useCallback(() => {
