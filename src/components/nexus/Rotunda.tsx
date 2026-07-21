@@ -538,30 +538,30 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         </div>
       </div>
 
-      {/* Look buttons */}
+      {/* Look buttons — desktop/tablet only; mobile uses drag + stacked list */}
       <button
         onPointerDown={(e) => e.stopPropagation()}
         onClick={(e) => { e.stopPropagation(); stepH(-STEP_H); }}
         aria-label="Look left"
-        className="absolute left-3 top-1/2 -translate-y-1/2 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-11 h-16 flex items-center justify-center text-lg touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
+        className="absolute left-3 top-1/2 -translate-y-1/2 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-11 h-16 hidden md:flex items-center justify-center text-lg touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
       >◄</button>
       <button
         onPointerDown={(e) => e.stopPropagation()}
         onClick={(e) => { e.stopPropagation(); stepH(STEP_H); }}
         aria-label="Look right"
-        className="absolute right-3 top-1/2 -translate-y-1/2 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-11 h-16 flex items-center justify-center text-lg touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
+        className="absolute right-3 top-1/2 -translate-y-1/2 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-11 h-16 hidden md:flex items-center justify-center text-lg touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
       >►</button>
       <button
         onPointerDown={(e) => e.stopPropagation()}
         onClick={(e) => { e.stopPropagation(); stepV(-STEP_V); }}
         aria-label="Look up"
-        className="absolute left-1/2 -translate-x-1/2 top-24 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-11 flex items-center justify-center touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
+        className="absolute left-1/2 -translate-x-1/2 top-24 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-11 hidden md:flex items-center justify-center touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
       >▲</button>
       <button
         onPointerDown={(e) => e.stopPropagation()}
         onClick={(e) => { e.stopPropagation(); stepV(STEP_V); }}
         aria-label="Look down"
-        className="absolute left-1/2 -translate-x-1/2 bottom-6 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-11 flex items-center justify-center touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
+        className="absolute left-1/2 -translate-x-1/2 bottom-6 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-11 hidden md:flex items-center justify-center touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
       >▼</button>
 
       {/* Lock-on ENTER prompt — desktop/tablet only; on mobile the stacked
