@@ -225,9 +225,12 @@ const Index = () => {
           bgImage={transition.bgImage}
           bgVideo={transition.bgVideo}
           code={transition.code}
+          tag={transition.tag}
+          durationMs={transition.durationMs}
           onDone={() => setTransition(null)}
         />
       )}
+
 
       {!introDone && <IntroOverlay onComplete={handleIntroComplete} />}
     </div>
