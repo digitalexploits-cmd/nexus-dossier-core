@@ -408,14 +408,10 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         </div>
       </div>
 
-      {/* Top HUD (below fixed TopBar) */}
+      {/* Status pill only — brand identity lives in the fixed TopBar,
+          so we no longer duplicate NEXUS · Company here. */}
       <div className="absolute inset-x-0 top-14 z-20 anim-fade-up pointer-events-none">
-        <div className="container flex items-center justify-between text-[0.68rem] mono tracking-[0.28em] uppercase text-foreground/80">
-          <div className="flex items-center gap-3 bg-background/40 backdrop-blur-sm px-3 py-1.5 border border-border/40 pointer-events-auto">
-            <span className="text-primary">NEXUS</span>
-            <span className="text-muted-foreground">|</span>
-            <span>{BRAND.company}</span>
-          </div>
+        <div className="container flex items-center justify-end text-[0.68rem] mono tracking-[0.28em] uppercase text-foreground/80">
           <div className="hidden md:flex items-center gap-3 bg-background/40 backdrop-blur-sm px-3 py-1.5 border border-border/40 pointer-events-auto">
             <span className="status-dot status-live" />
             <span>SHELL ONLINE</span>
