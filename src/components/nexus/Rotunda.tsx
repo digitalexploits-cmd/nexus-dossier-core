@@ -471,7 +471,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         <div
           className="absolute inset-x-0"
           style={{
-            top: "clamp(48px, 9vh, 78px)",
+            top: "clamp(60px, 11vh, 100px)",
             height: "1px",
             background:
               "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.55) 20%, rgba(212,175,55,0.85) 50%, rgba(212,175,55,0.55) 80%, transparent 100%)",
@@ -482,7 +482,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         <div
           className="absolute inset-x-0 bottom-0"
           style={{
-            top: "clamp(49px, 9vh, 79px)",
+            top: "clamp(61px, 11vh, 101px)",
             backgroundImage:
               "repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 3px)",
           }}
