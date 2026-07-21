@@ -257,6 +257,28 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
         <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.18)_0%,transparent_65%)]" />
 
+        {/* Mask baked-in kiosk gibberish: heavy navy scrim across the bottom
+            band where the hallucinated typography sits, feathered so the
+            floor and architecture read as intentional shadow, not censoring. */}
+        <div
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 pointer-events-none"
+          style={{
+            height: "38%",
+            background:
+              "linear-gradient(to top, rgba(4,8,16,0.96) 0%, rgba(6,12,24,0.85) 32%, rgba(8,16,28,0.55) 62%, transparent 100%)",
+          }}
+        />
+        <div
+          aria-hidden
+          className="absolute left-[8%] right-[8%] bottom-[6%] h-[18%] pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% 60%, rgba(2,4,8,0.85) 0%, rgba(2,4,8,0.55) 45%, transparent 78%)",
+            filter: "blur(12px)",
+          }}
+        />
+
         {/* Synthetic Vault doorway */}
         <div
           className="absolute top-1/2 pointer-events-none"
