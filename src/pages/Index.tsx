@@ -119,9 +119,8 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: "auto" });
   }, []);
 
-  // Premium 5-second cinematic transit — CSS flavor stack (vault doors, warp, iris,
-  // elevator, freefall, orbital lock, etc.). Uses destination hero as backdrop so
-  // narrative overlays render. No short video clips.
+  // 3-second cinematic video transit — shuffles the video/still pool and layers
+  // the premium flavor stack (vault doors, warp, iris, elevator, etc.) on top.
   const CINEMATIC_MS = 3000;
   const CINEMATIC_SWAP = 1050;
 
@@ -133,7 +132,14 @@ const Index = () => {
 
   const runTransition = useCallback((label: string, kind: TransitionKind, next: View, code?: string) => {
     if (prefersReducedMotion()) { commitView(next); return; }
-    setTransition({ label, kind, bgImage: bgFor(next), code, tag: "NEXUS TRANSIT", durationMs: CINEMATIC_MS });
+    const piece = pickTransition();
+    setTransition({
+      label, kind, code,
+      bgVideo: piece.video,
+      bgImage: piece.image ?? bgFor(next),
+      tag: piece.tag ?? "NEXUS TRANSIT",
+      durationMs: CINEMATIC_MS,
+    });
     window.setTimeout(() => { commitView(next); }, CINEMATIC_SWAP);
   }, [commitView, bgFor]);
 
@@ -150,7 +156,14 @@ const Index = () => {
 
   const openVault = useCallback(() => {
     if (prefersReducedMotion()) { setVaultOpen(true); return; }
-    setTransition({ label: "EVIDENCE VAULT", kind: "advance", bgImage: bgFor("vault"), code: "SUB-LEVEL · V", tag: "NEXUS TRANSIT", durationMs: CINEMATIC_MS });
+    const piece = pickTransition();
+    setTransition({
+      label: "EVIDENCE VAULT", kind: "advance", code: "SUB-LEVEL · V",
+      bgVideo: piece.video,
+      bgImage: piece.image ?? bgFor("vault"),
+      tag: piece.tag ?? "NEXUS TRANSIT",
+      durationMs: CINEMATIC_MS,
+    });
     window.setTimeout(() => { setVaultOpen(true); }, CINEMATIC_SWAP);
   }, [bgFor]);
 
@@ -160,7 +173,14 @@ const Index = () => {
     const label = view === "home" ? "ROTUNDA" : bayLabel(view as BayId);
     const bay = view !== "home" ? BAYS.find((b) => b.id === view) : undefined;
     const code = view === "home" ? "ATRIUM · 00" : bay?.code;
-    setTransition({ label, kind: "retreat", bgImage: bgFor(view), code, tag: "NEXUS TRANSIT", durationMs: CINEMATIC_MS });
+    const piece = pickTransition();
+    setTransition({
+      label, kind: "retreat", code,
+      bgVideo: piece.video,
+      bgImage: piece.image ?? bgFor(view),
+      tag: piece.tag ?? "NEXUS TRANSIT",
+      durationMs: CINEMATIC_MS,
+    });
     window.setTimeout(() => { setVaultOpen(false); }, CINEMATIC_SWAP);
   }, [view, bgFor]);
 
