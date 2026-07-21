@@ -352,6 +352,8 @@ export const BayTransition = ({ label, kind, bgImage, bgVideo, code, tag, durati
           <div className="opacity-70">// NEXUS TRANSIT · {kind === "advance" ? "OUTBOUND" : "INBOUND"}</div>
           <div className="mt-1 text-primary">DEST · {code ?? label.toUpperCase()}</div>
           <div className="mt-0.5 opacity-60">{coord}</div>
+          {tag && <div className="mt-1 text-primary/70">◇ {tag}</div>}
+
         </div>
       )}
 
