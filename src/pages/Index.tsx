@@ -110,25 +110,36 @@ const Index = () => {
   // Curtain (see BayTransition + @keyframes bay-curtain) peaks at ~35% of 1400ms ≈ 490ms.
   // Swap the underlying view at peak so the curtain covers the change, then let the
   // overlay play its reveal-out half and self-clear via onDone.
-  const runTransition = useCallback((label: string, kind: TransitionKind, next: View) => {
+  const runTransition = useCallback((label: string, kind: TransitionKind, next: View, bgImage?: string) => {
     if (prefersReducedMotion()) { commitView(next); return; }
-    setTransition({ label, kind });
+    setTransition({ label, kind, bgImage });
     window.setTimeout(() => { commitView(next); }, 490);
   }, [commitView]);
 
   const goHome = useCallback(() => {
     if (view === "home") return;
-    runTransition("ROTUNDA", "retreat", "home");
+    runTransition("ROTUNDA", "retreat", "home", TRANSITION_BG.home);
   }, [view, runTransition]);
 
   const goBay = useCallback((id: BayId) => {
     if (view === id) return;
-    runTransition(bayLabel(id), "advance", id);
+    runTransition(bayLabel(id), "advance", id, TRANSITION_BG[id]);
   }, [view, runTransition]);
 
   const openVault = useCallback(() => {
-    setVaultOpen(true);
+    if (prefersReducedMotion()) { setVaultOpen(true); return; }
+    setTransition({ label: "EVIDENCE VAULT", kind: "advance", bgImage: TRANSITION_BG.vault });
+    window.setTimeout(() => { setVaultOpen(true); }, 490);
   }, []);
+
+  const closeVault = useCallback((open: boolean) => {
+    if (open) { setVaultOpen(true); return; }
+    if (prefersReducedMotion()) { setVaultOpen(false); return; }
+    const label = view === "home" ? "ROTUNDA" : bayLabel(view as BayId);
+    const bg = view === "home" ? TRANSITION_BG.home : TRANSITION_BG[view as BayId];
+    setTransition({ label, kind: "retreat", bgImage: bg });
+    window.setTimeout(() => { setVaultOpen(false); }, 490);
+  }, [view]);
 
   const goContact = useCallback(() => {
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
