@@ -119,7 +119,7 @@ export const TopBar = ({ view, currentBay = "home", onHome, onBay, onOpenVault }
           <div className="hidden md:flex items-center gap-2 tick">
             <span className="status-dot status-live" /> ONLINE
           </div>
-          <div className="tick text-primary/80 pl-2 border-l border-primary/20 ml-1 hidden sm:block truncate max-w-[10rem]">
+          <div className="tick text-primary/80 pl-2 border-l border-primary/20 ml-1 hidden lg:block truncate max-w-[16rem]">
             {view}
           </div>
         </div>
