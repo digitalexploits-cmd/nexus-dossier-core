@@ -352,37 +352,43 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
       {/* Look buttons */}
       <button
-        onClick={() => stepH(-STEP_H)}
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={(e) => { e.stopPropagation(); stepH(-STEP_H); }}
         aria-label="Look left"
-        className="absolute left-3 top-1/2 -translate-y-1/2 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-10 h-16 flex items-center justify-center text-lg"
+        className="absolute left-3 top-1/2 -translate-y-1/2 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-11 h-16 flex items-center justify-center text-lg touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
       >◄</button>
       <button
-        onClick={() => stepH(STEP_H)}
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={(e) => { e.stopPropagation(); stepH(STEP_H); }}
         aria-label="Look right"
-        className="absolute right-3 top-1/2 -translate-y-1/2 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-10 h-16 flex items-center justify-center text-lg"
+        className="absolute right-3 top-1/2 -translate-y-1/2 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-11 h-16 flex items-center justify-center text-lg touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
       >►</button>
       <button
-        onClick={() => stepV(-STEP_V)}
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={(e) => { e.stopPropagation(); stepV(-STEP_V); }}
         aria-label="Look up"
-        className="absolute left-1/2 -translate-x-1/2 top-20 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-8 flex items-center justify-center"
+        className="absolute left-1/2 -translate-x-1/2 top-24 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-11 flex items-center justify-center touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
       >▲</button>
       <button
-        onClick={() => stepV(STEP_V)}
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={(e) => { e.stopPropagation(); stepV(STEP_V); }}
         aria-label="Look down"
-        className="absolute left-1/2 -translate-x-1/2 bottom-6 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-8 flex items-center justify-center"
+        className="absolute left-1/2 -translate-x-1/2 bottom-6 z-20 mono text-primary/80 hover:text-primary border border-primary/40 hover:border-primary/80 bg-background/40 backdrop-blur-sm w-16 h-11 flex items-center justify-center touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
       >▼</button>
 
       {/* Lock-on ENTER prompt (keyboard/drag flow) */}
       {lockedZone && (
-        <div className="absolute inset-x-0 bottom-20 z-20 flex justify-center pointer-events-none">
+        <div className="absolute inset-x-0 bottom-20 z-20 flex justify-center pointer-events-none px-4">
           <button
-            onClick={() => enterZone(lockedZone)}
-            className="pointer-events-auto mono uppercase text-primary border border-primary/70 bg-primary/10 hover:bg-primary/20 backdrop-blur-sm px-6 py-3 tracking-[0.32em] text-sm shadow-[0_0_40px_rgba(70,150,255,0.35)] transition-colors"
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => { e.stopPropagation(); enterZone(lockedZone); }}
+            className="pointer-events-auto mono uppercase text-primary border border-primary/70 bg-primary/10 hover:bg-primary/20 backdrop-blur-sm px-6 py-3 tracking-[0.32em] text-xs sm:text-sm shadow-[0_0_40px_rgba(70,150,255,0.35)] transition-colors touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 max-w-[calc(100vw-2rem)] truncate"
           >
             ▶ {lockedZone.id === "vault" ? "OPEN" : "ENTER"} — {lockedZone.label.toUpperCase()}
           </button>
         </div>
       )}
+
 
       {/* Compass bar removed — bay tiles on the panorama are the selection buttons. */}
 
