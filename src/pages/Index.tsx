@@ -9,15 +9,27 @@ import { BayTransition, type TransitionKind } from "@/components/nexus/BayTransi
 import { Button } from "@/components/ui/button";
 import { BAYS, type BayId } from "@/data/content";
 import { pickTransition, transitionDuration, transitionSwapMs } from "@/data/transitions";
+import heroMissionVid    from "../../public/media/hero-mission.mp4.asset.json";
+import heroTechnicalVid  from "../../public/media/hero-technical.mp4.asset.json";
+import heroCapabilityVid from "../../public/media/hero-capability.mp4.asset.json";
+import heroOperationsVid from "../../public/media/hero-operations.mp4.asset.json";
 
 import { prefersReducedMotion } from "@/lib/audio";
 
-// Hero image per bay — the stable landing state after transition.
+// Hero image per bay — the stable landing state / poster for the loop video.
 const HERO_IMAGES: Record<BayId, string> = {
   mission:    "/founder-office.jpg",
   technical:  "/media/technical-landing.jpg",
   capability: "/media/capability-landing.jpg",
   operations: "/media/operations-landing.jpg",
+};
+
+// Ambient looping hero videos — outside environment is alive.
+const HERO_VIDEOS: Record<BayId, string> = {
+  mission:    heroMissionVid.url,
+  technical:  heroTechnicalVid.url,
+  capability: heroCapabilityVid.url,
+  operations: heroOperationsVid.url,
 };
 
 // Gold family accent per bay — unified brand theme, subtle warmth variation.
@@ -198,6 +210,7 @@ const Index = () => {
             <BayShell
               bayId={view}
               heroImage={HERO_IMAGES[view]}
+              heroVideo={HERO_VIDEOS[view]}
               tagline={BAY_TAGLINE[view]}
               ambient={BAY_AMBIENT[view]}
               accent={BAY_ACCENTS[view]}
