@@ -362,7 +362,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
               key={z.id}
               onPointerDown={(e) => e.stopPropagation()}
               onClick={(e) => { e.stopPropagation(); dismissHint(); enterZone(z); }}
-              className="bay-hover-glow absolute top-[46%] group rounded-sm px-3 py-4 -m-3 touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
+              className="bay-hover-glow absolute top-[46%] group rounded-sm px-3 py-4 -m-3 touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 hidden md:block"
               style={{ left: `${z.pos * 100}%`, transform: "translate(-50%, -50%)", minWidth: 56, minHeight: 88 }}
               aria-label={`${z.id === "vault" ? "Open" : "Enter"} ${z.label}`}
             >
@@ -423,6 +423,29 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
                 </div>
               </div>
             </button>
+          );
+        })}
+
+        {/* Mobile-only: minimal beacons on the panorama so the scene still
+            reads as populated, but without overlapping labels. The stacked
+            selector below the console handles the actual choice. */}
+        {ZONES.map((z) => {
+          const isLocked = lockedZone?.id === z.id;
+          return (
+            <div
+              key={`m-${z.id}`}
+              aria-hidden
+              className="absolute top-[46%] pointer-events-none md:hidden"
+              style={{ left: `${z.pos * 100}%`, transform: "translate(-50%, -50%)" }}
+            >
+              <div
+                className={`w-2 h-2 rounded-full ${
+                  isLocked
+                    ? "bg-primary shadow-[0_0_18px_rgba(70,150,255,1)] scale-150"
+                    : "bg-primary/60 shadow-[0_0_8px_rgba(70,150,255,0.7)] anim-flicker"
+                }`}
+              />
+            </div>
           );
         })}
       </div>
