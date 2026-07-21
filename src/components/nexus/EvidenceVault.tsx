@@ -84,7 +84,10 @@ export const EvidenceVault = ({ open, onOpenChange, onReturnToRotunda }: Props) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-6xl w-[95vw] p-0 bg-background border-[rgba(80,160,255,0.28)] shadow-[0_40px_120px_rgba(0,0,0,0.55),0_0_60px_rgba(70,150,255,0.18)] overflow-hidden">
+      <DialogContent className="bay-depth-stage max-w-6xl w-[95vw] p-0 bg-background border-[rgba(80,160,255,0.28)] shadow-[0_40px_120px_rgba(0,0,0,0.55),0_0_60px_rgba(70,150,255,0.18)] overflow-hidden">
+        <div className="bay-depth-ambient pointer-events-none absolute inset-0" aria-hidden="true" />
+        <span className="bay-depth-orb pointer-events-none absolute -top-24 -left-24 w-72 h-72 rounded-full" aria-hidden="true" />
+        <span className="bay-depth-orb pointer-events-none absolute -bottom-24 -right-24 w-80 h-80 rounded-full" aria-hidden="true" />
         {/* ============ HEADER BAND ============ */}
         <DialogHeader className="relative p-6 md:p-8 border-b border-[rgba(80,160,255,0.2)] bg-[linear-gradient(180deg,rgba(20,38,62,0.9),rgba(8,14,24,0.9))]">
           <div className="flex items-start justify-between gap-4">

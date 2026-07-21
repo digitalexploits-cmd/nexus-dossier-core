@@ -150,17 +150,20 @@ export const MediaConsole = ({ open, onClose }: Props) => {
                 <button
                   key={m.id}
                   onClick={() => setSelectedId(m.id)}
-                  className={`w-full text-left px-4 py-3 border-b border-primary/10 transition-colors ${
+                  className={`w-full text-left px-3 py-2.5 border-b border-primary/10 transition-colors flex items-center gap-3 ${
                     active
                       ? "bg-primary/10 border-l-2 border-l-primary"
                       : "hover:bg-primary/5 border-l-2 border-l-transparent"
                   }`}
                 >
-                  <div className={`text-sm truncate ${active ? "text-primary" : "text-foreground"}`}>
-                    {m.title}
-                  </div>
-                  <div className="mono text-[0.55rem] tracking-[0.22em] uppercase text-muted-foreground mt-1">
-                    {m.category} · {m.kind}
+                  <MediaThumb item={m} active={active} />
+                  <div className="min-w-0 flex-1">
+                    <div className={`text-sm truncate ${active ? "text-primary" : "text-foreground"}`}>
+                      {m.title}
+                    </div>
+                    <div className="mono text-[0.55rem] tracking-[0.22em] uppercase text-muted-foreground mt-1 truncate">
+                      {m.category} · {m.kind}
+                    </div>
                   </div>
                 </button>
               );
@@ -179,6 +182,37 @@ export const MediaConsole = ({ open, onClose }: Props) => {
           </div>
         </div>
       </div>
+    </div>
+  );
+};
+
+const KIND_GLYPH: Record<MediaKind, string> = {
+  document: "📄",
+  video: "▶",
+  audio: "♪",
+  image: "🖼",
+};
+
+const MediaThumb = ({ item, active }: { item: MediaItem; active: boolean }) => {
+  const box = `shrink-0 w-14 h-10 border ${active ? "border-primary/60" : "border-primary/20"} bg-background/60 overflow-hidden flex items-center justify-center`;
+  if (item.kind === "image") {
+    return (
+      <div className={box}>
+        <img src={item.url} alt="" loading="lazy" className="w-full h-full object-cover" />
+      </div>
+    );
+  }
+  if (item.kind === "video") {
+    return (
+      <div className={`${box} relative`}>
+        <video src={item.url} muted playsInline preload="metadata" className="w-full h-full object-cover opacity-80" />
+        <span className="absolute inset-0 flex items-center justify-center text-primary text-xs">▶</span>
+      </div>
+    );
+  }
+  return (
+    <div className={box}>
+      <span className="mono text-primary/80 text-base">{KIND_GLYPH[item.kind]}</span>
     </div>
   );
 };
