@@ -212,6 +212,7 @@ const Index = () => {
               ambient={BAY_AMBIENT[view]}
               accent={BAY_ACCENTS[view]}
               lightingControls={view === "mission"}
+              windowRect={BAY_WINDOW_RECT[view]}
               onOpenVault={openVault}
               onContact={goContact}
             />
