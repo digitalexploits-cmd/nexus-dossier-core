@@ -338,6 +338,11 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
       {/* Living exterior — subtle sky-life ambient over the whole scene */}
       <div aria-hidden className="bay-exterior-life" />
+      {/* Storm clouds — occasional cumulonimbus rolling across the sky */}
+      <div aria-hidden className="sky-storm-band">
+        <div className="bay-hero-storm" />
+        <div className="bay-hero-storm layer-b" />
+      </div>
       {/* Drifting clouds through the dome oculus / upper glass — clipped, never inside */}
       <SkyWindow top={0} left={12} right={12} bottom={72} branchRight debugLabel="rotunda dome" />
 
