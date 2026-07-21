@@ -142,7 +142,7 @@
 
 
 @layer components {
-  .mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.02em; }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.02em; font-feature-settings: "zero", "cv11"; font-variant-numeric: tabular-nums; }
   .tick { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
   .rule { height: 1px; background: linear-gradient(90deg, transparent, hsl(var(--border)), transparent); }
   .panel {
