@@ -85,9 +85,8 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
     try { return window.localStorage.getItem("nexus.rotunda.hintSeen") !== "1"; }
     catch { return true; }
   });
-  const [vaultPanelOpen, setVaultPanelOpen] = useState(false);
-  const [mediaPanelOpen, setMediaPanelOpen] = useState(false);
   const [mediaConsoleOpen, setMediaConsoleOpen] = useState(false);
+
   const interactedRef = useRef(false);
   const headingRef = useRef(heading);
   const headingVRef = useRef(headingV);
