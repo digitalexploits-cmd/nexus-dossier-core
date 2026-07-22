@@ -93,6 +93,26 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   headingRef.current = heading;
   headingVRef.current = headingV;
 
+  // Idle micro-drift — very slow living motion when the visitor is not interacting.
+  // Creates the feeling of a real space rather than a frozen panorama.
+  const [idleOffset, setIdleOffset] = useState({ x: 0, y: 0 });
+  useEffect(() => {
+    if (dragging || snapping) return;
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const t = (now - start) / 1000;
+      // Extremely gentle elliptical drift (~0.4% of travel)
+      setIdleOffset({
+        x: Math.sin(t * 0.11) * 0.0035,
+        y: Math.cos(t * 0.085) * 0.0022,
+      });
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [dragging, snapping]);
+
   const lockedZone = useMemo(() => {
     let best: { z: Zone; d: number } | null = null;
     for (const z of ZONES) {
@@ -111,6 +131,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
     if (!interactedRef.current) {
       interactedRef.current = true;
       setHintVisible(false);
+      try { window.localStorage.setItem("nexus.rotunda.hintSeen", "1"); } catch {}
     }
   }, []);
 
@@ -212,8 +233,12 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
     return () => window.clearTimeout(t);
   }, []);
 
-  const translateX = travelX > 0 ? -heading * travelX : (viewW - worldW) / 2;
-  const translateY = travelY > 0 ? -headingV * travelY : (viewH - worldH) / 2;
+  // Apply idle drift only when not actively controlled
+  const effectiveHeading = dragging || snapping ? heading : clamp(heading + idleOffset.x);
+  const effectiveHeadingV = dragging || snapping ? headingV : clamp(headingV + idleOffset.y);
+
+  const translateX = travelX > 0 ? -effectiveHeading * travelX : (viewW - worldW) / 2;
+  const translateY = travelY > 0 ? -effectiveHeadingV * travelY : (viewH - worldH) / 2;
   const worldTransform = `translate3d(${translateX}px, ${translateY}px, 0)`;
   const worldTransition = snapping
     ? "transform 600ms cubic-bezier(0.22,1,0.36,1)"
@@ -252,9 +277,9 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           onLoad={measure}
         />
 
+        {/* Atmospheric light washes */}
         <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_14%_38%,rgba(110,200,255,0.18)_0%,transparent_45%)]" />
         <div className="absolute inset-0 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_86%_88%,rgba(255,180,100,0.16)_0%,transparent_52%)]" />
-
         <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.18)_0%,transparent_65%)]" />
 
         {/* Rotunda floor — feathered concrete band grounding the etched crest. */}
@@ -267,18 +292,29 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
               "linear-gradient(to top, rgba(26,31,40,0.92) 0%, rgba(30,36,46,0.55) 55%, transparent 100%)",
           }}
         />
-        {/* Ambient pool of light under the dome */}
+
+        {/* Ambient pool of light under the dome — richer, breathing */}
         <div
           aria-hidden
-          className="absolute inset-x-0 bottom-0 pointer-events-none"
+          className="absolute inset-x-0 bottom-0 pointer-events-none rotunda-floor-pool"
           style={{
-            height: "12%",
+            height: "14%",
             background:
-              "radial-gradient(ellipse 60% 100% at 50% 40%, rgba(120,170,220,0.16) 0%, transparent 70%)",
+              "radial-gradient(ellipse 62% 100% at 50% 40%, rgba(120,170,220,0.20) 0%, transparent 72%)",
             mixBlendMode: "screen",
           }}
         />
 
+        {/* Operational floor indicator lights — subtle status dots that feel alive */}
+        <div aria-hidden className="absolute inset-x-0 bottom-[3%] pointer-events-none flex justify-center gap-[min(8%,48px)]">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <div
+              key={i}
+              className="w-1 h-1 rounded-full bg-primary/50 rotunda-status-dot"
+              style={{ animationDelay: `${i * 0.7}s` }}
+            />
+          ))}
+        </div>
 
         {/* Etched-in-concrete floor emblem — SINE~WaiV crest embossed into the
             rotunda floor. Perspective-tilted, low-opacity, blended so it reads
@@ -334,10 +370,6 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           />
         </div>
 
-
-        {/* Synthetic Vault doorway removed per request — no floating text overlays */}
-
-
         {/* Zone markers — kiosk labels with strict 3-tier hierarchy:
             (1) index chip · (2) title · (3) sub. Label block is width-capped
             so adjacent zones never overlap on any breakpoint. */}
@@ -355,25 +387,29 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
               <div className="relative flex flex-col items-center pointer-events-auto">
                 {/* Beacon */}
                 <div
-                  className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
                     isLocked
-                      ? "bg-primary shadow-[0_0_24px_rgba(70,150,255,1)] scale-150"
+                      ? "bg-primary shadow-[0_0_28px_rgba(70,150,255,1)] scale-[1.65] beacon-locked"
                       : "bg-primary/70 shadow-[0_0_10px_rgba(70,150,255,0.9)] anim-flicker"
                   }`}
                 />
                 {/* Stem */}
-                <div className={`mt-2 w-px transition-all ${isLocked ? "h-14 sm:h-20 bg-primary/60" : "h-8 sm:h-12 bg-primary/30"}`} />
+                <div className={`mt-2 w-px transition-all duration-300 ${
+                  isLocked
+                    ? "h-16 sm:h-22 bg-primary/70 shadow-[0_0_12px_hsl(var(--primary)/0.5)]"
+                    : "h-8 sm:h-12 bg-primary/30"
+                }`} />
 
                 {/* Label stack — capped width, centered, tiered typography */}
-                <div className={`mt-2 flex flex-col items-center gap-1 transition-opacity ${
+                <div className={`mt-2 flex flex-col items-center gap-1 transition-opacity duration-300 ${
                   isLocked ? "opacity-100" : "opacity-90 group-hover:opacity-100"
                 }`}
                   style={{ width: isLocked ? "min(11rem, 40vw)" : "min(8.5rem, 32vw)" }}
                 >
                   {/* Tier 1 — index chip */}
-                  <div className={`mono tracking-[0.32em] px-1.5 py-[1px] border transition-colors ${
+                  <div className={`mono tracking-[0.32em] px-1.5 py-[1px] border transition-colors duration-300 ${
                     isLocked
-                      ? "text-primary border-primary/70 bg-primary/10 text-[0.55rem] sm:text-[0.6rem]"
+                      ? "text-primary border-primary/80 bg-primary/15 text-[0.55rem] sm:text-[0.6rem] shadow-[0_0_12px_hsl(var(--primary)/0.25)]"
                       : "text-primary/70 border-primary/25 bg-background/40 text-[0.5rem] sm:text-[0.55rem] group-hover:text-primary group-hover:border-primary/60"
                   }`}>
                     {z.index}
@@ -381,18 +417,18 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
                   {/* Tier 2 — title */}
                   <div
-                    className={`mono uppercase text-center leading-tight transition-all ${
+                    className={`mono uppercase text-center leading-tight transition-all duration-300 ${
                       isLocked
                         ? "text-primary text-[0.72rem] sm:text-sm tracking-[0.22em] sm:tracking-[0.28em]"
                         : "text-primary/85 text-[0.6rem] sm:text-[0.68rem] tracking-[0.18em] sm:tracking-[0.24em] group-hover:text-primary"
                     }`}
-                    style={isLocked ? { textShadow: "0 0 18px hsl(var(--primary) / 0.7)" } : undefined}
+                    style={isLocked ? { textShadow: "0 0 20px hsl(var(--primary) / 0.75)" } : undefined}
                   >
                     {z.label}
                   </div>
 
-                  {/* Tier 3 — sub (only on lock or hover, never wraps to more than 2 lines) */}
-                  <div className={`mono uppercase text-center leading-tight tracking-[0.2em] sm:tracking-[0.24em] transition-opacity ${
+                  {/* Tier 3 — sub */}
+                  <div className={`mono uppercase text-center leading-tight tracking-[0.2em] sm:tracking-[0.24em] transition-opacity duration-300 ${
                     isLocked
                       ? "text-primary/70 opacity-100 text-[0.5rem] sm:text-[0.55rem]"
                       : "text-muted-foreground opacity-0 group-hover:opacity-70 text-[0.5rem] sm:text-[0.55rem]"
@@ -412,9 +448,7 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           );
         })}
 
-        {/* Mobile-only: minimal beacons on the panorama so the scene still
-            reads as populated, but without overlapping labels. The stacked
-            selector below the console handles the actual choice. */}
+        {/* Mobile-only: minimal beacons on the panorama */}
         {ZONES.map((z) => {
           const isLocked = lockedZone?.id === z.id;
           return (
@@ -425,9 +459,9 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
               style={{ left: `${z.pos * 100}%`, transform: "translate(-50%, -50%)" }}
             >
               <div
-                className={`w-2 h-2 rounded-full ${
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
                   isLocked
-                    ? "bg-primary shadow-[0_0_18px_rgba(70,150,255,1)] scale-150"
+                    ? "bg-primary shadow-[0_0_20px_rgba(70,150,255,1)] scale-150 beacon-locked"
                     : "bg-primary/60 shadow-[0_0_8px_rgba(70,150,255,0.7)] anim-flicker"
                 }`}
               />
@@ -446,22 +480,27 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
       {/* Drifting clouds through the dome oculus / upper glass — clipped, never inside */}
       <SkyWindow top={0} left={12} right={12} bottom={72} branchRight debugLabel="rotunda dome" />
 
-      {/* PREMIUM LIGHTING RIG — cinematic key/fill/rays/rim/bloom/grade */}
+      {/* PREMIUM LIGHTING RIG — cinematic key/fill/rim/bloom/grade */}
       <div aria-hidden className="premium-lighting" style={{ ["--bay-accent" as any]: "#4db7ff" }}>
         <div className="pl-key" />
         <div className="pl-fill" />
-        <div className="pl-rays" />
         <div className="pl-rim" />
         <div className="pl-bloom" />
-        <div className="pl-flare" />
         <div className="pl-grade" />
       </div>
 
-
-
       {/* CAMERA-FIXED OVERLAYS — vignette + top scrim only, no HUD chrome. */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_72%,rgba(5,7,10,0.55)_100%)]" />
-      <div className="absolute inset-x-0 top-0 h-20 pointer-events-none bg-gradient-to-b from-background/50 to-transparent" />
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_68%,rgba(5,7,10,0.62)_100%)]" />
+      <div className="absolute inset-x-0 top-0 h-24 pointer-events-none bg-gradient-to-b from-background/55 to-transparent" />
+
+      {/* First-time interaction hint */}
+      {hintVisible && (
+        <div className="absolute bottom-10 inset-x-0 flex justify-center pointer-events-none z-20">
+          <div className="mono text-[0.6rem] tracking-[0.32em] text-primary/70 bg-background/50 backdrop-blur-sm border border-primary/20 px-4 py-2 rounded-sm">
+            DRAG TO LOOK · ENTER TO ACCESS
+          </div>
+        </div>
+      )}
 
       <MediaConsole open={mediaConsoleOpen} onClose={() => setMediaConsoleOpen(false)} />
 
