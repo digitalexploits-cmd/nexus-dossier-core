@@ -202,14 +202,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <TopBar
-        view={viewLabel}
-        currentBay={view}
-        onHome={goHome}
-        onBay={goBay}
-        onOpenVault={openVault}
-      />
-
       <main>
 
         {view === "home" && <Rotunda onSelect={goBay} onOpenVault={openVault} />}
