@@ -9,46 +9,39 @@ import { BayTransition, type TransitionKind } from "@/components/nexus/BayTransi
 
 import { BAYS, type BayId } from "@/data/content";
 import { pickTransition } from "@/data/transitions";
-
-
 import { prefersReducedMotion } from "@/lib/audio";
 
-// Hero image per bay — the stable landing state after transition.
 const HERO_IMAGES: Record<BayId, string> = {
-  mission:    "/founder-office.jpg",
-  technical:  "/media/technical-landing.jpg",
+  mission: "/founder-office.jpg",
+  technical: "/media/technical-landing.jpg",
   capability: "/media/capability-landing.jpg",
   operations: "/media/operations-landing.jpg",
 };
 
-// Gold family accent per bay — unified brand theme, subtle warmth variation.
 const BAY_ACCENTS: Record<BayId, string> = {
-  mission:    "#d4a84a", // signature gold
-  technical:  "#e8c46b", // light gold
-  capability: "#b8892d", // deep gold
-  operations: "#f0d78c", // pale gold
+  mission: "#d4a84a",
+  technical: "#e8c46b",
+  capability: "#b8892d",
+  operations: "#f0d78c",
 };
 
 const BAY_AMBIENT: Record<BayId, string> = {
-  mission:    "ON RECORD",
-  technical:  "CALIBRATED",
+  mission: "ON RECORD",
+  technical: "CALIBRATED",
   capability: "ON DISPLAY",
   operations: "MONITORED · LIVE",
 };
 
-// Per-bay window rectangle (percent inset) — where the exterior glass sits
-// in each hero image. Sky animation is clipped to this box so clouds and
-// distant lightning read as "life outside" instead of overlaying the room.
 const BAY_WINDOW_RECT: Record<BayId, { top: number; right: number; bottom: number; left: number; branchLeft?: boolean; branchRight?: boolean }> = {
-  mission:    { top: 3,  right: 0,  bottom: 22, left: 36, branchRight: true },
-  technical:  { top: 8,  right: 0,  bottom: 45, left: 28, branchRight: true },
-  capability: { top: 4,  right: 0,  bottom: 48, left: 30, branchLeft: true, branchRight: true },
-  operations: { top: 3,  right: 55, bottom: 22, left: 2,  branchLeft: true },
+  mission: { top: 3, right: 0, bottom: 22, left: 36, branchRight: true },
+  technical: { top: 8, right: 0, bottom: 45, left: 28, branchRight: true },
+  capability: { top: 4, right: 0, bottom: 48, left: 30, branchLeft: true, branchRight: true },
+  operations: { top: 3, right: 55, bottom: 22, left: 2, branchLeft: true },
 };
 
 const BAY_TAGLINE: Record<BayId, [string, string]> = {
-  mission:    ["", ""],
-  technical:  ["Inspect the signal.", ""],
+  mission: ["", ""],
+  technical: ["Inspect the signal.", ""],
   capability: ["Frame the capability.", "Not the hype."],
   operations: ["Command the shell.", "Route the evidence."],
 };
@@ -63,14 +56,13 @@ const VIEW_HASH: Record<View, string> = {
   operations: "#operations",
 };
 
-// Cinematic transition stills — hidden-in-plain-sight approaches per destination.
 const TRANSITION_BG: Record<View | "vault", string> = {
-  home:       "/media/transitions/transition-rotunda.jpg",
-  mission:    "/media/transitions/transition-mission.jpg",
-  technical:  "/media/transitions/transition-technical.jpg",
+  home: "/media/transitions/transition-rotunda.jpg",
+  mission: "/media/transitions/transition-mission.jpg",
+  technical: "/media/transitions/transition-technical.jpg",
   capability: "/media/transitions/transition-capability.jpg",
   operations: "/media/transitions/transition-operations.jpg",
-  vault:      "/media/transitions/transition-vault.jpg",
+  vault: "/media/transitions/transition-vault.jpg",
 };
 
 const hashToView = (h: string): View => {
@@ -87,10 +79,12 @@ const Index = () => {
   const [introDone, setIntroDone] = useState(false);
   const [transition, setTransition] = useState<{ label: string; kind: TransitionKind; bgImage?: string; bgVideo?: string; code?: string; tag?: string; durationMs?: number } | null>(null);
 
-
   const syncFromHash = useCallback(() => {
     const h = window.location.hash;
-    if (h === "#vault") { setVaultOpen(true); return; }
+    if (h === "#vault") {
+      setVaultOpen(true);
+      return;
+    }
     const next = hashToView(h);
     setView((prev) => (prev === next ? prev : next));
   }, []);
@@ -119,10 +113,11 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: "auto" });
   }, []);
 
-  // 3-second cinematic video transit — shuffles the video/still pool and layers
-  // the premium flavor stack (vault doors, warp, iris, elevator, etc.) on top.
-  const CINEMATIC_MS = 5000;
-  const CINEMATIC_SWAP = 1700;
+  // 6.5-second controlled sequence:
+  // 0.0–1.2 camera motion · 1.2–2.0 mechanical seal + hidden swap
+  // 2.0–5.0 clean clip viewing · 5.0–6.5 reveal into the live destination.
+  const CINEMATIC_MS = 6500;
+  const CINEMATIC_SWAP = 2000;
 
   const bgFor = useCallback((v: View | "vault"): string => {
     if (v === "home") return "/nexus-rotunda-new.jpg";
@@ -131,16 +126,21 @@ const Index = () => {
   }, []);
 
   const runTransition = useCallback((label: string, kind: TransitionKind, next: View, code?: string) => {
-    if (prefersReducedMotion()) { commitView(next); return; }
+    if (prefersReducedMotion()) {
+      commitView(next);
+      return;
+    }
     const piece = pickTransition();
     setTransition({
-      label, kind, code,
+      label,
+      kind,
+      code,
       bgVideo: piece.video,
       bgImage: piece.image ?? bgFor(next),
       tag: piece.tag ?? "NEXUS TRANSIT",
       durationMs: CINEMATIC_MS,
     });
-    window.setTimeout(() => { commitView(next); }, CINEMATIC_SWAP);
+    window.setTimeout(() => commitView(next), CINEMATIC_SWAP);
   }, [commitView, bgFor]);
 
   const goHome = useCallback(() => {
@@ -155,44 +155,58 @@ const Index = () => {
   }, [view, runTransition]);
 
   const openVault = useCallback(() => {
-    if (prefersReducedMotion()) { setVaultOpen(true); return; }
+    if (prefersReducedMotion()) {
+      setVaultOpen(true);
+      return;
+    }
     const piece = pickTransition();
     setTransition({
-      label: "EVIDENCE VAULT", kind: "advance", code: "SUB-LEVEL · V",
+      label: "EVIDENCE VAULT",
+      kind: "advance",
+      code: "SUB-LEVEL · V",
       bgVideo: piece.video,
       bgImage: piece.image ?? bgFor("vault"),
       tag: piece.tag ?? "NEXUS TRANSIT",
       durationMs: CINEMATIC_MS,
     });
-    window.setTimeout(() => { setVaultOpen(true); }, CINEMATIC_SWAP);
+    window.setTimeout(() => setVaultOpen(true), CINEMATIC_SWAP);
   }, [bgFor]);
 
   const closeVault = useCallback((open: boolean) => {
-    if (open) { setVaultOpen(true); return; }
-    if (prefersReducedMotion()) { setVaultOpen(false); return; }
+    if (open) {
+      setVaultOpen(true);
+      return;
+    }
+    if (prefersReducedMotion()) {
+      setVaultOpen(false);
+      return;
+    }
     const label = view === "home" ? "ROTUNDA" : bayLabel(view as BayId);
     const bay = view !== "home" ? BAYS.find((b) => b.id === view) : undefined;
     const code = view === "home" ? "ATRIUM · 00" : bay?.code;
     const piece = pickTransition();
     setTransition({
-      label, kind: "retreat", code,
+      label,
+      kind: "retreat",
+      code,
       bgVideo: piece.video,
       bgImage: piece.image ?? bgFor(view),
       tag: piece.tag ?? "NEXUS TRANSIT",
       durationMs: CINEMATIC_MS,
     });
-    window.setTimeout(() => { setVaultOpen(false); }, CINEMATIC_SWAP);
+    window.setTimeout(() => setVaultOpen(false), CINEMATIC_SWAP);
   }, [view, bgFor]);
-
 
   const goContact = useCallback(() => {
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
-  
-
   const handleIntroComplete = useCallback(() => {
-    try { sessionStorage.setItem("nexus:intro", "done"); } catch { /* ignore */ }
+    try {
+      sessionStorage.setItem("nexus:intro", "done");
+    } catch {
+      // Ignore storage restrictions.
+    }
     commitView("home");
     setIntroDone(true);
   }, [commitView]);
@@ -207,8 +221,6 @@ const Index = () => {
         onOpenVault={openVault}
       />
       <main>
-
-
         {view === "home" && <Rotunda onSelect={goBay} onOpenVault={openVault} />}
         {view !== "home" && (
           <div key={view} className="anim-bay-enter">
@@ -225,7 +237,6 @@ const Index = () => {
             />
           </div>
         )}
-
         <Contact />
       </main>
 
@@ -248,7 +259,6 @@ const Index = () => {
           onDone={() => setTransition(null)}
         />
       )}
-
 
       {!introDone && <IntroOverlay onComplete={handleIntroComplete} />}
     </div>
