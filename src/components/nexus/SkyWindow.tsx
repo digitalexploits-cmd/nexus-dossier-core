@@ -65,8 +65,16 @@ export const SkyWindow = ({
       <div className="bay-hero-lightning" />
       <div className="bay-hero-lightning layer-b" />
       <div className="bay-hero-shadow" />
+      {/* Living exterior — a distant plane's contrail, a small flock of birds,
+          and a lazy drifting leaf. Purely decorative, non-interactive. */}
+      <div className="sky-life sky-plane" />
+      <div className="sky-life sky-bird sky-bird-a" />
+      <div className="sky-life sky-bird sky-bird-b" />
+      <div className="sky-life sky-bird sky-bird-c" />
+      <div className="sky-life sky-leaf" />
       {branchLeft && <div className="bay-hero-branch left" />}
       {branchRight && <div className="bay-hero-branch right" />}
+
       {glassTint && (
         <div
           style={{
