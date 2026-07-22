@@ -379,8 +379,9 @@ export const BayShell = ({
       {/* ============ BAY CANON — validation graph / decision log / evidence walkthrough ============ */}
       <BayCanon bayId={bayId} />
 
-      {/* ============ FILES ON RECORD ============ */}
-      <DocumentShelf bay={bayId} />
+      {/* FILES ON RECORD removed — assets already surfaced via the
+          Category Rail above; the shelf duplicated the same items. */}
+
 
         </div>
         {/* bottom seam */}
