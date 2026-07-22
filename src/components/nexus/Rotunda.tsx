@@ -260,16 +260,15 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
         <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.18)_0%,transparent_65%)]" />
 
-        {/* Rotunda floor — kept off the view. Just a soft feathered concrete
-            wash across the very bottom of the image so the etched crest has
-            somewhere to sit, without blocking the architecture above. */}
+        {/* Rotunda floor — slim feathered concrete band so the exterior view
+            dominates. Just enough footing to seat the etched crest. */}
         <div
           aria-hidden
           className="absolute inset-x-0 bottom-0 pointer-events-none"
           style={{
-            height: "22%",
+            height: "11%",
             background:
-              "linear-gradient(to top, rgba(26,31,40,0.85) 0%, rgba(30,36,46,0.55) 45%, rgba(35,41,53,0.25) 80%, transparent 100%)",
+              "linear-gradient(to top, rgba(26,31,40,0.82) 0%, rgba(30,36,46,0.45) 55%, transparent 100%)",
           }}
         />
         {/* Ambient pool of light under the dome */}
@@ -277,9 +276,9 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           aria-hidden
           className="absolute inset-x-0 bottom-0 pointer-events-none"
           style={{
-            height: "22%",
+            height: "12%",
             background:
-              "radial-gradient(ellipse 60% 100% at 50% 30%, rgba(120,170,220,0.18) 0%, transparent 70%)",
+              "radial-gradient(ellipse 60% 100% at 50% 40%, rgba(120,170,220,0.16) 0%, transparent 70%)",
             mixBlendMode: "screen",
           }}
         />
@@ -292,10 +291,10 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
           aria-hidden
           className="absolute left-1/2 pointer-events-none"
           style={{
-            bottom: "1%",
-            width: "min(42%, 560px)",
+            bottom: "0.5%",
+            width: "min(28%, 380px)",
             aspectRatio: "1550 / 640",
-            transform: "translateX(-50%) perspective(900px) rotateX(68deg)",
+            transform: "translateX(-50%) perspective(900px) rotateX(72deg)",
             transformOrigin: "50% 100%",
           }}
         >
