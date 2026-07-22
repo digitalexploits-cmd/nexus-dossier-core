@@ -510,6 +510,39 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         />
       </div>
 
+      {/* FUNCTIONAL KIOSK — clickable tiles pinned to the viewport bottom,
+          replacing the baked-in kiosk faceplate. Works on every breakpoint. */}
+      <div
+        className="absolute inset-x-0 bottom-0 z-20 px-3 sm:px-6 pb-4 sm:pb-6 pointer-events-none"
+        onPointerDown={(e) => e.stopPropagation()}
+      >
+        <div className="mx-auto max-w-5xl">
+          <div className="mono text-[0.55rem] sm:text-[0.6rem] tracking-[0.32em] text-primary/70 text-center mb-2 pointer-events-none">
+            — SELECT OBJECTIVE —
+          </div>
+          <div className="grid grid-cols-4 gap-2 sm:gap-3 pointer-events-auto">
+            {ZONES.filter((z) => z.id !== "vault").map((z) => (
+              <button
+                key={`kiosk-${z.id}`}
+                onClick={(e) => { e.stopPropagation(); dismissHint(); enterZone(z); }}
+                aria-label={`Enter ${z.label}`}
+                className="group relative border border-primary/40 hover:border-primary/90 bg-gradient-to-b from-[#0e1826]/90 to-[#060b14]/95 hover:from-[#132238]/95 hover:to-[#0a1220]/95 backdrop-blur-sm px-2 py-3 sm:px-3 sm:py-4 transition-all touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 shadow-[0_0_18px_rgba(70,150,255,0.08)] hover:shadow-[0_0_32px_rgba(70,150,255,0.28)]"
+              >
+                <div className="mono text-[0.6rem] sm:text-[0.7rem] tracking-[0.28em] text-primary/80 group-hover:text-primary">
+                  {z.index}
+                </div>
+                <div className="mt-1 mono uppercase text-[0.55rem] sm:text-[0.68rem] tracking-[0.16em] sm:tracking-[0.22em] text-foreground/90 group-hover:text-primary leading-tight">
+                  {z.label}
+                </div>
+                <div className="mt-1 hidden sm:block text-[0.5rem] tracking-[0.18em] uppercase text-muted-foreground/80 group-hover:text-foreground/70 leading-tight">
+                  {z.sub}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
 
       {/* Reticle */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
