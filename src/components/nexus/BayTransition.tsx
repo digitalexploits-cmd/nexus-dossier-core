@@ -46,8 +46,6 @@ export const BayTransition = ({
     reveal: Math.round(duration * (5.0 / 6.5)),
   }), [duration]);
 
-  // Alternate between a horizontal mechanical shutter and a circular aperture.
-  // The selection is stable for a destination, not random on every render.
   const useIris = useMemo(
     () => [...label].reduce((sum, char) => sum + char.charCodeAt(0), 0) % 2 === 0,
     [label],
@@ -97,7 +95,6 @@ export const BayTransition = ({
           : "none",
       }}
     >
-      {/* Destination clip/still. No shake, flash, scanline, flare, or club-light effects. */}
       <div
         className="absolute inset-0"
         style={{
@@ -127,7 +124,6 @@ export const BayTransition = ({
         )}
       </div>
 
-      {/* Restrained vignette for legibility; deliberately static. */}
       <div
         className="absolute inset-0"
         style={{
@@ -137,12 +133,13 @@ export const BayTransition = ({
 
       {useIris ? (
         <div
-          className="absolute inset-0 bg-[#04060a]"
+          className="absolute left-1/2 top-1/2 rounded-full"
           style={{
-            clipPath: isSealed
-              ? "circle(0% at 50% 50%)"
-              : "circle(76% at 50% 50%)",
-            transition: "clip-path 700ms cubic-bezier(0.7,0,0.2,1)",
+            width: isSealed ? 0 : "180vmax",
+            height: isSealed ? 0 : "180vmax",
+            transform: "translate(-50%, -50%)",
+            boxShadow: "0 0 0 100vmax #04060a",
+            transition: "width 700ms cubic-bezier(0.7,0,0.2,1), height 700ms cubic-bezier(0.7,0,0.2,1)",
           }}
         />
       ) : (
@@ -164,7 +161,6 @@ export const BayTransition = ({
         </>
       )}
 
-      {/* Minimal identification only—no telemetry wall or pulsing light rig. */}
       <div
         className="absolute inset-x-0 bottom-8 flex flex-col items-center text-center px-6"
         style={{
