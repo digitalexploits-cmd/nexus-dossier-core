@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import type { SpectrumFrame } from "@/types/observability";
 
 interface SpectrumWaterfallProps {
-  frame?: SpectrumFrame;
+  frame?: SpectrumFrame | null;
   className?: string;
   /** Height of the main spectrum plot */
   height?: number;
@@ -13,7 +13,7 @@ interface SpectrumWaterfallProps {
 /**
  * Pure presentational spectrum + optional waterfall placeholder.
  * Accepts any SpectrumFrame that satisfies the interface.
- * No analysis logic – renders whatever bins are supplied.
+ * Gracefully handles missing / unavailable spectrum.
  */
 export function SpectrumWaterfall({
   frame,
@@ -25,12 +25,12 @@ export function SpectrumWaterfall({
     return (
       <div
         className={cn(
-          "flex items-center justify-center rounded-xl border border-dashed border-white/10 bg-[#0a1424]/60 text-sm text-slate-500",
+          "flex items-center justify-center rounded-xl border border-dashed border-border bg-card/40 text-sm text-muted-foreground",
           className,
         )}
         style={{ height }}
       >
-        Awaiting spectrum data
+        Spectrum unavailable
       </div>
     );
   }
@@ -42,13 +42,13 @@ export function SpectrumWaterfall({
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className={cn("rounded-xl border border-white/8 bg-[#0a1424]/80 overflow-hidden", className)}
+      className={cn("rounded-xl border border-border bg-card/80 overflow-hidden", className)}
     >
       <div className="flex items-center justify-between px-4 pt-3 pb-1">
-        <span className="text-[11px] font-medium uppercase tracking-wider text-slate-400">
+        <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
           Spectrum
         </span>
-        <span className="text-[10px] text-slate-500 tabular-nums">
+        <span className="text-[10px] text-muted-foreground tabular-nums">
           {frame.sampleRateHz.toLocaleString()} Hz · {bins.length} bins
         </span>
       </div>
@@ -72,9 +72,9 @@ export function SpectrumWaterfall({
           })}
           <defs>
             <linearGradient id="specGrad" x1="0" y1="1" x2="0" y2="0">
-              <stop offset="0%" stopColor="rgba(251,191,36,0.15)" />
-              <stop offset="60%" stopColor="rgba(251,191,36,0.7)" />
-              <stop offset="100%" stopColor="rgba(253,224,71,0.95)" />
+              <stop offset="0%" stopColor="hsl(var(--primary) / 0.15)" />
+              <stop offset="60%" stopColor="hsl(var(--primary) / 0.7)" />
+              <stop offset="100%" stopColor="hsl(var(--primary-glow) / 0.95)" />
             </linearGradient>
           </defs>
         </svg>
@@ -82,8 +82,8 @@ export function SpectrumWaterfall({
 
       {/* Waterfall history strip */}
       {showWaterfall && frame.history && frame.history.length > 0 && (
-        <div className="border-t border-white/5 px-3 py-2">
-          <div className="text-[10px] uppercase tracking-wider text-slate-500 mb-1.5">Waterfall</div>
+        <div className="border-t border-border px-3 py-2">
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5">Waterfall</div>
           <div className="flex gap-px h-12">
             {frame.history.map((row, ri) => {
               const rowMax = Math.max(...row.map((b) => b.magnitude), 0.001);
@@ -96,7 +96,7 @@ export function SpectrumWaterfall({
                         key={bi}
                         className="w-full flex-1 rounded-[1px]"
                         style={{
-                          backgroundColor: `rgba(251, 191, 36, ${0.15 + intensity * 0.75})`,
+                          backgroundColor: `hsl(var(--primary) / ${0.15 + intensity * 0.75})`,
                         }}
                       />
                     );
