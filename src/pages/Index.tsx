@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Rotunda } from "@/components/nexus/Rotunda";
 import { BayShell } from "@/components/nexus/BayShell";
 import { EvidenceVault } from "@/components/nexus/EvidenceVault";
