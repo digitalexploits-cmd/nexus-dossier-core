@@ -21,29 +21,28 @@ export function TelemetryWidget({ channel, className, index = 0 }: TelemetryWidg
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05, type: "spring", stiffness: 280, damping: 26 }}
       className={cn(
-        "rounded-xl border border-white/8 bg-[#0a1424]/80 p-4 backdrop-blur-sm",
+        "rounded-xl border border-border bg-card/80 p-4 backdrop-blur-sm",
         className,
       )}
     >
       <div className="flex items-center justify-between gap-2">
-        <span className="text-[11px] font-medium uppercase tracking-wider text-slate-400">
+        <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
           {channel.label}
         </span>
         {channel.status && <HealthBadge state={channel.status} size="sm" showLabel={false} />}
       </div>
 
       <div className="mt-2 flex items-baseline gap-1">
-        <span className="text-2xl font-semibold tabular-nums text-white">
+        <span className="text-2xl font-semibold tabular-nums text-foreground">
           {channel.current.toLocaleString(undefined, { maximumFractionDigits: 1 })}
         </span>
-        <span className="text-xs text-slate-500">{channel.unit}</span>
+        <span className="text-xs text-muted-foreground">{channel.unit}</span>
       </div>
 
-      {/* range bar */}
       {pct !== undefined && (
-        <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-slate-800">
+        <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-muted">
           <motion.div
-            className="h-full rounded-full bg-gradient-to-r from-amber-500/80 to-amber-300"
+            className="h-full rounded-full bg-primary/80"
             initial={{ width: 0 }}
             animate={{ width: `${pct}%` }}
             transition={{ duration: 0.8, ease: "easeOut" }}
@@ -51,7 +50,6 @@ export function TelemetryWidget({ channel, className, index = 0 }: TelemetryWidg
         </div>
       )}
 
-      {/* sparkline */}
       {channel.sparkline && channel.sparkline.length > 1 && (
         <div className="mt-3 h-10 w-full opacity-80">
           <svg
@@ -61,13 +59,13 @@ export function TelemetryWidget({ channel, className, index = 0 }: TelemetryWidg
           >
             <defs>
               <linearGradient id={`spark-${channel.id}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="rgba(251,191,36,0.35)" />
-                <stop offset="100%" stopColor="rgba(251,191,36,0)" />
+                <stop offset="0%" stopColor="hsl(var(--primary) / 0.35)" />
+                <stop offset="100%" stopColor="hsl(var(--primary) / 0)" />
               </linearGradient>
             </defs>
             <polyline
               fill={`url(#spark-${channel.id})`}
-              stroke="rgba(251,191,36,0.7)"
+              stroke="hsl(var(--primary) / 0.7)"
               strokeWidth="1.25"
               points={(() => {
                 const vals = channel.sparkline!.map((p) => p.value);

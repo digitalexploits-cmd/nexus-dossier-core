@@ -20,28 +20,26 @@ export function KpiCard({ data, className, index = 0 }: KpiCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.06, type: "spring", stiffness: 260, damping: 24 }}
       className={cn(
-        "relative overflow-hidden rounded-xl border border-white/10",
-        "bg-gradient-to-br from-[#0c1a2e]/90 to-[#08101c]/95",
-        "p-5 shadow-lg backdrop-blur-sm",
+        "relative overflow-hidden rounded-xl border border-border",
+        "bg-card/90 p-5 shadow-lg backdrop-blur-sm",
         className,
       )}
     >
-      {/* subtle gold accent line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
 
       <div className="flex items-start justify-between gap-3">
-        <p className="text-[11px] font-medium uppercase tracking-wider text-slate-400">
+        <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
           {data.label}
         </p>
         {data.status && <HealthBadge state={data.status} size="sm" showLabel={false} />}
       </div>
 
       <div className="mt-3 flex items-baseline gap-1.5">
-        <span className="text-3xl font-semibold tracking-tight text-white tabular-nums">
+        <span className="text-3xl font-semibold tracking-tight text-foreground tabular-nums">
           {data.value}
         </span>
         {data.unit && (
-          <span className="text-sm text-slate-400 font-medium">{data.unit}</span>
+          <span className="text-sm text-muted-foreground font-medium">{data.unit}</span>
         )}
       </div>
 
@@ -52,7 +50,7 @@ export function KpiCard({ data, className, index = 0 }: KpiCardProps) {
               "h-3.5 w-3.5",
               data.trend === "up" && "text-emerald-400",
               data.trend === "down" && "text-rose-400",
-              data.trend === "flat" && "text-slate-500",
+              data.trend === "flat" && "text-muted-foreground",
             )}
           />
           {data.trendValue !== undefined && (
@@ -61,7 +59,7 @@ export function KpiCard({ data, className, index = 0 }: KpiCardProps) {
                 "font-medium tabular-nums",
                 data.trend === "up" && "text-emerald-400",
                 data.trend === "down" && "text-rose-400",
-                data.trend === "flat" && "text-slate-400",
+                data.trend === "flat" && "text-muted-foreground",
               )}
             >
               {data.trendValue > 0 ? "+" : ""}
@@ -70,18 +68,17 @@ export function KpiCard({ data, className, index = 0 }: KpiCardProps) {
             </span>
           )}
           {data.trendLabel && (
-            <span className="text-slate-500">{data.trendLabel}</span>
+            <span className="text-muted-foreground">{data.trendLabel}</span>
           )}
         </div>
       )}
 
-      {/* mini sparkline if provided */}
       {data.sparkline && data.sparkline.length > 1 && (
         <div className="mt-4 h-8 w-full">
           <svg viewBox={`0 0 ${data.sparkline.length - 1} 32`} className="h-full w-full" preserveAspectRatio="none">
             <polyline
               fill="none"
-              stroke="rgba(251,191,36,0.55)"
+              stroke="hsl(var(--primary) / 0.55)"
               strokeWidth="1.5"
               points={data.sparkline
                 .map((v, i) => {
