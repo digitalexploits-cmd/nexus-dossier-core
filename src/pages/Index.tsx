@@ -3,7 +3,7 @@ import { Rotunda } from "@/components/nexus/Rotunda";
 import { BayShell } from "@/components/nexus/BayShell";
 import { EvidenceVault } from "@/components/nexus/EvidenceVault";
 import { Contact } from "@/components/nexus/Contact";
-import { TopBar, BottomBar } from "@/components/nexus/Chrome";
+import { BottomBar } from "@/components/nexus/Chrome";
 import { IntroOverlay } from "@/components/nexus/IntroOverlay";
 import { BayTransition, type TransitionKind } from "@/components/nexus/BayTransition";
 
