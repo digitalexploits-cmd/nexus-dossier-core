@@ -258,15 +258,14 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
 
         <div className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none mix-blend-screen bg-[radial-gradient(ellipse_at_50%_100%,rgba(80,170,255,0.18)_0%,transparent_65%)]" />
 
-        {/* Rotunda floor — slim feathered concrete band so the exterior view
-            dominates. Just enough footing to seat the etched crest. */}
+        {/* Rotunda floor — feathered concrete band grounding the etched crest. */}
         <div
           aria-hidden
           className="absolute inset-x-0 bottom-0 pointer-events-none"
           style={{
-            height: "11%",
+            height: "22%",
             background:
-              "linear-gradient(to top, rgba(26,31,40,0.82) 0%, rgba(30,36,46,0.45) 55%, transparent 100%)",
+              "linear-gradient(to top, rgba(26,31,40,0.92) 0%, rgba(30,36,46,0.55) 55%, transparent 100%)",
           }}
         />
         {/* Ambient pool of light under the dome */}
