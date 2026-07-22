@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Rotunda } from "@/components/nexus/Rotunda";
 import { BayShell } from "@/components/nexus/BayShell";
 import { EvidenceVault } from "@/components/nexus/EvidenceVault";
 import { Contact } from "@/components/nexus/Contact";
-import { TopBar, BottomBar } from "@/components/nexus/Chrome";
+import { BottomBar } from "@/components/nexus/Chrome";
 import { IntroOverlay } from "@/components/nexus/IntroOverlay";
 import { BayTransition, type TransitionKind } from "@/components/nexus/BayTransition";
 
@@ -189,10 +189,7 @@ const Index = () => {
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
-  const viewLabel = useMemo(
-    () => (view === "home" ? "ROTUNDA" : bayLabel(view as BayId).toUpperCase()),
-    [view],
-  );
+  
 
   const handleIntroComplete = useCallback(() => {
     try { sessionStorage.setItem("nexus:intro", "done"); } catch { /* ignore */ }
@@ -202,14 +199,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <TopBar
-        view={viewLabel}
-        currentBay={view}
-        onHome={goHome}
-        onBay={goBay}
-        onOpenVault={openVault}
-      />
-
       <main>
 
         {view === "home" && <Rotunda onSelect={goBay} onOpenVault={openVault} />}
