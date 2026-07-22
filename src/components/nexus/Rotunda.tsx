@@ -584,53 +584,9 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
         </div>
       )}
 
-      {/* MOBILE — stacked zone selector sitting on the console counter.
-          Clean vertical list, capped width, tap-first hit targets, tiered
-          typography matching the desktop kiosk labels. */}
-      <div
-        className="absolute inset-x-0 bottom-3 z-20 md:hidden px-3 pointer-events-none"
-        onPointerDown={(e) => e.stopPropagation()}
-      >
-        <div className="mx-auto max-w-md pointer-events-auto">
-          <div className="flex items-center justify-between mb-2 px-1">
-            <div className="mono text-[0.55rem] tracking-[0.32em] text-primary/80">◆ SELECT DESTINATION</div>
-            <div className="mono text-[0.5rem] tracking-[0.28em] text-muted-foreground">TAP TO ENTER</div>
-          </div>
-          <ul className="space-y-1.5">
-            {ZONES.map((z) => {
-              const isLocked = lockedZone?.id === z.id;
-              return (
-                <li key={`mstack-${z.id}`}>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); dismissHint(); enterZone(z); }}
-                    aria-label={`${z.id === "vault" ? "Open" : "Enter"} ${z.label}`}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 border backdrop-blur-md transition-colors touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 ${
-                      isLocked
-                        ? "border-primary/70 bg-primary/15 shadow-[0_0_24px_rgba(70,150,255,0.35)]"
-                        : "border-primary/25 bg-background/55 hover:border-primary/60"
-                    }`}
-                  >
-                    <span className={`mono text-[0.55rem] tracking-[0.28em] px-1.5 py-[1px] border ${
-                      isLocked ? "text-primary border-primary/70 bg-primary/10" : "text-primary/70 border-primary/25"
-                    }`}>{z.index}</span>
-                    <span className="flex-1 min-w-0 text-left">
-                      <span className={`block mono uppercase truncate text-[0.72rem] tracking-[0.22em] ${
-                        isLocked ? "text-primary" : "text-primary/85"
-                      }`}>{z.label}</span>
-                      <span className="block text-[0.6rem] text-muted-foreground uppercase tracking-[0.18em] truncate">
-                        {z.sub}
-                      </span>
-                    </span>
-                    <span className={`mono text-[0.6rem] tracking-[0.28em] ${
-                      isLocked ? "text-primary" : "text-primary/60"
-                    }`}>▶</span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </div>
+      {/* Mobile stacked zone selector removed — panorama beacons + tap-anywhere
+          navigation carry the flow on small screens. */}
+
 
       {/* Vault HUD panel (compact / collapsible) */}
       <div
