@@ -893,13 +893,94 @@
   animation-delay: 11s;
 }
 @keyframes bay-hero-lightning-flash {
-  0%, 92%   { opacity: 0; }
-  93%       { opacity: 0.85; }
-  94%       { opacity: 0.15; }
-  95%       { opacity: 0.7; }
-  96%       { opacity: 0.05; }
+  0%, 96%   { opacity: 0; }
+  97%       { opacity: 0.45; }
+  97.5%     { opacity: 0.08; }
+  98%       { opacity: 0.32; }
+  99%       { opacity: 0.02; }
   100%      { opacity: 0; }
 }
+
+/* ============================================================
+   SKY LIFE — birds, plane contrail, drifting leaf. Clipped to
+   the SkyWindow so they only cross the visible glass.
+   ============================================================ */
+.sky-life { position: absolute; pointer-events: none; will-change: transform, opacity; }
+
+/* Plane + long thin contrail streaking slowly across the sky */
+.sky-plane {
+  top: 18%; left: -12%;
+  width: 26%; height: 3px;
+  opacity: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.05) 8%,
+    rgba(255,255,255,0.55) 55%,
+    rgba(255,255,255,0.9) 92%,
+    rgba(255,255,255,0.95) 100%
+  );
+  filter: blur(0.6px) drop-shadow(0 0 3px rgba(255,255,255,0.35));
+  border-radius: 2px;
+  transform: translate3d(0, 0, 0) rotate(-6deg);
+  animation: sky-plane-cross 42s linear infinite;
+  animation-delay: -8s;
+}
+@keyframes sky-plane-cross {
+  0%   { transform: translate3d(0, 0, 0) rotate(-6deg);   opacity: 0; }
+  6%   { opacity: 0.85; }
+  85%  { opacity: 0.7; }
+  100% { transform: translate3d(520%, -6%, 0) rotate(-6deg); opacity: 0; }
+}
+
+/* Birds — tiny V-shaped silhouettes, gentle vertical bob */
+.sky-bird {
+  width: 10px; height: 4px;
+  background:
+    linear-gradient(45deg,  transparent 42%, rgba(10,14,22,0.85) 44%, rgba(10,14,22,0.85) 56%, transparent 58%),
+    linear-gradient(-45deg, transparent 42%, rgba(10,14,22,0.85) 44%, rgba(10,14,22,0.85) 56%, transparent 58%);
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.4));
+  opacity: 0;
+}
+.sky-bird-a { top: 34%; left: -6%; animation: sky-bird-cross 58s linear infinite, sky-bird-flap 0.6s ease-in-out infinite alternate; animation-delay: -12s, 0s; }
+.sky-bird-b { top: 41%; left: -8%; transform: scale(0.75); animation: sky-bird-cross 74s linear infinite, sky-bird-flap 0.7s ease-in-out infinite alternate; animation-delay: -34s, -0.2s; }
+.sky-bird-c { top: 30%; left: -10%; transform: scale(0.6); animation: sky-bird-cross 96s linear infinite, sky-bird-flap 0.55s ease-in-out infinite alternate; animation-delay: -55s, -0.4s; }
+@keyframes sky-bird-cross {
+  0%   { opacity: 0; }
+  4%   { opacity: 0.9; }
+  50%  { transform: translate3d(400%, -18px, 0) scale(var(--s, 1)); }
+  92%  { opacity: 0.6; }
+  100% { transform: translate3d(820%, 12px, 0) scale(var(--s, 1)); opacity: 0; }
+}
+@keyframes sky-bird-flap {
+  0%   { filter: drop-shadow(0 1px 1px rgba(0,0,0,0.4)) brightness(1); }
+  100% { filter: drop-shadow(0 1px 1px rgba(0,0,0,0.4)) brightness(0.85); }
+}
+
+/* Drifting leaf — small warm speck spiraling downward */
+.sky-leaf {
+  top: 20%; right: 8%;
+  width: 5px; height: 5px;
+  border-radius: 60% 20% 60% 20%;
+  background: linear-gradient(135deg, #c9a24a, #6a4a1e);
+  opacity: 0;
+  animation: sky-leaf-fall 26s ease-in-out infinite;
+  animation-delay: -6s;
+}
+@keyframes sky-leaf-fall {
+  0%   { transform: translate3d(0, 0, 0) rotate(0deg);        opacity: 0; }
+  8%   { opacity: 0.85; }
+  25%  { transform: translate3d(-30px, 60px, 0) rotate(120deg); }
+  50%  { transform: translate3d(20px, 140px, 0) rotate(240deg); }
+  75%  { transform: translate3d(-20px, 220px, 0) rotate(360deg); }
+  92%  { opacity: 0.4; }
+  100% { transform: translate3d(10px, 320px, 0) rotate(480deg); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sky-plane, .sky-bird, .sky-leaf { animation: none !important; opacity: 0 !important; }
+}
+
 
 /* Occasional towering cumulonimbus / storm cell — drifts across the sky
    band, fades in for a long window then recedes, so weather feels alive
