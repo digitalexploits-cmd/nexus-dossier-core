@@ -210,27 +210,8 @@ export const BayShell = ({
 
 
 
-        {/* Multimedia Viewer launcher — glass panel button (responsive) */}
-        <div className="absolute top-3 right-3 md:top-6 md:right-6 z-20">
-          <button
-            type="button"
-            onClick={() => setMediaConsoleOpen(true)}
-            className="interactive group relative flex items-center gap-2 md:gap-2.5 rounded-sm px-2.5 py-2 md:px-4 md:py-2.5 backdrop-blur-md transition-all duration-300 hover:-translate-y-[1px]"
-            style={{
-              borderWidth: 1,
-              borderStyle: "solid",
-              borderColor: `${accent}66`,
-              background: `linear-gradient(180deg, ${accent}18, rgba(10,18,30,0.55))`,
-              boxShadow: `0 0 24px -6px ${accent}55, inset 0 1px 0 ${accent}33`,
-            }}
-            aria-label="Open multimedia viewer"
-          >
-            <span className="text-sm md:text-base leading-none" style={{ color: accent }}>◫</span>
-            <span className="mono text-[0.55rem] md:text-[0.6rem] tracking-[0.24em] md:tracking-[0.28em] uppercase" style={{ color: "#eef6ff" }}>
-              <span className="hidden sm:inline">Multimedia </span>Viewer
-            </span>
-          </button>
-        </div>
+        {/* Multimedia Viewer launcher removed — no floating hero-corner labels */}
+
 
       </section>
 
