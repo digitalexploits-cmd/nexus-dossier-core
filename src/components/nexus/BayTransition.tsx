@@ -3,529 +3,188 @@ import { prefersReducedMotion } from "@/lib/audio";
 
 export type TransitionKind = "advance" | "retreat";
 
+type Phase = "camera" | "seal" | "view" | "reveal";
+
 interface Props {
   label: string;
   kind: TransitionKind;
   bgImage?: string;
-  /** Optional cinematic video — takes priority over bgImage when set. */
   bgVideo?: string;
-  /** Short destination code, e.g. "BAY 02" or "VAULT" */
   code?: string;
-  /** Optional flavor tag rendered in the bottom HUD. */
   tag?: string;
-  /** Total runtime of this transit in ms. Defaults to 5000. */
   durationMs?: number;
   onDone: () => void;
 }
 
-// Default transit length. Individual pieces can override via durationMs
-// so each clip plays through as its own immersive experience.
-const DEFAULT_DURATION = 5000;
-/** @deprecated — swap time is now per-transit; use transitionSwapMs() from data/transitions. */
-export const TRANSITION_SWAP_MS = Math.round(DEFAULT_DURATION * 0.35);
+const DEFAULT_DURATION = 6500;
 
-
-const TELEMETRY_LINES = [
-  "AUTH · REVIEW-SAFE",
-  "LINK · SECURE",
-  "CANON · SYNCED",
-  "MANIFEST · SIGNED",
-  "TELEMETRY · NOMINAL",
-  "PAYLOAD · VERIFIED",
-];
-
-// Cinematic camera flavors — one is chosen at random per transit so no two
-// feel the same. Each flavor is a CSS keyframe defined in index.css.
-// Some flavors carry an `overlay` id that renders a narrative prop
-// (secret door, iris, warp streaks, elevator slats, film gate, etc.).
-type FlavorOverlay = "doors" | "iris" | "warp" | "elevator" | "film" | "coincidence";
-type Flavor = { name: string; phase: string; overlay?: FlavorOverlay };
-const FLAVORS: readonly Flavor[] = [
-  { name: "flavor-fall",              phase: "FREEFALL VECTOR" },
-  { name: "flavor-dolly-in",          phase: "DOLLY ADVANCE" },
-  { name: "flavor-reverse-out",       phase: "REVERSE PULL" },
-  { name: "flavor-warp",              phase: "WARP ALIGNMENT" },
-  { name: "flavor-spin-in",           phase: "ORBITAL LOCK" },
-  { name: "flavor-tilt-pan",          phase: "LATERAL SWEEP" },
-  { name: "flavor-rise",              phase: "ASCENT VECTOR" },
-  { name: "flavor-glitch-slice",      phase: "SIGNAL RECONSTRUCT" },
-  { name: "flavor-secret-door-hold",  phase: "CONCEALED ENTRY",  overlay: "doors" },
-  { name: "flavor-coincidence",       phase: "PASSING COINCIDENCE", overlay: "coincidence" },
-  { name: "flavor-warp-drive",        phase: "WARP DRIVE · ENGAGED", overlay: "warp" },
-  { name: "flavor-coaster",           phase: "GRAVITY COASTER" },
-  { name: "flavor-iris",              phase: "IRIS OPEN",         overlay: "iris" },
-  { name: "flavor-elevator",          phase: "SERVICE ELEVATOR",  overlay: "elevator" },
-  { name: "flavor-film",              phase: "PROJECTION GATE",   overlay: "film" },
-] as const;
-
-/** Cinematic multi-stage transit sequence with HUD, telemetry, and dual scans. */
-export const BayTransition = ({ label, kind, bgImage, bgVideo, code, tag, durationMs, onDone }: Props) => {
+/**
+ * Controlled three-part transition:
+ * 0.0–1.2s camera motion
+ * 1.2–2.0s mechanical shutter/iris closes and reopens over the page swap
+ * 2.0–5.0s clean clip viewing
+ * 5.0–6.5s soft reveal into the live destination
+ */
+export const BayTransition = ({
+  label,
+  kind,
+  bgImage,
+  bgVideo,
+  code,
+  tag,
+  durationMs,
+  onDone,
+}: Props) => {
   const reduced = prefersReducedMotion();
-  const DURATION = Math.max(2400, Math.min(30000, durationMs ?? DEFAULT_DURATION));
+  const duration = Math.max(3200, Math.min(12000, durationMs ?? DEFAULT_DURATION));
+  const [phase, setPhase] = useState<Phase>("camera");
+  const [cameraMoved, setCameraMoved] = useState(false);
 
+  const timing = useMemo(() => ({
+    seal: Math.round(duration * (1.2 / 6.5)),
+    view: Math.round(duration * (2.0 / 6.5)),
+    reveal: Math.round(duration * (5.0 / 6.5)),
+  }), [duration]);
+
+  // Alternate between a horizontal mechanical shutter and a circular aperture.
+  // The selection is stable for a destination, not random on every render.
+  const useIris = useMemo(
+    () => [...label].reduce((sum, char) => sum + char.charCodeAt(0), 0) % 2 === 0,
+    [label],
+  );
 
   useEffect(() => {
-    const t = setTimeout(onDone, reduced ? 320 : DURATION);
-    return () => clearTimeout(t);
-  }, [onDone, reduced]);
+    if (reduced) {
+      const done = window.setTimeout(onDone, 320);
+      return () => window.clearTimeout(done);
+    }
 
-  // Typewriter effect on destination label
-  const [typed, setTyped] = useState(0);
-  useEffect(() => {
-    if (reduced) { setTyped(label.length); return; }
-    const step = Math.max(28, Math.floor(600 / Math.max(1, label.length)));
-    const id = window.setInterval(() => {
-      setTyped((n) => (n >= label.length ? n : n + 1));
-    }, step);
-    return () => window.clearInterval(id);
-  }, [label, reduced]);
+    const motion = window.requestAnimationFrame(() => setCameraMoved(true));
+    const seal = window.setTimeout(() => setPhase("seal"), timing.seal);
+    const view = window.setTimeout(() => setPhase("view"), timing.view);
+    const reveal = window.setTimeout(() => setPhase("reveal"), timing.reveal);
+    const done = window.setTimeout(onDone, duration);
 
-  // Progress bar tick
-  const [pct, setPct] = useState(0);
-  useEffect(() => {
-    if (reduced) { setPct(100); return; }
-    const start = performance.now();
-    let raf = 0;
-    const tick = (t: number) => {
-      const p = Math.min(100, ((t - start) / (DURATION - 200)) * 100);
-      setPct(p);
-      if (p < 100) raf = requestAnimationFrame(tick);
+    return () => {
+      window.cancelAnimationFrame(motion);
+      window.clearTimeout(seal);
+      window.clearTimeout(view);
+      window.clearTimeout(reveal);
+      window.clearTimeout(done);
     };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [reduced]);
+  }, [duration, onDone, reduced, timing]);
 
-  // Random-looking coordinate line, stable per mount
-  const coord = useMemo(() => {
-    const r = () => Math.floor(Math.random() * 9000 + 1000);
-    return `${r()} · ${r()} · ${r()}`;
-  }, []);
+  const isSealed = phase === "seal";
+  const isRevealing = phase === "reveal";
+  const cameraStart = kind === "advance"
+    ? "scale(1.01) translate3d(-0.6%, 0, 0)"
+    : "scale(1.075) translate3d(0.6%, 0, 0)";
+  const cameraEnd = kind === "advance"
+    ? "scale(1.075) translate3d(0.6%, -0.25%, 0)"
+    : "scale(1.01) translate3d(-0.6%, 0.25%, 0)";
 
-  // Pick a random cinematic flavor per mount so no two transits feel the same.
-  const flavor = useMemo(() => FLAVORS[Math.floor(Math.random() * FLAVORS.length)], []);
-
-  const dur = `${DURATION}ms`;
-  const ease = "cubic-bezier(0.22,1,0.36,1)";
-  const flavorAnim = `${flavor.name} ${dur} ${ease} forwards`;
+  if (reduced) {
+    return <div className="fixed inset-0 z-[90] bg-[#04060a] animate-out fade-out duration-300" />;
+  }
 
   return (
     <div
-      className="fixed inset-0 z-[90] pointer-events-none overflow-hidden"
-      style={{ animation: reduced ? "intro-fade-in 300ms ease-out forwards" : undefined }}
+      className="fixed inset-0 z-[90] pointer-events-none overflow-hidden bg-[#04060a]"
+      style={{
+        opacity: isRevealing ? 0 : 1,
+        transition: isRevealing
+          ? `opacity ${Math.max(800, duration - timing.reveal)}ms cubic-bezier(0.22,1,0.36,1)`
+          : "none",
+      }}
     >
-      {/* Curtain — very brief blackout only long enough to hide the swap */}
+      {/* Destination clip/still. No shake, flash, scanline, flare, or club-light effects. */}
       <div
-        className="absolute inset-0 bg-[#04060a]"
+        className="absolute inset-0"
         style={{
-          animation: reduced
-            ? "intro-fade-in 300ms ease-out forwards"
-            : `bay-curtain-brief ${dur} ${ease} forwards`,
+          transform: cameraMoved ? cameraEnd : cameraStart,
+          transition: `transform ${timing.seal}ms cubic-bezier(0.22,1,0.36,1)`,
+          willChange: "transform",
+        }}
+      >
+        {bgVideo ? (
+          <video
+            src={bgVideo}
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ filter: "saturate(1.04) contrast(1.06) brightness(0.96)" }}
+          />
+        ) : (
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: bgImage ? `url(${bgImage})` : undefined,
+              filter: "saturate(1.04) contrast(1.06) brightness(0.96)",
+            }}
+          />
+        )}
+      </div>
+
+      {/* Restrained vignette for legibility; deliberately static. */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: "radial-gradient(ellipse at center, transparent 58%, rgba(4,6,10,0.52) 100%)",
         }}
       />
 
-      {/* Cinematic backdrop — video preferred, still image fallback */}
-      {(bgVideo || bgImage) && !reduced && (
-        <>
-          {bgVideo ? (
-            <video
-              src={bgVideo}
-              autoPlay
-              muted
-              playsInline
-              loop
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{
-                filter: "saturate(1.15) contrast(1.15) brightness(1.15)",
-                transformOrigin: "50% 50%",
-                willChange: "transform, filter, opacity, clip-path",
-                animation:
-                  flavor.overlay === "iris"
-                    ? `${flavorAnim}, iris-open ${dur} ${ease} forwards`
-                    : flavorAnim,
-              }}
-            />
-          ) : (
-            <div
-              className="absolute inset-0"
-              style={{
-                backgroundImage: `url(${bgImage})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                filter: "saturate(1.15) contrast(1.15) brightness(1.15)",
-                transformOrigin: "50% 50%",
-                willChange: "transform, filter, opacity, clip-path",
-                animation:
-                  flavor.overlay === "iris"
-                    ? `${flavorAnim}, iris-open ${dur} ${ease} forwards`
-                    : flavorAnim,
-              }}
-            />
-          )}
-          {/* Gentle vignette — keeps focus without swallowing the frame */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(ellipse at center, rgba(4,6,10,0) 0%, rgba(4,6,10,0.15) 70%, rgba(4,6,10,0.55) 100%)",
-              animation: `bay-still-kenburns ${dur} ${ease} forwards`,
-            }}
-          />
-          {/* Horizontal atmospheric haze band */}
-          <div
-            className="absolute inset-x-0 top-1/2 h-40 -translate-y-1/2"
-            style={{
-              background:
-                "linear-gradient(90deg, transparent, hsl(var(--primary)/0.09) 40%, hsl(var(--primary)/0.14) 50%, hsl(var(--primary)/0.09) 60%, transparent)",
-              animation: `bay-haze ${dur} ${ease} forwards`,
-              filter: "blur(24px)",
-            }}
-          />
-          {/* Anamorphic flare sweep across the frame */}
-          <div
-            className="absolute inset-0 overflow-hidden mix-blend-screen"
-            style={{ animation: `bay-label ${dur} ${ease} forwards` }}
-          >
-            <div
-              className="absolute top-0 bottom-0 w-1/3"
-              style={{
-                left: 0,
-                background:
-                  "linear-gradient(90deg, transparent, hsl(var(--primary)/0.35), hsl(var(--primary)/0.6), hsl(var(--primary)/0.35), transparent)",
-                filter: "blur(28px)",
-                animation: `flavor-flare-sweep ${DURATION - 400}ms ${ease} 300ms forwards`,
-              }}
-            />
-          </div>
-
-          {/* Narrative overlays — secret doors, warp streaks, elevator, film gate, camera flash */}
-          {flavor.overlay === "doors" && (
-            <>
-              {(["left", "right"] as const).map((side) => (
-                <div
-                  key={side}
-                  className="absolute top-0 bottom-0 w-1/2 bg-[#04060a]"
-                  style={{
-                    [side]: 0,
-                    borderInlineEnd: side === "left" ? "1px solid hsl(var(--primary)/0.6)" : undefined,
-                    borderInlineStart: side === "right" ? "1px solid hsl(var(--primary)/0.6)" : undefined,
-                    boxShadow: "inset 0 0 80px rgba(0,0,0,0.8)",
-                    backgroundImage:
-                      "repeating-linear-gradient(180deg, rgba(212,175,55,0.05) 0 2px, transparent 2px 22px), radial-gradient(circle at 50% 40%, rgba(212,175,55,0.18), transparent 60%)",
-                    animation: `door-open-${side} ${DURATION - 400}ms cubic-bezier(0.7,0,0.2,1) 200ms forwards`,
-                  }}
-                />
-              ))}
-            </>
-          )}
-
-          {flavor.overlay === "warp" && (
-            <div
-              className="absolute inset-0 overflow-hidden pointer-events-none"
-              style={{ animation: `warp-streaks ${DURATION - 400}ms cubic-bezier(0.6,0,0.3,1) 200ms forwards` }}
-            >
-              {Array.from({ length: 60 }).map((_, i) => {
-                const angle = (i / 60) * 360;
-                const len = 30 + Math.random() * 40;
-                return (
-                  <span
-                    key={i}
-                    className="absolute left-1/2 top-1/2 origin-left"
-                    style={{
-                      width: `${len}%`,
-                      height: 1 + Math.random() * 1.5,
-                      background: "linear-gradient(90deg, transparent, hsl(var(--primary)/0.85), white)",
-                      transform: `rotate(${angle}deg)`,
-                      filter: "blur(0.5px)",
-                    }}
-                  />
-                );
-              })}
-            </div>
-          )}
-
-          {flavor.overlay === "elevator" && (
-            <>
-              {[0, 1, 2, 3, 4].map((i) => (
-                <div
-                  key={i}
-                  className="absolute inset-x-0 bg-[#04060a]"
-                  style={{
-                    top: `${i * 20}%`,
-                    height: "20%",
-                    borderTop: "1px solid hsl(var(--primary)/0.35)",
-                    borderBottom: "1px solid hsl(var(--primary)/0.15)",
-                    boxShadow: "inset 0 0 40px rgba(0,0,0,0.7)",
-                    animation: `elevator-slat ${DURATION - 400}ms cubic-bezier(0.7,0,0.2,1) ${100 + i * 80}ms forwards`,
-                  }}
-                />
-              ))}
-            </>
-          )}
-
-          {flavor.overlay === "film" && (
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background:
-                  "repeating-linear-gradient(0deg, rgba(0,0,0,0.35) 0 3px, transparent 3px 8px)",
-                animation: `film-gate ${DURATION}ms steps(12,end) forwards`,
-                mixBlendMode: "multiply",
-              }}
-            />
-          )}
-
-          {flavor.overlay === "coincidence" && (
-            <div
-              className="absolute inset-0 bg-white pointer-events-none"
-              style={{ animation: `coincidence-flash ${DURATION}ms ease-out forwards` }}
-            />
-          )}
-
-          {/* Scanline texture */}
-          <div
-            className="absolute inset-0 opacity-25 mix-blend-overlay"
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(0deg, rgba(212,175,55,0.07) 0 1px, transparent 1px 3px)",
-              animation: `bay-still-kenburns ${dur} ${ease} forwards`,
-            }}
-          />
-        </>
-      )}
-
-      {/* Dual scan beams — longer travel for the extended sequence */}
-      {!reduced && (
-        <>
-          <div
-            className="absolute inset-x-0 h-[2px]"
-            style={{
-              top: kind === "advance" ? "-3px" : "100%",
-              background:
-                "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.95), transparent)",
-              boxShadow: "0 0 32px hsl(var(--primary) / 0.7)",
-              animation: `${kind === "advance" ? "bay-scan-down" : "bay-scan-up"} 2600ms ${ease} forwards`,
-            }}
-          />
-          <div
-            className="absolute inset-x-0 h-[1px] opacity-70"
-            style={{
-              top: kind === "advance" ? "100%" : "-3px",
-              background:
-                "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.6), transparent)",
-              animation: `${kind === "advance" ? "bay-scan-up" : "bay-scan-down"} 3000ms ${ease} 900ms forwards`,
-            }}
-          />
-        </>
-      )}
-
-      {/* Corner ticks */}
-      {!reduced && (
+      {useIris ? (
         <div
-          className="absolute inset-6 pointer-events-none"
-          style={{ animation: `bay-label ${dur} ${ease} forwards` }}
-        >
-          {(["tl", "tr", "bl", "br"] as const).map((c) => (
-            <span
-              key={c}
-              className="absolute w-5 h-5 border-primary/70"
-              style={{
-                top: c.startsWith("t") ? 0 : undefined,
-                bottom: c.startsWith("b") ? 0 : undefined,
-                left: c.endsWith("l") ? 0 : undefined,
-                right: c.endsWith("r") ? 0 : undefined,
-                borderTopWidth: c.startsWith("t") ? 1 : 0,
-                borderBottomWidth: c.startsWith("b") ? 1 : 0,
-                borderLeftWidth: c.endsWith("l") ? 1 : 0,
-                borderRightWidth: c.endsWith("r") ? 1 : 0,
-              }}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Top-left HUD: destination code */}
-      {!reduced && (
-        <div
-          className="absolute top-6 left-6 mono text-primary/85 text-[0.62rem] tracking-[0.36em]"
-          style={{ animation: `bay-label ${dur} ${ease} forwards` }}
-        >
-          <div className="opacity-70">// NEXUS TRANSIT · {kind === "advance" ? "OUTBOUND" : "INBOUND"}</div>
-          <div className="mt-1 text-primary">DEST · {code ?? label.toUpperCase()}</div>
-          <div className="mt-0.5 opacity-60">{coord}</div>
-          {tag && <div className="mt-1 text-primary/70">◇ {tag}</div>}
-
-        </div>
-      )}
-
-      {/* Top-right HUD: telemetry lines */}
-      {!reduced && (
-        <div
-          className="absolute top-6 right-6 mono text-primary/85 text-[0.6rem] tracking-[0.3em] text-right space-y-1"
-          style={{ animation: `bay-label ${dur} ${ease} forwards` }}
-        >
-          {TELEMETRY_LINES.map((line, i) => (
-            <div
-              key={line}
-              style={{
-                animation: `intro-fade-in 400ms ease-out ${300 + i * 160}ms both`,
-              }}
-            >
-              <span className="opacity-60">▸</span> {line}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Center: title */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div
-          className="mono text-primary text-center px-6"
+          className="absolute inset-0 bg-[#04060a]"
           style={{
-            textShadow: "0 0 24px hsl(var(--primary) / 0.65), 0 2px 12px rgba(0,0,0,0.9)",
-            animation: reduced
-              ? "intro-fade-in 260ms ease-out forwards"
-              : `bay-label ${dur} ${ease} forwards`,
+            clipPath: isSealed
+              ? "circle(0% at 50% 50%)"
+              : "circle(76% at 50% 50%)",
+            transition: "clip-path 700ms cubic-bezier(0.7,0,0.2,1)",
           }}
-        >
-          <div className="text-[0.62rem] tracking-[0.42em] text-primary/75 mb-3">
-            {kind === "advance" ? "ENTERING //" : "RETURNING //"}
-          </div>
-          <div className="text-2xl md:text-4xl tracking-[0.32em] uppercase">
-            {label.slice(0, typed)}
-            {!reduced && typed < label.length && (
-              <span className="inline-block w-[0.6ch] -mb-0.5 animate-pulse">▍</span>
-            )}
-          </div>
-          {code && (
-            <div className="mt-3 text-[0.6rem] tracking-[0.5em] text-primary/60">{code}</div>
-          )}
-        </div>
-      </div>
-
-      {/* Bottom HUD: progress + status */}
-      {!reduced && (
-        <div
-          className="absolute bottom-8 inset-x-6 mono text-primary/85"
-          style={{ animation: `bay-label ${dur} ${ease} forwards` }}
-        >
-          <div className="flex items-end justify-between text-[0.58rem] tracking-[0.3em] mb-2">
-            <span className="opacity-70">TRANSIT · {Math.floor(pct)}%</span>
-            <span className="opacity-80 text-primary">{flavor.phase}</span>
-            <span className="opacity-70 hidden md:inline">
-              {pct < 30 ? "SEALING PERIMETER" : pct < 65 ? "ROUTING CHANNEL" : pct < 90 ? "HANDSHAKE" : "LOCK"}
-            </span>
-          </div>
-          <div className="relative h-[3px] w-full bg-primary/15 overflow-hidden">
-            <div
-              className="absolute inset-y-0 left-0 bg-primary"
-              style={{
-                width: `${pct}%`,
-                boxShadow: "0 0 12px hsl(var(--primary) / 0.75)",
-              }}
-            />
-            {/* Tick marks */}
-            {[0.25, 0.5, 0.75].map((p) => (
-              <span
-                key={p}
-                className="absolute top-0 bottom-0 w-px bg-[#04060a]/70"
-                style={{ left: `${p * 100}%` }}
-              />
-            ))}
-          </div>
-          <div className="mt-2 flex items-center gap-3 text-[0.56rem] tracking-[0.32em] opacity-60">
-            <span>◇ AI BASE³ · NEXUS</span>
-            <span>·</span>
-            <span>REVIEWER-SAFE CHANNEL</span>
-            <span className="ml-auto">SIG {(pct * 12.4).toFixed(0).padStart(4, "0")}Hz</span>
-          </div>
-        </div>
+        />
+      ) : (
+        <>
+          <div
+            className="absolute inset-y-0 left-0 w-1/2 bg-[#04060a] border-r border-primary/25"
+            style={{
+              transform: isSealed ? "translateX(0)" : "translateX(-101%)",
+              transition: "transform 700ms cubic-bezier(0.7,0,0.2,1)",
+            }}
+          />
+          <div
+            className="absolute inset-y-0 right-0 w-1/2 bg-[#04060a] border-l border-primary/25"
+            style={{
+              transform: isSealed ? "translateX(0)" : "translateX(101%)",
+              transition: "transform 700ms cubic-bezier(0.7,0,0.2,1)",
+            }}
+          />
+        </>
       )}
 
-      {/* ============================================================
-          UNIFIED BOOKENDS — same signature on every transit.
-          Opener: gold bars slide in + seal flash + AI Base³ sigil stamp.
-          Closer: matching flash + bars retract just before hand-off.
-          ============================================================ */}
-      {!reduced && (() => {
-        const OPEN_MS  = 520;
-        const CLOSE_MS = 620;
-        const closeDelay = Math.max(0, DURATION - CLOSE_MS);
-        const barBase =
-          "linear-gradient(180deg, #04060a 0%, #04060a 78%, hsl(var(--primary)/0.55) 82%, hsl(var(--primary)/0.9) 88%, hsl(var(--primary)/0.15) 100%)";
-        const barBaseFlipped =
-          "linear-gradient(0deg, #04060a 0%, #04060a 78%, hsl(var(--primary)/0.55) 82%, hsl(var(--primary)/0.9) 88%, hsl(var(--primary)/0.15) 100%)";
-        return (
-          <>
-            {/* Top letterbox bar */}
-            <div
-              className="absolute inset-x-0 top-0 h-[9vh] pointer-events-none z-[5]"
-              style={{
-                background: barBase,
-                boxShadow: "0 6px 22px -8px hsl(var(--primary)/0.55)",
-                animation:
-                  `transit-bar-top-in ${OPEN_MS}ms cubic-bezier(0.7,0,0.2,1) forwards,` +
-                  `transit-bar-top-out ${CLOSE_MS}ms cubic-bezier(0.6,0,0.2,1) ${closeDelay}ms forwards`,
-              }}
-            />
-            {/* Bottom letterbox bar */}
-            <div
-              className="absolute inset-x-0 bottom-0 h-[9vh] pointer-events-none z-[5]"
-              style={{
-                background: barBaseFlipped,
-                boxShadow: "0 -6px 22px -8px hsl(var(--primary)/0.55)",
-                animation:
-                  `transit-bar-bot-in ${OPEN_MS}ms cubic-bezier(0.7,0,0.2,1) forwards,` +
-                  `transit-bar-bot-out ${CLOSE_MS}ms cubic-bezier(0.6,0,0.2,1) ${closeDelay}ms forwards`,
-              }}
-            />
-
-            {/* Opening seal flash */}
-            <div
-              className="absolute inset-0 pointer-events-none z-[6]"
-              style={{
-                background:
-                  "radial-gradient(ellipse at center, hsl(var(--primary)/0.55) 0%, hsl(var(--primary)/0.15) 40%, transparent 70%)",
-                mixBlendMode: "screen",
-                animation: `transit-seal-flash 620ms ease-out forwards`,
-              }}
-            />
-            {/* Closing seal flash */}
-            <div
-              className="absolute inset-0 pointer-events-none z-[6]"
-              style={{
-                background:
-                  "radial-gradient(ellipse at center, hsl(var(--primary)/0.5) 0%, hsl(var(--primary)/0.12) 45%, transparent 72%)",
-                mixBlendMode: "screen",
-                opacity: 0,
-                animation: `transit-seal-flash 700ms ease-in ${closeDelay}ms forwards`,
-              }}
-            />
-
-            {/* AI Base³ signature sigil — stamps at open, re-stamps at close */}
-            <div
-              className="absolute left-1/2 top-[9vh] mono text-primary/90 text-[0.58rem] pointer-events-none z-[7]"
-              style={{
-                transform: "translate(-50%, -50%)",
-                textShadow: "0 0 18px hsl(var(--primary)/0.7)",
-                animation: `transit-sigil-stamp 640ms ease-out forwards`,
-              }}
-            >
-              ◇ AI BASE³ · NEXUS TRANSIT ◇
-            </div>
-            <div
-              className="absolute left-1/2 bottom-[9vh] mono text-primary/90 text-[0.58rem] pointer-events-none z-[7]"
-              style={{
-                transform: "translate(-50%, 50%)",
-                textShadow: "0 0 18px hsl(var(--primary)/0.7)",
-                opacity: 0,
-                animation: `transit-sigil-stamp 720ms ease-out ${closeDelay}ms forwards`,
-              }}
-            >
-              ◇ CHANNEL SEALED · REVIEWER-SAFE ◇
-            </div>
-          </>
-        );
-      })()}
+      {/* Minimal identification only—no telemetry wall or pulsing light rig. */}
+      <div
+        className="absolute inset-x-0 bottom-8 flex flex-col items-center text-center px-6"
+        style={{
+          opacity: phase === "camera" || phase === "seal" ? 0.9 : 0.58,
+          transition: "opacity 500ms ease",
+          textShadow: "0 2px 12px rgba(0,0,0,0.9)",
+        }}
+      >
+        <div className="mono text-[0.55rem] tracking-[0.38em] text-primary/70">
+          {kind === "advance" ? "ENTERING" : "RETURNING"} · {code ?? "NEXUS"}
+        </div>
+        <div className="mono mt-2 text-sm md:text-lg tracking-[0.3em] text-foreground/90 uppercase">
+          {label}
+        </div>
+        {tag && (
+          <div className="mono mt-2 text-[0.5rem] tracking-[0.3em] text-muted-foreground/70">
+            {tag}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
