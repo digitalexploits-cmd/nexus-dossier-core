@@ -77,7 +77,9 @@ export const Rotunda = ({ onSelect, onOpenVault }: Props) => {
   // right-leg river, and Busch Stadium all read on a narrow viewport.
   const isMobileInitial = typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
   const [heading, setHeading] = useState(isMobileInitial ? 0.50 : 0.30);
-  const [headingV, setHeadingV] = useState(isMobileInitial ? 0.50 : 0.58);
+  // Lowered sight line: frame higher up the panorama so the exterior view
+  // dominates and the dark rotunda floor takes only a slim band at the bottom.
+  const [headingV, setHeadingV] = useState(isMobileInitial ? 0.38 : 0.42);
   const [dragging, setDragging] = useState(false);
   const [snapping, setSnapping] = useState(false);
   const [hintVisible, setHintVisible] = useState(() => {
